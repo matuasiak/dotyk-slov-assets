@@ -174,11 +174,11 @@
     const accountSource = header.querySelector('[data-testid="signin"]');
     if (buttons && accountSource && !buttons.querySelector(".ds8-account-link")) {
       const account = document.createElement("a");
-      account.className = "ds8-account-link";
+      account.className = "ds-account-link ds8-account-link";
       account.href = accountSource.getAttribute("href") || "/login/";
       account.rel = "nofollow";
       account.setAttribute("aria-label", "Prihlásenie a účet");
-      account.innerHTML = '<span class="ds8-account-icon" aria-hidden="true"></span><span class="ds8-account-text">Účet</span>';
+      account.innerHTML = '<span class="ds-account-icon ds8-account-icon" aria-hidden="true"></span><span class="ds-account-text ds8-account-text">Účet</span>';
       const cart = buttons.querySelector(".cart-count");
       buttons.insertBefore(account, cart || buttons.lastElementChild);
     }
@@ -277,8 +277,8 @@
 
   const init = () => {
     ensureFont();
-    document.documentElement.classList.add("ds8-theme");
-    document.body.classList.add("ds8-theme");
+    document.documentElement.classList.add("ds-clean-theme", "ds8-theme");
+    document.body.classList.add("ds-clean-theme", "ds8-theme");
     enhanceHeader();
     enhanceFooter();
     enhanceHomepage();
