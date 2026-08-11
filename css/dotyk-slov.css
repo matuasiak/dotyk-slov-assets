@@ -2661,7 +2661,6 @@ body.ds-clean-home-active #content {
   padding: 0 !important;
 }
 
-
 /* DS v8 editorial storefront */
 /* Dotyk Slov v8 — approved editorial storefront for Shoptet */
 :root {
@@ -2680,6 +2679,7 @@ body.ds-clean-home-active #content {
 html.ds8-theme { scroll-behavior: smooth; scroll-padding-top: 126px; }
 body.ds8-theme { overflow-x: hidden; background: var(--ds8-paper) !important; color: var(--ds8-ink) !important; font-family: var(--ds8-font) !important; -webkit-font-smoothing: antialiased; }
 body.ds8-theme a { text-decoration: none; }
+#ds-topbar { display: none !important; }
 
 /* Keep Shoptet as the engine; only restyle its native chrome. */
 body.ds8-theme #header { position: sticky !important; z-index: 90 !important; top: 0 !important; background: rgba(245, 244, 240, .94) !important; border: 0 !important; box-shadow: none !important; backdrop-filter: blur(16px); }
@@ -2687,6 +2687,9 @@ body.ds8-theme #header .header-top { background: transparent !important; }
 body.ds8-theme #header .header-top::before { min-height: 32px !important; padding: 6px 28px !important; background: var(--ds8-ink) !important; color: var(--ds8-white) !important; font: 650 9px/1.35 var(--ds8-font) !important; letter-spacing: .12em !important; }
 body.ds8-theme #header .header-top-wrapper { min-height: 76px !important; height: 76px !important; grid-template-columns: 210px minmax(260px, 1fr) auto !important; gap: clamp(24px, 4vw, 64px) !important; }
 body.ds8-theme #header .site-name img { width: 176px !important; max-height: 48px !important; }
+body.ds8-theme #header .site-name a { display: flex !important; align-items: center !important; min-height: 48px; color: var(--ds8-ink) !important; }
+body.ds8-theme #header .site-name img { display: none !important; }
+body.ds8-theme #header .site-name a::before { content: "DOTYK SLOV."; display: block; color: var(--ds8-ink); font: 800 20px/1 var(--ds8-font); letter-spacing: -.055em; }
 body.ds8-theme #header .search-input { height: 46px !important; padding-inline: 18px 52px !important; border: 1px solid var(--ds8-line) !important; border-radius: 999px !important; background: rgba(255, 255, 255, .74) !important; color: var(--ds8-ink) !important; font: 500 12px var(--ds8-font) !important; }
 body.ds8-theme #header .search-button { right: 6px !important; top: 2px !important; }
 body.ds8-theme #header .navigation-buttons > a { border-radius: 999px !important; }
@@ -2861,6 +2864,17 @@ body.ds8-theme .products .p > .image { background: #eceae5 !important; }
 body.ds8-theme .products .name { color: var(--ds8-ink) !important; font-family: var(--ds8-font) !important; font-weight: 650 !important; }
 body.ds8-theme .btn, body.ds8-theme button.btn { border-radius: 999px !important; font-family: var(--ds8-font) !important; }
 body.ds8-theme .btn-primary { background: var(--ds8-ink) !important; border-color: var(--ds8-ink) !important; color: var(--ds8-white) !important; }
+
+/* Native consent remains functional, but visually belongs to the same system. */
+body.ds8-theme .siteCookies { right: 14px !important; bottom: 14px !important; width: min(440px, calc(100% - 28px)) !important; overflow: hidden !important; border: 1px solid var(--ds8-line) !important; border-radius: 20px !important; background: rgba(255,255,255,.96) !important; color: var(--ds8-ink) !important; box-shadow: 0 24px 90px rgba(11,11,11,.18) !important; backdrop-filter: blur(16px); }
+body.ds8-theme .siteCookies__form { display: block !important; padding: 22px !important; }
+body.ds8-theme .siteCookies__text { color: var(--ds8-ink) !important; font: 500 13px/1.55 var(--ds8-font) !important; }
+body.ds8-theme .siteCookies__text a { color: inherit !important; text-decoration: underline !important; }
+body.ds8-theme .siteCookies__links { margin: 14px 0 0 !important; }
+body.ds8-theme .siteCookies__link { padding: 0 !important; border: 0 !important; background: transparent !important; color: var(--ds8-muted) !important; font: 650 10px/1 var(--ds8-font) !important; letter-spacing: .08em !important; text-transform: uppercase; }
+body.ds8-theme .siteCookies__buttonWrap { display: flex !important; gap: 8px !important; margin-top: 18px !important; }
+body.ds8-theme .siteCookies__button { flex: 1 1 0 !important; min-height: 44px !important; padding: 0 16px !important; border: 1px solid var(--ds8-ink) !important; border-radius: 999px !important; background: transparent !important; color: var(--ds8-ink) !important; font: 750 10px/1 var(--ds8-font) !important; letter-spacing: .06em !important; }
+body.ds8-theme .siteCookies__button[value="all"] { background: var(--ds8-ink) !important; color: var(--ds8-white) !important; }
 
 @media (max-width: 1100px) {
   .ds8-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
