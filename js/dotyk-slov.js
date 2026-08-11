@@ -1,7 +1,8 @@
 (() => {
   "use strict";
 
-  const CONFIG_URL = "https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js";
+  const REMOTE_CONFIG_URL = "https://dotyk-slov-template-admin.matuasiak.chatgpt.site/api/config";
+  const FALLBACK_CONFIG_URL = "https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js";
   let CONFIG = window.DOTYK_SLOV_THEME || {};
   let started = false;
   const FALLBACK_ASSETS = "https://matuasiak.github.io/dotyk-slov-assets/images";
@@ -497,12 +498,7 @@
     }
   };
 
-  const loadConfiguration = () => {
-    if (window.DOTYK_SLOV_THEME) {
-      startWhenReady();
-      return;
-    }
-
+  const loadFallbackConfiguration = () => {
     const existing = document.querySelector("script[data-ds9-config]");
     if (existing) {
       existing.addEventListener("load", startWhenReady, { once: true });
@@ -511,13 +507,45 @@
     }
 
     const script = document.createElement("script");
-    script.src = CONFIG_URL;
+    script.src = FALLBACK_CONFIG_URL;
     script.async = true;
     script.dataset.ds9Config = "true";
-    script.addEventListener("load", startWhenReady, { once: true });
+    script.addEventListener("load", () => {
+      document.documentElement.dataset.ds9ConfigSource = "fallback";
+      startWhenReady();
+    }, { once: true });
     script.addEventListener("error", startWhenReady, { once: true });
     document.head.appendChild(script);
   };
 
-  loadConfiguration();
+  const loadConfiguration = async () => {
+    const inlineConfig = window.DOTYK_SLOV_THEME;
+    const controller = "AbortController" in window ? new AbortController() : null;
+    const timeout = window.setTimeout(() => controller?.abort(), 2400);
+    try {
+      const response = await window.fetch(REMOTE_CONFIG_URL, {
+        cache: "no-store",
+        credentials: "omit",
+        signal: controller?.signal,
+      });
+      if (!response.ok) throw new Error(`Remote theme config returned ${response.status}`);
+      const payload = await response.json();
+      if (!payload?.config || typeof payload.config !== "object") throw new Error("Remote theme config is invalid");
+      window.DOTYK_SLOV_THEME = payload.config;
+      document.documentElement.dataset.ds9ConfigSource = "backoffice";
+      startWhenReady();
+    } catch {
+      if (inlineConfig) {
+        window.DOTYK_SLOV_THEME = inlineConfig;
+        document.documentElement.dataset.ds9ConfigSource = "inline";
+        startWhenReady();
+      } else {
+        loadFallbackConfiguration();
+      }
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  };
+
+  void loadConfiguration();
 })();
