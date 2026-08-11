@@ -2642,3 +2642,21 @@ body.ds-clean-theme #footer .footer-bottom {
     transition-duration: .01ms !important;
   }
 }
+
+/* DS v7: homepage full-width layout fix */
+body.ds-clean-home-active .content-wrapper-in {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body.ds-clean-home-active #content {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
