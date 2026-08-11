@@ -1,212 +1,382 @@
 (() => {
   "use strict";
 
-  const ASSET_ROOT = "https://matuasiak.github.io/dotyk-slov-assets/images";
+  const CONFIG_URL = "https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js";
+  let CONFIG = window.DOTYK_SLOV_THEME || {};
+  let started = false;
+  const FALLBACK_ASSETS = "https://matuasiak.github.io/dotyk-slov-assets/images";
+
+  const get = (path, fallback) => {
+    const value = path.split(".").reduce((current, key) => current?.[key], CONFIG);
+    return value === undefined || value === null || value === "" ? fallback : value;
+  };
+
+  const list = (path, fallback = []) => {
+    const value = get(path, fallback);
+    return Array.isArray(value) ? value : fallback;
+  };
+
+  const escapeHTML = (value) =>
+    String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  const safeURL = (value, fallback = "#") => {
+    const url = String(value || "").trim();
+    if (/^(#|\/|https:\/\/)/i.test(url)) return escapeHTML(url);
+    return fallback;
+  };
+
   const isHomepage = () =>
-    document.body.classList.contains("in-index") ||
-    window.location.pathname === "/" ||
-    window.location.pathname === "";
+    document.body.classList.contains("in-index") || ["", "/"].includes(window.location.pathname);
+
+  const isProduct = () =>
+    document.body.classList.contains("type-detail") || document.body.classList.contains("type-product");
+
+  const isCart = () =>
+    document.body.classList.contains("in-kosik") || window.location.pathname.includes("kosik");
+
+  const isThankYou = () =>
+    document.body.classList.contains("in-dekujeme") || /dakujeme|thank-you|objednavka[/]dokoncena/i.test(window.location.pathname);
+
+  const removeLegacyState = () => {
+    const legacy = [
+      "ds-clean-theme",
+      "ds-clean-home-active",
+      "ds-home-active",
+      "ds8-theme",
+      "ds8-home-active",
+      "ds8-motion-ready",
+    ];
+    document.documentElement.classList.remove(...legacy);
+    document.body.classList.remove(...legacy);
+    document.querySelectorAll(".ds-home,.ds8-home,.ds8-footer-brand,.ds-footer-brand").forEach((node) => node.remove());
+  };
 
   const ensureFont = () => {
-    if (document.querySelector('link[data-ds8-font]')) return;
+    if (document.querySelector('link[data-ds9-font]')) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = "https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap";
-    link.dataset.ds8Font = "true";
+    link.dataset.ds9Font = "true";
     document.head.appendChild(link);
   };
 
-  const products = [
-    {
-      url: "/damske-tricko--off-white-psik-je-laska/",
-      image: `${ASSET_ROOT}/dotyk-product-black.webp`,
-      imageClass: "ds8-product-image--black",
-      tag: "Bestseller",
-      name: "PSÍK JE LÁSKA",
-      type: "Dámske tričko · off white",
-      price: "23,90 €",
-    },
-    {
-      url: "/damsky-crop-top--cierna-vsetko-prejde/",
-      image: `${ASSET_ROOT}/dotyk-editorial-cream.webp`,
-      imageClass: "ds8-product-image--cream",
-      tag: "Nové",
-      name: "VŠETKO PREJDE",
-      type: "Dámsky crop top · čierna",
-      price: "19,90 €",
-    },
-    {
-      url: "/oversized-unisex-tricko--biela-anti-social-dog-owner/",
-      image: `${ASSET_ROOT}/dotyk-product-black.webp`,
-      imageClass: "ds8-product-image--stone",
-      tag: "Core",
-      name: "ANTI-SOCIAL DOG OWNER",
-      type: "Oversize unisex tričko",
-      price: "24,90 €",
-    },
-    {
-      url: "/siltovka--vintage-red-tired-human/",
-      image: `${ASSET_ROOT}/dotyk-editorial-cream.webp`,
-      imageClass: "ds8-product-image--sand",
-      tag: "Nové",
-      name: "TIRED HUMAN",
-      type: "Šiltovka · vintage red",
-      price: "14,90 €",
-    },
-  ];
+  const applyDesignTokens = () => {
+    const color = (path, fallback) => {
+      const value = String(get(path, fallback)).trim();
+      return /^#[0-9a-f]{6}$/i.test(value) ? value : fallback;
+    };
+    const radius = Number(get("design.cornerRadius", 26));
+    const root = document.documentElement;
+    root.style.setProperty("--ds9-ink", color("design.ink", "#0b0b0b"));
+    root.style.setProperty("--ds9-paper", color("design.paper", "#f5f4f0"));
+    root.style.setProperty("--ds9-acid", color("design.accent", "#d9ff45"));
+    root.style.setProperty("--ds9-violet", color("design.violet", "#5c46ed"));
+    root.style.setProperty("--ds9-radius", `${Math.max(12, Math.min(40, Number.isFinite(radius) ? radius : 26))}px`);
+  };
 
-  const productCard = (product, index) => `
-    <article class="ds8-product-card ds8-tilt-card" data-ds8-reveal style="--ds8-reveal-order:${index}">
-      <a class="ds8-product-image ${product.imageClass}" href="${product.url}" aria-label="Pozrieť ${product.name}">
-        <img src="${product.image}" alt="${product.name}" loading="lazy">
-        <span class="ds8-product-tag">${product.tag}</span>
-        <span class="ds8-quick-add" aria-hidden="true">+</span>
-      </a>
-      <div class="ds8-product-meta">
-        <div><h3><a href="${product.url}">${product.name}</a></h3><p>${product.type}</p></div>
-        <strong>${product.price}</strong>
-      </div>
-    </article>`;
-
-  const homepageMarkup = `
-    <div class="ds8-home" id="ds8-top">
-      <section class="ds8-hero" id="novinky">
-        <img src="${ASSET_ROOT}/dotyk-hero.webp" alt="Dotyk Slov streetwear editorial" fetchpriority="high">
-        <div class="ds8-hero-shade"></div>
-        <div class="ds8-hero-content" data-ds8-reveal>
-          <p class="ds8-eyebrow ds8-eyebrow--light">NOVÝ DROP / 08—26</p>
-          <h1>Nie všetko treba povedať nahlas.</h1>
-          <p class="ds8-hero-copy">Niekedy stačí, keď to máš na sebe.</p>
-          <div class="ds8-hero-actions">
-            <a class="ds8-button ds8-button--light" href="#ds8-core">Pozrieť novinky</a>
-            <a class="ds8-text-link ds8-text-link--light" href="#ds8-nalady">Vybrať podľa nálady →</a>
-          </div>
-        </div>
-        <div class="ds8-hero-depth-card" aria-hidden="true"><span>VNÚTORNÝ MONOLÓG</span><strong>ON / OFF</strong><i></i></div>
-        <div class="ds8-hero-note">DROP 04<br>PRE TÝCH, ČO CÍTIA VIAC</div>
-      </section>
-
-      <nav class="ds8-quick-categories" aria-label="Kategórie" data-ds8-reveal>
-        <a href="/unisex-tricka/">Tričká<span>↗</span></a>
-        <a href="/crop-topy/">Cropy<span>↗</span></a>
-        <a href="/mikiny/">Mikiny<span>↗</span></a>
-        <a href="/doplnky/">Šiltovky<span>↗</span></a>
-        <a href="/doplnky/">Doplnky<span>↗</span></a>
-        <a href="/oblecenie/">Všetko<span>↗</span></a>
-      </nav>
-
-      <section class="ds8-products-section" id="ds8-core">
-        <div class="ds8-section-heading" data-ds8-reveal>
-          <div><p class="ds8-eyebrow">CORE / VŽDY PRÍTOMNÉ</p><h2>Veci, ktoré hovoria za teba.</h2></div>
-          <a class="ds8-text-link" href="/oblecenie/">Pozrieť všetko →</a>
-        </div>
-        <div class="ds8-product-grid">${products.map(productCard).join("")}</div>
-      </section>
-
-      <section class="ds8-depth-bridge" aria-label="Slová, ktoré nosíš" data-ds8-reveal>
-        <div class="ds8-depth-bridge-track" aria-hidden="true"><span>SLOVÁ</span><span>KTORÉ</span><span>NOSÍŠ</span></div>
-        <p>Niektoré vety ostanú v hlave. Iné idú s tebou.</p>
-      </section>
-
-      <section class="ds8-statement-panel" data-ds8-reveal>
-        <div class="ds8-statement-orb" aria-hidden="true"></div>
-        <p class="ds8-eyebrow ds8-eyebrow--light">DOTYK SLOV / OD 2022</p>
-        <p class="ds8-statement-copy">Nie merch. Nálada, ktorú si môžeš obliecť.</p>
-        <div class="ds8-statement-facts" data-ds8-reveal>
-          <span><strong>lokálne</strong>potlačené u nás</span>
-          <span><strong>od 1 kusa</strong>žiadna masovka</span>
-          <span><strong>7 000+</strong>ľudí v komunite</span>
-        </div>
-      </section>
-
-      <section class="ds8-moods-section" id="ds8-nalady">
-        <div class="ds8-section-heading ds8-section-heading--compact" data-ds8-reveal>
-          <div><p class="ds8-eyebrow">PODĽA NÁLADY</p><h2>Nájdi sa. Alebo sa aspoň skús.</h2></div>
-        </div>
-        <div class="ds8-mood-grid">
-          <a class="ds8-mood-card ds8-mood-card--1 ds8-tilt-card" href="/produkty-podla-textu/" data-ds8-reveal style="--ds8-reveal-order:0">
-            <img src="${ASSET_ROOT}/dotyk-editorial-cream.webp" alt="" loading="lazy"><span class="ds8-mood-overlay"></span><p>01 / OVERTHINKING</p><h3><span>Keď cítiš</span><span>príliš veľa.</span></h3><span class="ds8-mood-arrow">↗</span>
-          </a>
-          <a class="ds8-mood-card ds8-mood-card--2 ds8-tilt-card" href="/produkty-podla-textu/" data-ds8-reveal style="--ds8-reveal-order:1">
-            <img src="${ASSET_ROOT}/dotyk-hero.webp" alt="" loading="lazy"><span class="ds8-mood-overlay"></span><p>02 / SOCIAL BATTERY</p><h3><span>Dnes to</span><span>nedávam.</span></h3><span class="ds8-mood-arrow">↗</span>
-          </a>
-          <a class="ds8-mood-card ds8-mood-card--3 ds8-tilt-card" href="/produkty-podla-textu/" data-ds8-reveal style="--ds8-reveal-order:2">
-            <img src="${ASSET_ROOT}/dotyk-product-black.webp" alt="" loading="lazy"><span class="ds8-mood-overlay"></span><p>03 / MAIN CHARACTER</p><h3><span>Ale aspoň</span><span>dobre vyzerám.</span></h3><span class="ds8-mood-arrow">↗</span>
-          </a>
-        </div>
-      </section>
-
-      <section class="ds8-custom-section" id="ds8-tvoje-slova" data-ds8-reveal>
-        <div class="ds8-custom-copy" data-ds8-reveal>
-          <p class="ds8-eyebrow ds8-eyebrow--light">TVOJE SLOVÁ</p>
-          <h2>Máš vetu, ktorú nikto iný nemá?</h2>
-          <p>Pošli ju nám. My z nej spravíme vec, ktorú budeš chcieť nosiť častejšie než vlastné myšlienky.</p>
-          <a href="/vytvor-si-vlastne-tricko-2/" class="ds8-button ds8-button--light">Vytvoriť vlastný kúsok</a>
-        </div>
-        <div class="ds8-thought-cloud" aria-hidden="true">
-          <span class="ds8-thought ds8-thought--1">mám toho dosť</span><span class="ds8-thought ds8-thought--2">ale esteticky</span><span class="ds8-thought ds8-thought--3">...</span><span class="ds8-thought ds8-thought--4">asi som v pohode</span><span class="ds8-thought ds8-thought--5">neodpisujem</span>
-        </div>
-      </section>
-
-      <section class="ds8-story-section" data-ds8-reveal>
-        <div class="ds8-story-image ds8-parallax-frame"><img src="${ASSET_ROOT}/dotyk-editorial-cream.webp" alt="Dotyk Slov editorial" loading="lazy"></div>
-        <div class="ds8-story-copy" data-ds8-reveal>
-          <p class="ds8-eyebrow">ZNAČKA S VLASTNÝM HLASOM</p>
-          <h2>Vzniklo to z viet, ktoré ostali v hlave.</h2>
-          <p>Dotyk Slov je pre ľudí, ktorí cítia veľa, hovoria málo a humor používajú ako obranný mechanizmus. Každý kúsok navrhujeme a tlačíme lokálne.</p>
-          <a href="/o-nas/" class="ds8-text-link">Náš príbeh →</a>
-        </div>
-      </section>
-
-      <section class="ds8-newsletter" data-ds8-reveal>
-        <div><p class="ds8-eyebrow">TICHÁ POŠTA</p><h2>Občas ti niečo povieme. Nahlas nie.</h2></div>
-        <a class="ds8-newsletter-action" href="#formNewsletter"><span>tvoj@email.sk</span><strong>Chcem byť pri tom →</strong></a>
-      </section>
-    </div>`;
+  const renderAnnouncement = () => {
+    const header = document.querySelector("#header");
+    if (!header) return;
+    header.querySelectorAll(":scope > .ds9-announcement").forEach((node) => node.remove());
+    const messages = list("announcement", ["Doprava zdarma nad 50 €", "Ručne a lokálne potlačené"]);
+    if (!messages.length) return;
+    const bar = document.createElement("div");
+    bar.className = "ds9-announcement";
+    bar.setAttribute("aria-label", "Informácie o nákupe");
+    bar.innerHTML = `<div class="ds9-announcement-track">${messages
+      .map((message) => `<span>${escapeHTML(message)}</span>`)
+      .join("")}</div>`;
+    header.prepend(bar);
+  };
 
   const enhanceHeader = () => {
     const header = document.querySelector("#header");
     if (!header) return;
+    renderAnnouncement();
+
     const searchInput = header.querySelector(".search-input");
     if (searchInput) searchInput.placeholder = "Čo chceš povedať bez slov?";
 
     const buttons = header.querySelector(".navigation-buttons");
-    const accountSource = header.querySelector('[data-testid="signin"]');
-    if (buttons && accountSource && !buttons.querySelector(".ds8-account-link")) {
+    if (buttons && !buttons.querySelector(".ds9-account-link")) {
       const account = document.createElement("a");
-      account.className = "ds-account-link ds8-account-link";
-      account.href = accountSource.getAttribute("href") || "/login/";
+      account.className = "ds9-account-link";
+      account.href = "/client-center/";
       account.rel = "nofollow";
       account.setAttribute("aria-label", "Prihlásenie a účet");
-      account.innerHTML = '<span class="ds-account-icon ds8-account-icon" aria-hidden="true"></span><span class="ds-account-text ds8-account-text">Účet</span>';
-      const cart = buttons.querySelector(".cart-count");
-      buttons.insertBefore(account, cart || buttons.lastElementChild);
+      account.innerHTML = '<span class="ds9-account-icon" aria-hidden="true"></span><span>Účet</span>';
+      const cart = [...buttons.children].find(
+        (node) => node.matches?.(".cart-count") || node.querySelector?.(".cart-count"),
+      );
+      buttons.insertBefore(account, cart || null);
     }
   };
 
   const enhanceFooter = () => {
     const footer = document.querySelector("#footer");
     if (!footer) return;
-    footer.querySelectorAll(".ds-footer-brand,.ds8-footer-brand").forEach((node) => node.remove());
+    footer.querySelectorAll(".ds9-footer-brand").forEach((node) => node.remove());
     footer.insertAdjacentHTML(
       "afterbegin",
-      '<div class="container ds8-footer-brand"><strong>DOTYK SLOV<span>.</span></strong><p>Nie všetko treba povedať nahlas.</p></div>',
+      '<div class="container ds9-footer-brand"><strong>DOTYK SLOV<span>.</span></strong><p>Nie všetko treba povedať nahlas.</p></div>',
     );
+  };
+
+  const categoriesMarkup = () => {
+    const categories = list("categories", [
+      { label: "Tričká", url: "/unisex-tricka/" },
+      { label: "Cropy", url: "/crop-topy/" },
+      { label: "Mikiny", url: "/mikiny/" },
+      { label: "Doplnky", url: "/doplnky/" },
+    ]);
+    return categories
+      .map(
+        (item) =>
+          `<a href="${safeURL(item.url)}"><span>${escapeHTML(item.label)}</span><i aria-hidden="true">↗</i></a>`,
+      )
+      .join("");
+  };
+
+  const factsMarkup = () =>
+    list("statement.facts", [
+      { value: "lokálne", label: "potlačené u nás" },
+      { value: "od 1 kusa", label: "žiadna masovka" },
+      { value: "7 000+", label: "ľudí v komunite" },
+    ])
+      .map((fact) => `<span><strong>${escapeHTML(fact.value)}</strong>${escapeHTML(fact.label)}</span>`)
+      .join("");
+
+  const moodsMarkup = () =>
+    list("moods.cards", [])
+      .slice(0, 4)
+      .map(
+        (mood, index) => `
+          <a class="ds9-mood-card ds9-tilt-card" href="${safeURL(mood.url, "/produkty-podla-textu/")}" data-ds9-reveal style="--ds9-order:${index}">
+            <img src="${safeURL(mood.image, `${FALLBACK_ASSETS}/dotyk-hero.webp`)}" alt="" loading="lazy">
+            <span class="ds9-mood-overlay"></span>
+            <p>${escapeHTML(mood.label || `0${index + 1} / NÁLADA`)}</p>
+            <h3>${escapeHTML(mood.headline || "Nájdi sa v slovách.")}</h3>
+            <span class="ds9-mood-arrow" aria-hidden="true">↗</span>
+          </a>`,
+      )
+      .join("");
+
+  const thoughtsMarkup = () =>
+    list("custom.thoughts", ["mám toho dosť", "ale esteticky", "...", "asi som v pohode", "neodpisujem"])
+      .slice(0, 5)
+      .map((thought, index) => `<span class="ds9-thought ds9-thought--${index + 1}">${escapeHTML(thought)}</span>`)
+      .join("");
+
+  const homepageMarkup = (welcomeTitle, welcomeCopy) => {
+    const bridgeWords = list("bridge.words", ["SLOVÁ", "KTORÉ", "NOSÍŠ"]).slice(0, 3);
+    return `
+      <div class="ds9-home" id="ds9-top">
+        <section class="ds9-hero" id="novinky">
+          <div class="ds9-hero-media"></div>
+          <div class="ds9-hero-shade"></div>
+          <div class="ds9-hero-content" data-ds9-reveal>
+            <p class="ds9-eyebrow ds9-eyebrow--light">${escapeHTML(get("hero.eyebrow", "NOVÝ DROP"))}</p>
+            <h1>${escapeHTML(welcomeTitle || get("hero.headline", "Nie všetko treba povedať nahlas."))}</h1>
+            <p class="ds9-hero-copy">${escapeHTML(welcomeCopy || get("hero.copy", "Niekedy stačí, keď to máš na sebe."))}</p>
+            <div class="ds9-hero-actions">
+              <a class="ds9-button ds9-button--light" href="${safeURL(get("hero.primaryUrl", "#ds9-products"))}">${escapeHTML(get("hero.primaryLabel", "Pozrieť novinky"))}</a>
+              <a class="ds9-text-link ds9-text-link--light" href="${safeURL(get("hero.secondaryUrl", "#ds9-moods"))}">${escapeHTML(get("hero.secondaryLabel", "Vybrať podľa nálady"))} →</a>
+            </div>
+          </div>
+          <div class="ds9-hero-depth-card" aria-hidden="true"><span>${escapeHTML(get("hero.floatingLabel", "VNÚTORNÝ MONOLÓG"))}</span><strong>${escapeHTML(get("hero.floatingValue", "ON / OFF"))}</strong><i></i></div>
+        </section>
+
+        <nav class="ds9-quick-categories" aria-label="Kategórie" data-ds9-reveal>${categoriesMarkup()}</nav>
+        <div class="ds9-benefits-slot"></div>
+
+        <section class="ds9-products-area" id="ds9-products">
+          <div class="ds9-section-heading" data-ds9-reveal>
+            <div><p class="ds9-eyebrow">${escapeHTML(get("products.eyebrow", "VYBRANÉ PRE TEBA"))}</p><h2>${escapeHTML(get("products.headline", "Veci, ktoré hovoria za teba."))}</h2></div>
+            <a class="ds9-text-link" href="${safeURL(get("products.allUrl", "/oblecenie/"))}">${escapeHTML(get("products.allLabel", "Pozrieť všetko"))} →</a>
+          </div>
+          <div class="ds9-products-stack"></div>
+        </section>
+
+        <section class="ds9-depth-bridge" aria-label="Slová, ktoré nosíš" data-ds9-reveal>
+          <div class="ds9-depth-bridge-track" aria-hidden="true">${bridgeWords.map((word) => `<span>${escapeHTML(word)}</span>`).join("")}</div>
+          <p>${escapeHTML(get("bridge.copy", "Niektoré vety ostanú v hlave. Iné idú s tebou."))}</p>
+        </section>
+
+        <section class="ds9-statement-panel" data-ds9-reveal>
+          <div class="ds9-statement-orb" aria-hidden="true"></div>
+          <p class="ds9-eyebrow ds9-eyebrow--light">${escapeHTML(get("statement.eyebrow", "DOTYK SLOV / OD 2022"))}</p>
+          <p class="ds9-statement-copy">${escapeHTML(get("statement.headline", "Nie merch. Nálada, ktorú si môžeš obliecť."))}</p>
+          <div class="ds9-statement-facts">${factsMarkup()}</div>
+        </section>
+
+        <section class="ds9-moods-section" id="ds9-moods">
+          <div class="ds9-section-heading" data-ds9-reveal>
+            <div><p class="ds9-eyebrow">${escapeHTML(get("moods.eyebrow", "PODĽA NÁLADY"))}</p><h2>${escapeHTML(get("moods.headline", "Nájdi sa. Alebo sa aspoň skús."))}</h2></div>
+          </div>
+          <div class="ds9-mood-grid">${moodsMarkup()}</div>
+        </section>
+
+        <section class="ds9-custom-section" id="ds9-custom" data-ds9-reveal>
+          <div class="ds9-custom-copy">
+            <p class="ds9-eyebrow ds9-eyebrow--light">${escapeHTML(get("custom.eyebrow", "TVOJE SLOVÁ"))}</p>
+            <h2>${escapeHTML(get("custom.headline", "Máš vetu, ktorú nikto iný nemá?"))}</h2>
+            <p>${escapeHTML(get("custom.copy", "Pošli ju nám. My ju prenesieme na kúsok, ktorý bude iba tvoj."))}</p>
+            <a class="ds9-button ds9-button--light" href="${safeURL(get("custom.buttonUrl", "/vytvor-si-vlastne-tricko-2/"))}">${escapeHTML(get("custom.buttonLabel", "Vytvoriť vlastný kúsok"))}</a>
+          </div>
+          <div class="ds9-thought-cloud" aria-hidden="true">${thoughtsMarkup()}</div>
+        </section>
+
+        <section class="ds9-story-section" data-ds9-reveal>
+          <div class="ds9-story-image ds9-parallax-frame"><img src="${safeURL(get("story.image", `${FALLBACK_ASSETS}/dotyk-editorial-cream.webp`))}" alt="Dotyk Slov editorial" loading="lazy"></div>
+          <div class="ds9-story-copy">
+            <p class="ds9-eyebrow">${escapeHTML(get("story.eyebrow", "ZNAČKA S VLASTNÝM HLASOM"))}</p>
+            <h2>${escapeHTML(get("story.headline", "Vzniklo to z viet, ktoré ostali v hlave."))}</h2>
+            <p>${escapeHTML(get("story.copy", "Dotyk Slov je pre ľudí, ktorí cítia veľa, hovoria málo a humor používajú ako obranný mechanizmus."))}</p>
+            <a class="ds9-text-link" href="${safeURL(get("story.buttonUrl", "/o-nas/"))}">${escapeHTML(get("story.buttonLabel", "Náš príbeh"))} →</a>
+          </div>
+        </section>
+
+        <section class="ds9-newsletter" data-ds9-reveal>
+          <div><p class="ds9-eyebrow">${escapeHTML(get("newsletter.eyebrow", "TICHÁ POŠTA"))}</p><h2>${escapeHTML(get("newsletter.headline", "Občas ti niečo povieme. Nahlas nie."))}</h2></div>
+          <a class="ds9-newsletter-action" href="#formNewsletterWidget"><span>${escapeHTML(get("newsletter.placeholder", "tvoj@email.sk"))}</span><strong>${escapeHTML(get("newsletter.buttonLabel", "Chcem byť pri tom"))} →</strong></a>
+        </section>
+      </div>`;
+  };
+
+  const getWelcomeContent = (content) => {
+    const welcome = content.querySelector(":scope > .welcome-wrapper, :scope > .homepage-text, :scope > .container-narrow .welcome-wrapper");
+    if (!welcome) return { title: "", copy: "", node: null };
+    const title = welcome.querySelector("h1")?.textContent?.trim() || "";
+    const copy = welcome.querySelector("p")?.textContent?.trim() || "";
+    return { title, copy, node: welcome };
+  };
+
+  const collectProductGroups = (content) => {
+    const children = [...content.children];
+    const groups = [];
+    children.forEach((node, index) => {
+      if (!node.classList.contains("homepage-group-title")) return;
+      const wrapper = children.slice(index + 1).find((candidate) => candidate.classList.contains("products-wrapper"));
+      if (wrapper && !groups.some((group) => group.wrapper === wrapper)) groups.push({ heading: node, wrapper });
+    });
+    return groups;
+  };
+
+  const prepareNativeProductGroup = ({ heading, wrapper }, index, host) => {
+    const section = document.createElement("section");
+    section.className = "ds9-native-product-section";
+    section.dataset.groupIndex = String(index);
+    heading.classList.add("ds9-native-product-heading");
+    wrapper.classList.add("ds9-native-products");
+    wrapper.removeAttribute("style");
+    wrapper.querySelectorAll(".product-slider,.products-block,.product").forEach((node) => node.removeAttribute("style"));
+    section.append(heading, wrapper);
+    host.appendChild(section);
   };
 
   const enhanceHomepage = () => {
     if (!isHomepage()) return;
-    document.body.classList.add("ds8-home-active");
     const content = document.querySelector("#content");
     if (!content) return;
-    content.querySelectorAll(":scope > .ds-home,:scope > .ds8-home").forEach((node) => node.remove());
-    content.insertAdjacentHTML("afterbegin", homepageMarkup);
+
+    const bannerRow = content.querySelector(":scope > .banners-row");
+    const benefits = content.querySelector(":scope > .benefitBanner");
+    const groups = collectProductGroups(content);
+    const welcome = getWelcomeContent(content);
+
+    content.querySelectorAll(":scope > .ds9-home").forEach((node) => node.remove());
+    content.insertAdjacentHTML("afterbegin", homepageMarkup(welcome.title, welcome.copy));
+    const home = content.querySelector(":scope > .ds9-home");
+    if (!home) return;
+
+    document.body.classList.add("ds9-home-active");
+    content.classList.add("ds9-content");
+
+    const mediaHost = home.querySelector(".ds9-hero-media");
+    if (bannerRow) {
+      bannerRow.classList.add("ds9-native-hero");
+      bannerRow.querySelectorAll("a[target='_blank']").forEach((link) => link.removeAttribute("target"));
+      mediaHost.appendChild(bannerRow);
+    } else {
+      mediaHost.innerHTML = `<img src="${safeURL(get("hero.fallbackImage", `${FALLBACK_ASSETS}/dotyk-hero.webp`))}" alt="Dotyk Slov" fetchpriority="high">`;
+    }
+
+    if (benefits) {
+      benefits.classList.add("ds9-native-benefits");
+      home.querySelector(".ds9-benefits-slot")?.appendChild(benefits);
+    }
+
+    const productsHost = home.querySelector(".ds9-products-stack");
+    groups.forEach((group, index) => prepareNativeProductGroup(group, index, productsHost));
+    if (!groups.length) {
+      productsHost.innerHTML = '<a class="ds9-products-empty" href="/oblecenie/">Produkty nastavíš v Shoptete v časti Produkty → Titulná strana.</a>';
+    }
+
+    welcome.node?.remove();
+    content.querySelectorAll(":scope > .container-narrow:empty").forEach((node) => node.remove());
+  };
+
+  const enhanceProductPage = () => {
+    if (!isProduct()) return;
+    document.body.classList.add("ds9-product-page");
+
+    const cartBlock = document.querySelector(".p-to-cart-block");
+    if (cartBlock && !document.querySelector(".ds9-product-assurance")) {
+      const assurance = document.createElement("div");
+      assurance.className = "ds9-product-assurance";
+      assurance.innerHTML = list("productPage.assurances", ["Ručne a lokálne potlačené", "Doprava zdarma od 50 €", "Bezpečná platba"])
+        .map((item) => `<span><i aria-hidden="true">✓</i>${escapeHTML(item)}</span>`)
+        .join("");
+      cartBlock.insertAdjacentElement("afterend", assurance);
+    }
+
+    const related = document.querySelector(".products-related");
+    if (related && !document.querySelector(".ds9-related-intro")) {
+      const intro = document.createElement("div");
+      intro.className = "ds9-related-intro";
+      intro.innerHTML = `<p>${escapeHTML(get("productPage.relatedEyebrow", "DÁVA ZMYSEL SPOLU"))}</p><h2>${escapeHTML(get("productPage.relatedHeadline", "Ešte jedna veta do nálady."))}</h2><span>${escapeHTML(get("productPage.relatedCopy", "Doplnky a kúsky, ktoré sa k tomuto produktu prirodzene hodia."))}</span>`;
+      related.parentNode.insertBefore(intro, related);
+      related.classList.add("ds9-related-products");
+    }
+  };
+
+  const enhanceCart = () => {
+    if (!isCart()) return;
+    document.body.classList.add("ds9-cart-page");
+
+    const delivery = document.querySelector(".extra.delivery");
+    delivery?.classList.add("ds9-shipping-progress");
+
+    const summary = document.querySelector(".row.summary");
+    if (summary && !document.querySelector(".ds9-cart-confidence")) {
+      const block = document.createElement("aside");
+      block.className = "ds9-cart-confidence";
+      block.innerHTML = `<div>${list("cart.confidence", ["Lokálna výroba", "Bezpečná platba", "Doprava zdarma od 50 €"])
+        .map((item) => `<span><i aria-hidden="true">✓</i>${escapeHTML(item)}</span>`)
+        .join("")}</div><a href="${safeURL(get("cart.addOnUrl", "/doplnky/"))}"><strong>${escapeHTML(get("cart.addOnLabel", "Drobnosť, ktorá dotiahne košík"))}</strong><small>${escapeHTML(get("cart.addOnCopy", "Pozri doplnky bez zbytočného presviedčania."))}</small><b aria-hidden="true">↗</b></a>`;
+      summary.insertAdjacentElement("afterend", block);
+    }
+  };
+
+  const enhanceThankYou = () => {
+    if (!isThankYou()) return;
+    const content = document.querySelector("#content .content-inner, #content");
+    if (!content || document.querySelector(".ds9-post-purchase")) return;
+    const section = document.createElement("section");
+    section.className = "ds9-post-purchase";
+    section.innerHTML = `<p>${escapeHTML(get("postPurchase.eyebrow", "OBJEDNÁVKA JE U NÁS"))}</p><h2>${escapeHTML(get("postPurchase.headline", "Tvoje slová už idú do sveta."))}</h2><span>${escapeHTML(get("postPurchase.copy", "Keď kúsok dorazí, označ nás. Možno sa v tom nájde niekto ďalší."))}</span><a href="${safeURL(get("postPurchase.buttonUrl", "/produkty-podla-textu/"))}">${escapeHTML(get("postPurchase.buttonLabel", "Pozrieť ďalšie nálady"))} →</a>`;
+    content.appendChild(section);
   };
 
   const initMotion = () => {
-    const home = document.querySelector(".ds8-home");
+    const home = document.querySelector(".ds9-home");
     if (!home || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    document.documentElement.classList.add("ds8-motion-ready");
+    document.documentElement.classList.add("ds9-motion-ready");
 
     if ("IntersectionObserver" in window) {
       const observer = new IntersectionObserver(
@@ -215,79 +385,108 @@
           entry.target.classList.add("is-visible");
           observer.unobserve(entry.target);
         }),
-        { rootMargin: "0px 0px -8%", threshold: 0.12 },
+        { rootMargin: "0px 0px -8%", threshold: 0.1 },
       );
-      home.querySelectorAll("[data-ds8-reveal]").forEach((node) => observer.observe(node));
+      home.querySelectorAll("[data-ds9-reveal]").forEach((node) => observer.observe(node));
     } else {
-      home.querySelectorAll("[data-ds8-reveal]").forEach((node) => node.classList.add("is-visible"));
+      home.querySelectorAll("[data-ds9-reveal]").forEach((node) => node.classList.add("is-visible"));
     }
 
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      const hero = home.querySelector(".ds8-hero");
-      if (hero) {
-        hero.addEventListener("pointermove", (event) => {
-          const rect = hero.getBoundingClientRect();
-          const x = (event.clientX - rect.left) / rect.width - 0.5;
-          const y = (event.clientY - rect.top) / rect.height - 0.5;
-          hero.style.setProperty("--ds8-hero-x", `${x * 24}px`);
-          hero.style.setProperty("--ds8-hero-y", `${y * 18}px`);
-          hero.style.setProperty("--ds8-hero-rx", `${y * -2.8}deg`);
-          hero.style.setProperty("--ds8-hero-ry", `${x * 3.2}deg`);
-        });
-        hero.addEventListener("pointerleave", () => {
-          ["--ds8-hero-x", "--ds8-hero-y", "--ds8-hero-rx", "--ds8-hero-ry"].forEach((name) => hero.style.removeProperty(name));
-        });
-      }
+      const hero = home.querySelector(".ds9-hero");
+      hero?.addEventListener("pointermove", (event) => {
+        const rect = hero.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+        hero.style.setProperty("--ds9-hero-x", `${x * 22}px`);
+        hero.style.setProperty("--ds9-hero-y", `${y * 17}px`);
+        hero.style.setProperty("--ds9-hero-rx", `${y * -2.5}deg`);
+        hero.style.setProperty("--ds9-hero-ry", `${x * 3}deg`);
+      });
+      hero?.addEventListener("pointerleave", () => {
+        ["--ds9-hero-x", "--ds9-hero-y", "--ds9-hero-rx", "--ds9-hero-ry"].forEach((name) => hero.style.removeProperty(name));
+      });
 
-      home.querySelectorAll(".ds8-tilt-card").forEach((card) => {
+      home.querySelectorAll(".ds9-tilt-card").forEach((card) => {
         card.addEventListener("pointermove", (event) => {
           const rect = card.getBoundingClientRect();
           const x = (event.clientX - rect.left) / rect.width;
           const y = (event.clientY - rect.top) / rect.height;
-          card.style.setProperty("--ds8-tilt-x", `${(0.5 - y) * 7}deg`);
-          card.style.setProperty("--ds8-tilt-y", `${(x - 0.5) * 7}deg`);
-          card.style.setProperty("--ds8-glow-x", `${x * 100}%`);
-          card.style.setProperty("--ds8-glow-y", `${y * 100}%`);
+          card.style.setProperty("--ds9-tilt-x", `${(0.5 - y) * 6}deg`);
+          card.style.setProperty("--ds9-tilt-y", `${(x - 0.5) * 6}deg`);
         });
         card.addEventListener("pointerleave", () => {
-          card.style.setProperty("--ds8-tilt-x", "0deg");
-          card.style.setProperty("--ds8-tilt-y", "0deg");
+          card.style.setProperty("--ds9-tilt-x", "0deg");
+          card.style.setProperty("--ds9-tilt-y", "0deg");
         });
       });
     }
 
-    const parallaxImage = home.querySelector(".ds8-parallax-frame img");
+    const parallaxImage = home.querySelector(".ds9-parallax-frame img");
     if (parallaxImage && window.matchMedia("(min-width: 821px)").matches) {
       let ticking = false;
-      const updateParallax = () => {
+      const update = () => {
         const rect = parallaxImage.getBoundingClientRect();
         const center = rect.top + rect.height / 2 - window.innerHeight / 2;
-        const shift = Math.max(-22, Math.min(22, center * -0.035));
-        parallaxImage.style.setProperty("--ds8-parallax-y", `${shift}px`);
+        parallaxImage.style.setProperty("--ds9-parallax-y", `${Math.max(-22, Math.min(22, center * -0.035))}px`);
         ticking = false;
       };
       window.addEventListener("scroll", () => {
         if (ticking) return;
         ticking = true;
-        window.requestAnimationFrame(updateParallax);
+        window.requestAnimationFrame(update);
       }, { passive: true });
-      updateParallax();
+      update();
     }
   };
 
   const init = () => {
+    if (started) return;
+    started = true;
+    CONFIG = window.DOTYK_SLOV_THEME || {};
+    removeLegacyState();
     ensureFont();
-    document.documentElement.classList.add("ds-clean-theme", "ds8-theme");
-    document.body.classList.add("ds-clean-theme", "ds8-theme");
+    applyDesignTokens();
+    document.documentElement.classList.add("ds9-theme");
+    document.body.classList.add("ds9-theme");
     enhanceHeader();
     enhanceFooter();
     enhanceHomepage();
+    enhanceProductPage();
+    enhanceCart();
+    enhanceThankYou();
     initMotion();
   };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
-  } else {
-    init();
-  }
+  const startWhenReady = () => {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
+  };
+
+  const loadConfiguration = () => {
+    if (window.DOTYK_SLOV_THEME) {
+      startWhenReady();
+      return;
+    }
+
+    const existing = document.querySelector("script[data-ds9-config]");
+    if (existing) {
+      existing.addEventListener("load", startWhenReady, { once: true });
+      existing.addEventListener("error", startWhenReady, { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = CONFIG_URL;
+    script.async = true;
+    script.dataset.ds9Config = "true";
+    script.addEventListener("load", startWhenReady, { once: true });
+    script.addEventListener("error", startWhenReady, { once: true });
+    document.head.appendChild(script);
+  };
+
+  loadConfiguration();
 })();
