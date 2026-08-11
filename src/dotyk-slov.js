@@ -1,7 +1,8 @@
 (() => {
   "use strict";
 
-  const CONFIG_URL = "https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js";
+  const REMOTE_CONFIG_URL = "https://dotyk-slov-template-admin.matuasiak.chatgpt.site/api/config";
+  const FALLBACK_CONFIG_URL = "https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js";
   let CONFIG = window.DOTYK_SLOV_THEME || {};
   let started = false;
   const FALLBACK_ASSETS = "https://matuasiak.github.io/dotyk-slov-assets/images";
@@ -53,7 +54,7 @@
     ];
     document.documentElement.classList.remove(...legacy);
     document.body.classList.remove(...legacy);
-    document.querySelectorAll(".ds-home,.ds8-home,.ds8-footer-brand,.ds-footer-brand").forEach((node) => node.remove());
+    document.querySelectorAll(".ds-home,.ds8-home,.ds8-footer-brand,.ds-footer-brand,.ds-quicknav,#ds-topbar").forEach((node) => node.remove());
   };
 
   const ensureFont = () => {
@@ -279,6 +280,36 @@
     host.appendChild(section);
   };
 
+  const prepareProductTabs = (home) => {
+    const sections = [...home.querySelectorAll(".ds9-native-product-section")];
+    if (sections.length < 2) return;
+    const tabs = document.createElement("div");
+    tabs.className = "ds9-product-tabs";
+    tabs.setAttribute("role", "tablist");
+    sections.forEach((section, index) => {
+      const title = section.querySelector(".homepage-group-title")?.textContent?.trim() || `Kolekcia ${index + 1}`;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `ds9-product-tab${index === 0 ? " is-active" : ""}`;
+      button.textContent = title;
+      button.setAttribute("role", "tab");
+      button.setAttribute("aria-selected", index === 0 ? "true" : "false");
+      section.classList.toggle("is-active", index === 0);
+      button.addEventListener("click", () => {
+        tabs.querySelectorAll(".ds9-product-tab").forEach((tab) => {
+          tab.classList.remove("is-active");
+          tab.setAttribute("aria-selected", "false");
+        });
+        sections.forEach((item) => item.classList.remove("is-active"));
+        button.classList.add("is-active");
+        button.setAttribute("aria-selected", "true");
+        section.classList.add("is-active");
+      });
+      tabs.appendChild(button);
+    });
+    home.querySelector(".ds9-products-stack")?.before(tabs);
+  };
+
   const enhanceHomepage = () => {
     if (!isHomepage()) return;
     const content = document.querySelector("#content");
@@ -313,6 +344,7 @@
 
     const productsHost = home.querySelector(".ds9-products-stack");
     groups.forEach((group, index) => prepareNativeProductGroup(group, index, productsHost));
+    prepareProductTabs(home);
     if (!groups.length) {
       productsHost.innerHTML = '<a class="ds9-products-empty" href="/oblecenie/">Produkty nastavíš v Shoptete v časti Produkty → Titulná strana.</a>';
     }
@@ -466,12 +498,7 @@
     }
   };
 
-  const loadConfiguration = () => {
-    if (window.DOTYK_SLOV_THEME) {
-      startWhenReady();
-      return;
-    }
-
+  const loadFallbackConfiguration = () => {
     const existing = document.querySelector("script[data-ds9-config]");
     if (existing) {
       existing.addEventListener("load", startWhenReady, { once: true });
@@ -480,13 +507,45 @@
     }
 
     const script = document.createElement("script");
-    script.src = CONFIG_URL;
+    script.src = FALLBACK_CONFIG_URL;
     script.async = true;
     script.dataset.ds9Config = "true";
-    script.addEventListener("load", startWhenReady, { once: true });
+    script.addEventListener("load", () => {
+      document.documentElement.dataset.ds9ConfigSource = "fallback";
+      startWhenReady();
+    }, { once: true });
     script.addEventListener("error", startWhenReady, { once: true });
     document.head.appendChild(script);
   };
 
-  loadConfiguration();
+  const loadConfiguration = async () => {
+    const inlineConfig = window.DOTYK_SLOV_THEME;
+    const controller = "AbortController" in window ? new AbortController() : null;
+    const timeout = window.setTimeout(() => controller?.abort(), 2400);
+    try {
+      const response = await window.fetch(REMOTE_CONFIG_URL, {
+        cache: "no-store",
+        credentials: "omit",
+        signal: controller?.signal,
+      });
+      if (!response.ok) throw new Error(`Remote theme config returned ${response.status}`);
+      const payload = await response.json();
+      if (!payload?.config || typeof payload.config !== "object") throw new Error("Remote theme config is invalid");
+      window.DOTYK_SLOV_THEME = payload.config;
+      document.documentElement.dataset.ds9ConfigSource = "backoffice";
+      startWhenReady();
+    } catch {
+      if (inlineConfig) {
+        window.DOTYK_SLOV_THEME = inlineConfig;
+        document.documentElement.dataset.ds9ConfigSource = "inline";
+        startWhenReady();
+      } else {
+        loadFallbackConfiguration();
+      }
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  };
+
+  void loadConfiguration();
 })();
