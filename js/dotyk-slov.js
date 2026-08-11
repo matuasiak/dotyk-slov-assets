@@ -1,16 +1,144 @@
-(()=>{"use strict";
-const home=()=>document.body.classList.contains("in-index")||location.pathname==="/"||location.pathname==="";
-const img={hero:"https://cdn.myshoptet.com/usr/808782.myshoptet.com/user/banners/banner_new_desktop_(2)-1.png?6a00f7a1",tees:"https://www.dotykslov.sk/user/documents/upload/tricko.png",crop:"https://www.dotykslov.sk/user/documents/upload/crop_1.png",limit:"https://www.dotykslov.sk/user/documents/upload/limitka.png",p1:"https://cdn.myshoptet.com/usr/808782.myshoptet.com/user/shop/detail/1965-1_oversized-unisex-tricko--biela-anti-social-dog-owner.png?ff=1&x=423&y=318&q=85&ts=6a71d1aa&sg=2175fb9d",p2:"https://cdn.myshoptet.com/usr/808782.myshoptet.com/user/shop/detail/1962_oversized-unisex-tricko--cierna-overthinking-breaks-your-heart.png?ff=1&x=423&y=318&q=85&ts=6a718ca1&sg=2175fb9d",p3:"https://cdn.myshoptet.com/usr/808782.myshoptet.com/user/shop/detail/1950_oversized-unisex-tricko--kremova-dobre-rano--k-k-ti--limitovana-edicia-.png?ff=1&x=423&y=318&q=85&ts=6a6b204e&sg=2175fb9d",p4:"https://cdn.myshoptet.com/usr/808782.myshoptet.com/user/shop/detail/1947_boxy-oversized-unisex-tricko--olive-svet-je-trosku-v-prdeli--ale-vonku-je-stale-krasne--limitovana-edicia-.png?ff=1&x=423&y=318&q=85&ts=6a6a247a&sg=2175fb9d"};
-const product=(url,pic,badge,name,price,pink="")=>`<article class="ds-product"><a href="${url}"><div class="ds-product-media"><span class="ds-badge ${pink}">${badge}</span><img src="${pic}" alt="${name}" loading="lazy"></div><div class="ds-product-copy"><h3>${name}</h3><div class="ds-product-row"><span class="ds-price">${price}</span><span class="ds-buy">Pozrieť +</span></div></div></a></article>`;
-const markup=`<div class="ds-home">
-<section class="ds-hero"><div class="ds-shell ds-hero-grid"><div class="ds-hero-copy"><p class="ds-kicker">Nová kolekcia · 2026</p><h1>Nie všetko <em>treba povedať</em> nahlas.</h1><p class="ds-hero-text">Tak sme to dali na tričko. Pre ľudí, ktorí cítia veľa, hovoria menej a aj tak povedia dosť.</p><div class="ds-actions"><a class="ds-btn" href="#ds-new">Pozrieť novinky</a><a class="ds-btn alt" href="#ds-moods">Vybrať podľa nálady</a></div></div><div class="ds-hero-media"><img src="${img.hero}" alt="Dotyk Slov — nová kolekcia"><div class="ds-sticker">mám toho dosť.<br>ale esteticky.</div></div></div></section>
-<section class="ds-trust"><div class="ds-shell ds-trust-grid"><div class="ds-trust-item"><span class="ds-num">01</span><div><strong>Originálne texty</strong><small>Ktoré inde nenájdeš.</small></div></div><div class="ds-trust-item"><span class="ds-num">02</span><div><strong>Lokálna výroba</strong><small>Každý kus robíme u nás.</small></div></div><div class="ds-trust-item"><span class="ds-num">03</span><div><strong>Poctivý materiál</strong><small>Kvalita, ktorú cítiš.</small></div></div><div class="ds-trust-item"><span class="ds-num">04</span><div><strong>Doprava zdarma</strong><small>Pri nákupe nad 50 €.</small></div></div></div></section>
-<section class="ds-section"><div class="ds-shell"><div class="ds-head"><div><span class="ds-overline">Vyber si svoju formu komunikácie</span><h2 class="ds-title">Čo si dnes <em>oblečieš?</em></h2></div><a class="ds-link" href="/oblecenie/">Všetko oblečenie ↗</a></div><div class="ds-categories"><a class="ds-category" href="/unisex-tricka/"><img src="${img.tees}" alt="Tričká"><span class="ds-category-label"><strong>Tričká</strong><i class="ds-arrow">↗</i></span></a><a class="ds-category" href="/crop-topy/"><img src="${img.crop}" alt="Cropy"><span class="ds-category-label"><strong>Cropy</strong><i class="ds-arrow">↗</i></span></a><a class="ds-category" href="/mikiny/"><img src="${img.p4}" alt="Mikiny"><span class="ds-category-label"><strong>Mikiny</strong><i class="ds-arrow">↗</i></span></a><a class="ds-category" href="/limitky/"><img src="${img.limit}" alt="Limitky"><span class="ds-category-label"><strong>Limitky</strong><i class="ds-arrow">↗</i></span></a><a class="ds-category" href="/doplnky/"><img src="${img.p3}" alt="Doplnky"><span class="ds-category-label"><strong>Doplnky</strong><i class="ds-arrow">↗</i></span></a></div></div></section>
-<section class="ds-section ds-products-section" id="ds-new"><div class="ds-shell"><div class="ds-head"><div><span class="ds-overline">Aktuálne vnútorné monológy</span><h2 class="ds-title">Práve sa <em>nosí.</em></h2></div><a class="ds-link" href="/tricka/">Zobraziť všetky ↗</a></div><div class="ds-products">${product("/oversized-unisex-tricko--biela-anti-social-dog-owner/",img.p1,"Novinka","Oversized UNISEX tričko — ANTI-SOCIAL DOG OWNER","24,90 €")}${product("/oversized-unisex-tricko--cierna-overthinking-breaks-your-heart/",img.p2,"-20 %","Oversized UNISEX tričko — OVERTHINKING BREAKS YOUR HEART","19,90 €","pink")}${product("/oversized-unisex-tricko--kremova-dobre-rano--k-k-ti/",img.p3,"Limitka","Oversized UNISEX tričko — DOBRÉ RÁNO, K*K*TI","24,90 €")}${product("/boxy-oversized-unisex-tricko--olive-svet-je-trosku-v-prdeli--ale-vonku-je-stale-krasne--limitovana-edicia-/",img.p4,"Limitka","Boxy oversized tričko — SVET JE TROŠKU V PRDELI","28,90 €","pink")}</div></div></section>
-<section class="ds-section" id="ds-moods"><div class="ds-shell"><div class="ds-head"><div><span class="ds-overline">Nemusíš vedieť, čo chceš</span><h2 class="ds-title">Stačí vedieť, <em>ako ti je.</em></h2></div></div><div class="ds-moods"><a class="ds-mood" href="/produkty-podla-textu/"><small>Mood 01 · overthinking</small><strong>Moja hlava má <em>otvorených</em> 47 kariet.</strong><p>Pre ľudí, ktorí si prehrávajú rozhovor ešte tri dni po tom, čo sa stal.</p></a><a class="ds-mood" href="/produkty-podla-textu/"><small>Mood 02 · introvert</small><strong>Small talk? <em>Nie, ďakujem.</em></strong><p>Sociálna baterka na troch percentách. Estetika na sto.</p></a><a class="ds-mood" href="/produkty-podla-textu/"><small>Mood 03 · jemný chaos</small><strong>Fungujem. <em>Asi.</em></strong><p>Dôležité je vyzerať, že máš plán.</p></a><a class="ds-mood" href="/produkty-podla-textu/"><small>Mood 04 · podľa počasia</small><strong>Citovo nedostupný, <em>ale milý.</em></strong><p>Pre emócie, ktoré si si zatiaľ nechal/a v konceptoch.</p></a></div></div></section>
-<section class="ds-quote"><div><blockquote>Oblečenie pre ľudí, ktorí <em>cítia veľa.</em></blockquote><p>Ak toto chápeš, patríš sem.</p></div></section>
-<section class="ds-section"><div class="ds-shell ds-story"><div class="ds-story-media"><img src="${img.hero}" alt="Lokálna tvorba Dotyk Slov" loading="lazy"></div><div class="ds-story-copy"><span class="ds-overline">Nie sme továreň na generické tričká</span><h2>Myšlienka. <em>Ruky. Potlač.</em></h2><p>Každý text vznikne u nás. Každý kus prejde našimi rukami. Žiadny anonymný veľkosklad. Len oblečenie, ktoré niečo povie aj vtedy, keď sa ti nechce.</p><div class="ds-points"><div class="ds-point"><span>01</span><div><strong>Autorský text</strong><small>Nie z Pinterestu. Z reálneho života.</small></div></div><div class="ds-point"><span>02</span><div><strong>Ručná lokálna potlač</strong><small>Každý kus robíme v našej dielni.</small></div></div><div class="ds-point"><span>03</span><div><strong>Kontrola kvality</strong><small>Lebo detail si všimneš, aj keď nič nepovieš.</small></div></div></div><a class="ds-btn alt" href="/o-nas/">Spoznaj Dotyk Slov</a></div></div></section>
-<section class="ds-news"><div class="ds-shell ds-news-grid"><div><h2>Občas napíšeme. <em>Nič toxické.</em></h2><p>Novinky, limitky a myšlienky, ktoré sa nezmestili na tričko.</p></div><a href="#formNewsletter"><span>Tvoj e-mail patrí sem.</span><strong>Chcem byť pri tom ↗</strong></a></div></section></div>`;
-const init=()=>{document.documentElement.classList.add("ds-js");if(!home()||document.querySelector(".ds-home"))return;document.body.classList.add("ds-home-active");const content=document.querySelector("#content")||document.querySelector("main")||document.querySelector("#content-wrapper");if(!content)return;content.insertAdjacentHTML("afterbegin",markup)};
-document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init,{once:true}):init();
+(() => {
+  "use strict";
+
+  const isHomepage = () =>
+    document.body.classList.contains("in-index") ||
+    window.location.pathname === "/" ||
+    window.location.pathname === "";
+
+  const homepageMarkup = `
+    <div class="ds-home ds-clean-home">
+      <section class="ds-clean-hero" aria-labelledby="ds-clean-title">
+        <div class="ds-clean-shell ds-clean-hero-grid">
+          <div class="ds-clean-hero-copy">
+            <p class="ds-clean-kicker">Dotyk Slov · oblečenie, ktoré povie dosť</p>
+            <h1 id="ds-clean-title">Nie všetko treba povedať nahlas.</h1>
+            <p>Pre ľudí, ktorí cítia veľa, hovoria menej a chcú nosiť niečo, čo ich naozaj vystihuje.</p>
+            <div class="ds-clean-actions">
+              <a class="ds-clean-button" href="#ds-products">Pozrieť novinky</a>
+              <a class="ds-clean-button ds-clean-button--quiet" href="/oblecenie/">Všetko oblečenie</a>
+            </div>
+          </div>
+
+          <nav class="ds-clean-categories" aria-label="Hlavné kategórie">
+            <a href="/unisex-tricka/"><span>01</span><strong>Tričká</strong><i>→</i></a>
+            <a href="/crop-topy/"><span>02</span><strong>Cropy</strong><i>→</i></a>
+            <a href="/mikiny/"><span>03</span><strong>Mikiny</strong><i>→</i></a>
+            <a href="/doplnky/"><span>04</span><strong>Doplnky</strong><i>→</i></a>
+            <a href="/limitky/"><span>05</span><strong>Limitky</strong><i>→</i></a>
+            <a href="/vytvor-si-vlastne-tricko-2/"><span>06</span><strong>Vlastný text</strong><i>→</i></a>
+          </nav>
+        </div>
+      </section>
+
+      <section class="ds-clean-benefits" aria-label="Výhody nákupu">
+        <div class="ds-clean-shell ds-clean-benefits-grid">
+          <div><strong>Originálne texty</strong><span>Nie z Pinterestu. Zo života.</span></div>
+          <div><strong>Lokálna výroba</strong><span>Každý kus prejde našimi rukami.</span></div>
+          <div><strong>Doprava zdarma</strong><span>Pri nákupe nad 50 €.</span></div>
+          <div><strong>Jednoduchá výmena</strong><span>Keď veľkosť netrafí náladu.</span></div>
+        </div>
+      </section>
+
+      <section class="ds-clean-products-intro" id="ds-products">
+        <div class="ds-clean-shell">
+          <p>Vybrané vnútorné monológy</p>
+          <div>
+            <h2>Práve sa nosí.</h2>
+            <a href="/oblecenie/">Zobraziť všetko <span>→</span></a>
+          </div>
+        </div>
+      </section>
+    </div>`;
+
+  const statementMarkup = `
+    <section class="ds-clean-statement">
+      <div class="ds-clean-shell">
+        <p>Nie iba potlač. Skôr myšlienka, ktorú nemusíš vysvetľovať.</p>
+        <div>
+          <strong>Ak toto chápeš,<br>patríš sem.</strong>
+          <a href="/o-nas/">O Dotyku Slov <span>→</span></a>
+        </div>
+      </div>
+    </section>`;
+
+  const enhanceHeader = () => {
+    const header = document.querySelector("#header");
+    if (!header) return;
+
+    const searchInput = header.querySelector(".search-input");
+    if (searchInput) searchInput.placeholder = "Čo chceš povedať bez slov?";
+
+    const buttons = header.querySelector(".navigation-buttons");
+    if (!buttons || buttons.querySelector(".ds-account-link")) return;
+
+    const accountSource = header.querySelector('[data-testid="signin"]');
+    if (!accountSource) return;
+
+    const account = document.createElement("a");
+    account.className = "ds-account-link";
+    account.href = accountSource.getAttribute("href") || "/login/";
+    account.rel = "nofollow";
+    account.setAttribute("aria-label", "Prihlásenie a účet");
+    account.innerHTML =
+      '<span class="ds-account-icon" aria-hidden="true"></span><span class="ds-account-text">Účet</span>';
+
+    const cart = buttons.querySelector(".cart-count");
+    buttons.insertBefore(account, cart || buttons.lastElementChild);
+  };
+
+  const enhanceFooter = () => {
+    const footer = document.querySelector("#footer");
+    if (!footer || footer.querySelector(".ds-footer-brand")) return;
+
+    footer.insertAdjacentHTML(
+      "afterbegin",
+      '<div class="container ds-footer-brand"><strong>DOTYK SLOV</strong><p>Nie všetko treba povedať nahlas.</p></div>',
+    );
+  };
+
+  const enhanceHomepage = () => {
+    if (!isHomepage()) return;
+
+    document.body.classList.add("ds-home-active", "ds-clean-home-active");
+    const content = document.querySelector("#content");
+    if (!content) return;
+
+    const existingHomepage = content.querySelector(":scope > .ds-home");
+    if (existingHomepage) existingHomepage.remove();
+    content.insertAdjacentHTML("afterbegin", homepageMarkup);
+
+    const productHeadings = [
+      ...content.querySelectorAll(":scope > .homepage-group-title"),
+    ];
+    productHeadings.forEach((heading, index) => {
+      heading.classList.add("ds-native-product-heading");
+      if (index === 0)
+        heading.classList.add("ds-native-product-heading--first");
+    });
+
+    content
+      .querySelectorAll(":scope > .products-wrapper")
+      .forEach((wrapper) => wrapper.classList.add("ds-native-products"));
+
+    const lastProducts = content.querySelector(
+      ":scope > .products-wrapper:last-of-type",
+    );
+    if (lastProducts)
+      lastProducts.insertAdjacentHTML("afterend", statementMarkup);
+  };
+
+  const init = () => {
+    document.documentElement.classList.add("ds-clean-theme");
+    document.body.classList.add("ds-clean-theme");
+    enhanceHeader();
+    enhanceFooter();
+    enhanceHomepage();
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
 })();
