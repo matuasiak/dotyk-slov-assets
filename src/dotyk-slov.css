@@ -16,7 +16,7 @@
 }
 
 html.ds9-theme { scroll-behavior: smooth; scroll-padding-top: 158px; }
-body.ds9-theme { overflow-x: hidden; background: var(--ds9-paper) !important; color: var(--ds9-ink) !important; font-family: var(--ds9-font) !important; -webkit-font-smoothing: antialiased; }
+body.ds9-theme { overflow-x: hidden; padding-top: 0 !important; background: var(--ds9-paper) !important; color: var(--ds9-ink) !important; font-family: var(--ds9-font) !important; -webkit-font-smoothing: antialiased; }
 body.ds9-theme a { text-decoration: none; }
 body.ds9-theme img { max-width: 100%; }
 body.ds9-theme #ds-topbar,
@@ -35,17 +35,17 @@ body.ds9-theme #header .container { max-width: none !important; }
 body.ds9-theme #header .header-top { width: 100% !important; display: block !important; }
 
 @media (min-width: 992px) {
-  body.ds9-theme #header .header-top-wrapper { position: relative !important; width: calc(100% - 56px) !important; max-width: var(--ds9-shell) !important; min-height: 74px !important; height: 74px !important; margin: auto !important; padding: 0 !important; display: grid !important; grid-template-columns: 190px minmax(260px, 1fr) auto !important; align-items: center !important; gap: clamp(24px, 4vw, 64px) !important; }
-  body.ds9-theme #header .site-name { position: static !important; width: auto !important; margin: 0 !important; padding: 0 !important; line-height: 1 !important; }
+  body.ds9-theme #header .header-top-wrapper { position: relative !important; width: calc(100% - 56px) !important; max-width: var(--ds9-shell) !important; min-height: 74px !important; height: 74px !important; margin: auto !important; padding: 0 !important; display: grid !important; grid-template-columns: 190px minmax(260px, 1fr) auto !important; grid-template-areas: "logo search actions" !important; align-items: center !important; gap: clamp(24px, 4vw, 64px) !important; }
+  body.ds9-theme #header .site-name { grid-area: logo !important; grid-column: 1 !important; grid-row: 1 !important; position: static !important; width: 190px !important; margin: 0 !important; padding: 0 !important; line-height: 1 !important; justify-self: start !important; }
   body.ds9-theme #header .site-name a { min-height: 44px; display: flex !important; align-items: center !important; color: var(--ds9-ink) !important; }
   body.ds9-theme #header .site-name img { display: none !important; }
   body.ds9-theme #header .site-name a::before { content: "DOTYK SLOV."; display: block; color: var(--ds9-ink); font: 800 21px/1 var(--ds9-font); letter-spacing: -.055em; }
-  body.ds9-theme #header .search { position: static !important; width: 100% !important; height: 46px !important; margin: 0 !important; padding: 0 !important; opacity: 1 !important; display: block !important; }
+  body.ds9-theme #header .search { grid-area: search !important; grid-column: 2 !important; grid-row: 1 !important; position: static !important; width: 100% !important; max-width: 680px !important; height: 46px !important; margin: 0 auto !important; padding: 0 !important; opacity: 1 !important; display: block !important; justify-self: center !important; }
   body.ds9-theme #header .search-form,
   body.ds9-theme #header .search-form fieldset { position: relative !important; width: 100% !important; height: 46px !important; margin: 0 !important; padding: 0 !important; display: block !important; border: 0 !important; }
   body.ds9-theme #header .search-input { box-sizing: border-box !important; width: 100% !important; height: 46px !important; margin: 0 !important; padding: 0 54px 0 18px !important; border: 1px solid var(--ds9-line) !important; border-radius: 999px !important; background: rgba(255, 255, 255, .72) !important; color: var(--ds9-ink) !important; font: 500 12px/1 var(--ds9-font) !important; box-shadow: none !important; }
   body.ds9-theme #header .search-button { position: absolute !important; right: 4px !important; top: 3px !important; width: 40px !important; height: 40px !important; margin: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important; color: var(--ds9-ink) !important; }
-  body.ds9-theme #header .navigation-buttons { position: static !important; width: auto !important; height: auto !important; margin: 0 !important; padding: 0 !important; display: flex !important; align-items: center !important; justify-content: flex-end !important; gap: 8px !important; }
+  body.ds9-theme #header .navigation-buttons { grid-area: actions !important; grid-column: 3 !important; grid-row: 1 !important; position: static !important; inset: auto !important; width: max-content !important; min-width: 0 !important; height: 42px !important; margin: 0 !important; padding: 0 !important; display: flex !important; align-items: center !important; justify-content: flex-end !important; justify-self: end !important; align-self: center !important; gap: 8px !important; transform: none !important; }
   body.ds9-theme #header .navigation-buttons > a { position: relative !important; inset: auto !important; min-height: 42px !important; height: 42px !important; margin: 0 !important; padding: 0 14px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; border: 1px solid var(--ds9-line) !important; border-radius: 999px !important; background: rgba(255,255,255,.58) !important; color: var(--ds9-ink) !important; box-shadow: none !important; font: 650 11px/1 var(--ds9-font) !important; }
   body.ds9-theme #header .navigation-buttons > [data-target="search"],
   body.ds9-theme #header .navigation-buttons > .toggle-window:not(.cart-count):not(.ds9-account-link) { display: none !important; }
