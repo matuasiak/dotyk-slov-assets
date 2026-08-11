@@ -53,7 +53,7 @@
     ];
     document.documentElement.classList.remove(...legacy);
     document.body.classList.remove(...legacy);
-    document.querySelectorAll(".ds-home,.ds8-home,.ds8-footer-brand,.ds-footer-brand").forEach((node) => node.remove());
+    document.querySelectorAll(".ds-home,.ds8-home,.ds8-footer-brand,.ds-footer-brand,.ds-quicknav,#ds-topbar").forEach((node) => node.remove());
   };
 
   const ensureFont = () => {
@@ -279,6 +279,36 @@
     host.appendChild(section);
   };
 
+  const prepareProductTabs = (home) => {
+    const sections = [...home.querySelectorAll(".ds9-native-product-section")];
+    if (sections.length < 2) return;
+    const tabs = document.createElement("div");
+    tabs.className = "ds9-product-tabs";
+    tabs.setAttribute("role", "tablist");
+    sections.forEach((section, index) => {
+      const title = section.querySelector(".homepage-group-title")?.textContent?.trim() || `Kolekcia ${index + 1}`;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `ds9-product-tab${index === 0 ? " is-active" : ""}`;
+      button.textContent = title;
+      button.setAttribute("role", "tab");
+      button.setAttribute("aria-selected", index === 0 ? "true" : "false");
+      section.classList.toggle("is-active", index === 0);
+      button.addEventListener("click", () => {
+        tabs.querySelectorAll(".ds9-product-tab").forEach((tab) => {
+          tab.classList.remove("is-active");
+          tab.setAttribute("aria-selected", "false");
+        });
+        sections.forEach((item) => item.classList.remove("is-active"));
+        button.classList.add("is-active");
+        button.setAttribute("aria-selected", "true");
+        section.classList.add("is-active");
+      });
+      tabs.appendChild(button);
+    });
+    home.querySelector(".ds9-products-stack")?.before(tabs);
+  };
+
   const enhanceHomepage = () => {
     if (!isHomepage()) return;
     const content = document.querySelector("#content");
@@ -313,6 +343,7 @@
 
     const productsHost = home.querySelector(".ds9-products-stack");
     groups.forEach((group, index) => prepareNativeProductGroup(group, index, productsHost));
+    prepareProductTabs(home);
     if (!groups.length) {
       productsHost.innerHTML = '<a class="ds9-products-empty" href="/oblecenie/">Produkty nastavíš v Shoptete v časti Produkty → Titulná strana.</a>';
     }
