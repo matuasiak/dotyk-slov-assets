@@ -1,0 +1,59 @@
+/**
+ * Dotyk Slov — Shoptet design layer
+ * Stage 1: safe foundation. Full homepage styling will be added after
+ * inspecting the sandbox DOM and content structure.
+ */
+
+:root {
+  --ds-offwhite: #f8f5f1;
+  --ds-paper: #fffdfb;
+  --ds-pink: #f1dfe2;
+  --ds-pink-soft: #f8edef;
+  --ds-ink: #191817;
+  --ds-muted: #716c68;
+  --ds-line: rgba(25, 24, 23, 0.12);
+  --ds-radius-sm: 12px;
+  --ds-radius-md: 20px;
+  --ds-radius-lg: 32px;
+  --ds-shadow: 0 16px 50px rgba(39, 31, 28, 0.08);
+  --ds-font: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ds-offwhite);
+  color: var(--ds-ink);
+  font-family: var(--ds-font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--ds-font);
+}
+
+::selection {
+  background: var(--ds-pink);
+  color: var(--ds-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
