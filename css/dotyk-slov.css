@@ -346,3 +346,107 @@ body.ds-theme #footer a { color: rgba(255,255,255,.72); }
   html.ds-theme { scroll-behavior: auto; }
   .ds-motion-ready .ds-reveal { opacity: 1; translate: 0; transition: none; }
 }
+
+
+/* DS 10.1.0 — Classic header repair and quieter editorial defaults */
+@media (min-width: 992px) {
+  body.ds-theme #header,
+  body.ds-theme #header .navigation-wrapper {
+    height: auto;
+  }
+
+  body.ds-theme #header .navigation-wrapper {
+    width: min(calc(100% - 56px), var(--ds-shell));
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  body.ds-theme #header .header-top {
+    width: 100%;
+    min-height: 74px;
+    height: auto;
+    margin: 0;
+    padding: 14px 0;
+    display: grid;
+    grid-template-columns: 190px minmax(260px, 1fr) auto;
+    grid-template-areas: "logo search actions";
+    align-items: center;
+    gap: clamp(24px, 4vw, 64px);
+  }
+
+  body.ds-theme #header .site-name-wrapper { grid-area: logo; width: 190px; }
+  body.ds-theme #header .search { grid-area: search; }
+  body.ds-theme #header .navigation-buttons { grid-area: actions; }
+
+  body.ds-theme #header #navigation {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border-top: 1px solid var(--ds-line);
+  }
+
+  body.ds-theme #header #navigation .navigation-in {
+    position: static;
+    inset: auto;
+    width: 100%;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  body.ds-theme #header #navigation .menu-level-1 {
+    width: 100%;
+    min-height: 48px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(18px, 2.8vw, 42px);
+  }
+
+  body.ds-theme #header #navigation .menu-level-1 > li,
+  body.ds-theme #header #navigation .menu-level-1 > li.splitted {
+    width: auto;
+    display: block;
+    visibility: visible;
+    flex: 0 0 auto;
+  }
+
+  body.ds-theme #header #navigation .menu-level-1 > li.appended-category,
+  body.ds-theme #header #navigation .navigationActions,
+  body.ds-theme #header #navigation .menu-helper {
+    display: none;
+  }
+}
+
+body.ds-theme #header .search-form .btn {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  width: auto;
+  min-width: 76px;
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ds-ink);
+  color: var(--ds-white);
+  font: 650 10px/1 var(--ds-font);
+}
+
+body.ds-home-page .ds-editorial { gap: 12px; }
+body.ds-home-page .ds-moods { padding: clamp(54px, 6vw, 88px) 12px; }
+body.ds-home-page .ds-mood-card { min-height: 460px; }
+body.ds-home-page .ds-section-title { margin-bottom: 30px; }
+body.ds-home-page .ds-section-title h2 { font-size: clamp(36px, 4.5vw, 64px); }
+
+@media (max-width: 991px) {
+  body.ds-home-page .ds-mood-card { min-height: 380px; }
+}

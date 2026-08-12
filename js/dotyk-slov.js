@@ -208,28 +208,34 @@
       .map((thought, index) => `<span class="ds-thought ds-thought--${index + 1}">${escapeHTML(thought)}</span>`)
       .join("");
 
-  const editorialMarkup = () => `
+  const editorialMarkup = () => [
+    enabled("editorialStatement", false) ? `
     <section class="ds-statement ds-reveal">
       <p class="ds-eyebrow ds-eyebrow--light">${escapeHTML(get("statement.eyebrow", "DOTYK SLOV / OD 2022"))}</p>
       <h2>${escapeHTML(get("statement.headline", "Nie merch. Nálada, ktorú si môžeš obliecť."))}</h2>
       <div>${factsMarkup()}</div>
-    </section>
+    </section>` : "",
+    enabled("editorialMoods", true) ? `
     <section class="ds-moods">
       <div class="ds-section-title ds-reveal"><p class="ds-eyebrow">${escapeHTML(get("moods.eyebrow", "PODĽA NÁLADY"))}</p><h2>${escapeHTML(get("moods.headline", "Nájdi sa. Alebo sa aspoň skús."))}</h2></div>
       <div class="ds-mood-grid">${moodMarkup()}</div>
-    </section>
+    </section>` : "",
+    enabled("editorialCustom", false) ? `
     <section class="ds-custom ds-reveal">
       <div><p class="ds-eyebrow ds-eyebrow--light">${escapeHTML(get("custom.eyebrow", "TVOJE SLOVÁ"))}</p><h2>${escapeHTML(get("custom.headline", "Máš vetu, ktorú nikto iný nemá?"))}</h2><p>${escapeHTML(get("custom.copy", "Pošli ju nám. My ju prenesieme na kúsok, ktorý bude iba tvoj."))}</p><a class="ds-button ds-button--light" href="${safeURL(get("custom.buttonUrl", "/vytvor-si-vlastne-tricko-2/"))}">${escapeHTML(get("custom.buttonLabel", "Vytvoriť vlastný kúsok"))}</a></div>
       <div class="ds-thoughts" aria-hidden="true">${thoughtsMarkup()}</div>
-    </section>
+    </section>` : "",
+    enabled("editorialStory", false) ? `
     <section class="ds-story ds-reveal">
       <div><img src="${safeURL(get("story.image", `${ASSET_ROOT}/dotyk-editorial-cream.webp`))}" alt="Dotyk Slov editorial" loading="lazy"></div>
       <article><p class="ds-eyebrow">${escapeHTML(get("story.eyebrow", "ZNAČKA S VLASTNÝM HLASOM"))}</p><h2>${escapeHTML(get("story.headline", "Vzniklo to z viet, ktoré ostali v hlave."))}</h2><p>${escapeHTML(get("story.copy", "Dotyk Slov je pre ľudí, ktorí cítia veľa, hovoria málo a humor používajú ako obranný mechanizmus."))}</p><a class="ds-text-link" href="${safeURL(get("story.buttonUrl", "/o-nas/"))}">${escapeHTML(get("story.buttonLabel", "Náš príbeh"))} →</a></article>
-    </section>
+    </section>` : "",
+    enabled("editorialNewsletter", false) ? `
     <section class="ds-newsletter ds-reveal">
       <div><p class="ds-eyebrow">${escapeHTML(get("newsletter.eyebrow", "TICHÁ POŠTA"))}</p><h2>${escapeHTML(get("newsletter.headline", "Občas ti niečo povieme. Nahlas nie."))}</h2></div>
       <a href="#formNewsletterWidget"><span>${escapeHTML(get("newsletter.placeholder", "tvoj@email.sk"))}</span><strong>${escapeHTML(get("newsletter.buttonLabel", "Chcem byť pri tom"))} →</strong></a>
-    </section>`;
+    </section>` : "",
+  ].join("");
 
   const enhanceEditorial = (content, groups) => {
     if (!enabled("editorialSections") || content.querySelector(":scope > .ds-editorial")) return;
@@ -237,7 +243,9 @@
     section.className = "ds-editorial";
     section.id = "ds-editorial";
     section.dataset.dsOwned = "editorial";
-    section.innerHTML = editorialMarkup();
+    const markup = editorialMarkup();
+    if (!markup.trim()) return;
+    section.innerHTML = markup;
     const anchor = groups.at(-1)?.wrapper || content.lastElementChild;
     if (anchor) anchor.insertAdjacentElement("afterend", section);
     else content.appendChild(section);
