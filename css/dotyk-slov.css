@@ -406,3 +406,258 @@ body.ds9-theme .siteCookies__button[value="all"] { background: var(--ds9-ink) !i
   .ds9-hero-media img { transform: scale(1.04); }
   .ds9-hero-content, .ds9-hero-depth-card, .ds9-mood-card { transform: none; }
 }
+
+
+/* DS9.3 structural repair: native Shoptet composition */
+body.ds9-theme .mcforms-wrapper { display: none !important; }
+
+@media (min-width: 992px) {
+  body.ds9-theme #header .ds9-account-link {
+    width: auto !important;
+    min-width: 78px !important;
+    padding-inline: 14px !important;
+  }
+  body.ds9-theme #header .menu-helper.visible {
+    position: absolute !important;
+    top: 50% !important;
+    right: 0 !important;
+    width: 72px !important;
+    min-width: 72px !important;
+    height: 34px !important;
+    padding: 0 !important;
+    transform: translateY(-50%) !important;
+    border: 1px solid var(--ds9-line) !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.72) !important;
+    box-shadow: none !important;
+  }
+  body.ds9-theme #header .menu-helper.visible::after { display: none !important; content: none !important; }
+  body.ds9-theme #header .menu-helper.visible > span {
+    display: flex !important;
+    width: 100% !important;
+    height: 100% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--ds9-ink) !important;
+    font: 700 10px/1 var(--ds9-font) !important;
+    letter-spacing: .08em !important;
+    text-transform: uppercase !important;
+  }
+  body.ds9-theme #header .menu-helper.visible > span::before { display: none !important; content: none !important; }
+  body.ds9-theme #header .menu-helper.visible > .menu-level-1 {
+    top: calc(100% + 10px) !important;
+    right: 0 !important;
+    left: auto !important;
+    min-width: 260px !important;
+    padding: 12px !important;
+    border: 1px solid var(--ds9-line) !important;
+    border-radius: 18px !important;
+    background: var(--ds9-white) !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,.12) !important;
+  }
+}
+
+.ds9-native-benefits,
+body.ds9-product-page .p-detail > .benefitBanner {
+  gap: 0 !important;
+  border: 1px solid var(--ds9-line) !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  background: rgba(255,255,255,.42) !important;
+}
+.ds9-native-benefits { grid-template-columns: repeat(4,minmax(0,1fr)) !important; }
+.ds9-native-benefits .benefitBanner__item,
+body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__item {
+  display: grid !important;
+  grid-template-columns: 48px minmax(0,1fr) !important;
+  align-items: center !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+  min-height: 132px !important;
+  padding: 22px !important;
+  border: 0 !important;
+  border-right: 1px solid var(--ds9-line) !important;
+  background: transparent !important;
+}
+.ds9-native-benefits .benefitBanner__item:last-child,
+body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__item:last-child { border-right: 0 !important; }
+.ds9-native-benefits .benefitBanner__picture,
+body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__picture {
+  width: 48px !important;
+  height: 48px !important;
+  margin: 0 !important;
+}
+.ds9-native-benefits .benefitBanner__img,
+body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__img {
+  width: 48px !important;
+  height: 48px !important;
+  object-fit: contain !important;
+}
+.ds9-native-benefits .benefitBanner__content,
+body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__content {
+  min-width: 0 !important;
+  padding: 0 !important;
+}
+.ds9-native-benefits .benefitBanner__title,
+body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__title {
+  display: block !important;
+  margin: 0 0 6px !important;
+  font: 700 14px/1.1 var(--ds9-font) !important;
+  letter-spacing: -.02em !important;
+}
+.ds9-native-benefits .benefitBanner__data,
+body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__data {
+  font: 450 12px/1.4 var(--ds9-font) !important;
+  color: rgba(11,11,11,.62) !important;
+}
+
+body.ds9-product-page .p-detail {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+body.ds9-product-page .p-detail > .js-hidden { display: none !important; }
+body.ds9-product-page .p-detail-inner {
+  display: grid !important;
+  grid-template-columns: minmax(0,1.06fr) minmax(390px,.94fr) !important;
+  align-items: start !important;
+  gap: clamp(38px,5vw,78px) !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+}
+body.ds9-product-page .p-detail-inner .p-image-wrapper {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+body.ds9-product-page .p-detail-inner .p-data-wrapper {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+body.ds9-product-page .p-detail .p-image {
+  display: block !important;
+  width: 100% !important;
+  min-height: 520px !important;
+  overflow: hidden !important;
+  border: 1px solid var(--ds9-line) !important;
+  border-radius: 24px !important;
+  background: #fff !important;
+}
+body.ds9-product-page .p-detail .p-image img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 auto !important;
+}
+body.ds9-product-page .p-detail .p-thumbnails {
+  margin-top: 14px !important;
+}
+body.ds9-product-page .p-detail h1 {
+  max-width: 14ch !important;
+  margin-bottom: 18px !important;
+  font-size: clamp(42px,4.4vw,68px) !important;
+}
+body.ds9-product-page .p-short-description {
+  margin-bottom: 24px !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+body.ds9-product-page .p-detail > .benefitBanner {
+  display: grid !important;
+  grid-template-columns: repeat(4,minmax(0,1fr)) !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: clamp(38px,5vw,72px) 0 0 !important;
+}
+body.ds9-product-page .p-detail-tabs-wrapper {
+  width: 100% !important;
+  margin: clamp(42px,5vw,76px) 0 0 !important;
+}
+body.ds9-product-page .products-related-header,
+body.ds9-product-page .products-alternative-header { display: none !important; }
+body.ds9-product-page .products-related-wrapper,
+body.ds9-product-page .products-alternative-wrapper {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: clamp(48px,6vw,86px) 0 0 !important;
+  overflow: visible !important;
+}
+body.ds9-product-page .products-related-wrapper .products,
+body.ds9-product-page .products-alternative-wrapper .products {
+  width: 100% !important;
+  overflow: visible !important;
+  cursor: default !important;
+}
+body.ds9-product-page .products-related-wrapper .products-block,
+body.ds9-product-page .products-alternative-wrapper .products-block {
+  display: grid !important;
+  grid-template-columns: repeat(4,minmax(0,1fr)) !important;
+  gap: 14px !important;
+  width: 100% !important;
+  transform: none !important;
+  transition: none !important;
+}
+body.ds9-product-page .products-related-wrapper .product,
+body.ds9-product-page .products-alternative-wrapper .product {
+  display: block !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+body.ds9-product-page .product-slider-pagination,
+body.ds9-product-page .product-slider-navigation,
+.ds9-native-products .product-slider-pagination,
+.ds9-native-products .product-slider-navigation { display: none !important; }
+body.ds9-product-page .ds9-related-intro {
+  margin: 0 0 28px !important;
+}
+body.ds9-product-page .ds9-related-intro h2 {
+  max-width: 16ch !important;
+  margin: 4px 0 10px !important;
+  font: 700 clamp(36px,4vw,60px)/.98 var(--ds9-font) !important;
+  letter-spacing: -.05em !important;
+}
+body.ds9-product-page .ds9-related-intro span {
+  display: block !important;
+  max-width: 580px !important;
+  color: rgba(11,11,11,.62) !important;
+  font-size: 15px !important;
+  line-height: 1.6 !important;
+}
+
+@media (max-width: 991px) {
+  body.ds9-product-page .p-detail-inner { grid-template-columns: minmax(0,1fr) !important; gap: 28px !important; }
+  body.ds9-product-page .p-detail-inner .p-image-wrapper { grid-column: 1 !important; grid-row: 1 !important; }
+  body.ds9-product-page .p-detail-inner .p-data-wrapper { grid-column: 1 !important; grid-row: 2 !important; }
+  body.ds9-product-page .p-detail .p-image { min-height: 0 !important; }
+  body.ds9-product-page .p-detail > .benefitBanner { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+  body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__item:nth-child(2n) { border-right: 0 !important; }
+  body.ds9-product-page .products-related-wrapper .products-block,
+  body.ds9-product-page .products-alternative-wrapper .products-block { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+}
+@media (max-width: 767px) {
+  .ds9-native-benefits { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+  .ds9-native-benefits .benefitBanner__item {
+    grid-template-columns: 38px minmax(0,1fr) !important;
+    gap: 10px !important;
+    min-height: 108px !important;
+    padding: 14px !important;
+  }
+  .ds9-native-benefits .benefitBanner__item:nth-child(2n) { border-right: 0 !important; }
+  .ds9-native-benefits .benefitBanner__picture,
+  .ds9-native-benefits .benefitBanner__img { width: 38px !important; height: 38px !important; }
+  body.ds9-product-page .p-detail h1 { max-width: none !important; font-size: clamp(34px,11vw,48px) !important; }
+  body.ds9-product-page .p-detail > .benefitBanner { grid-template-columns: minmax(0,1fr) !important; }
+  body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__item { border-right: 0 !important; border-bottom: 1px solid var(--ds9-line) !important; }
+  body.ds9-product-page .p-detail > .benefitBanner .benefitBanner__item:last-child { border-bottom: 0 !important; }
+}
