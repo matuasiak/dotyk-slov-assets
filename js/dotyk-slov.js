@@ -268,14 +268,48 @@
     return groups;
   };
 
+  const simplifyProductSlider = (wrapper, limit = 8) => {
+    if (!wrapper) return;
+    const seen = new Set();
+    let kept = 0;
+    wrapper.querySelectorAll(".product").forEach((product) => {
+      const data = product.querySelector("[data-micro-product-id]");
+      const id = data?.getAttribute("data-micro-product-id")
+        || product.querySelector("a.image")?.getAttribute("href")
+        || product.querySelector("a")?.getAttribute("href")
+        || "";
+      if ((id && seen.has(id)) || kept >= limit) {
+        product.remove();
+        return;
+      }
+      if (id) seen.add(id);
+      kept += 1;
+      product.classList.remove("active", "inactive");
+      product.removeAttribute("style");
+    });
+    wrapper.querySelectorAll(".product-slider-pagination,.product-slider-navigation").forEach((node) => node.remove());
+    wrapper.querySelectorAll(".product-slider,.products-block").forEach((node) => {
+      node.removeAttribute("style");
+      node.classList.remove("dragging");
+    });
+    wrapper.classList.remove("has-navigation");
+    wrapper.removeAttribute("style");
+  };
+
+  const cleanBenefitBanner = (banner) => {
+    if (!banner) return;
+    banner.querySelectorAll(".benefitBanner__item").forEach((item) => {
+      if (!item.querySelector("img,.benefitBanner__title,a,button")) item.remove();
+    });
+  };
+
   const prepareNativeProductGroup = ({ heading, wrapper }, index, host) => {
     const section = document.createElement("section");
     section.className = "ds9-native-product-section";
     section.dataset.groupIndex = String(index);
     heading.classList.add("ds9-native-product-heading");
     wrapper.classList.add("ds9-native-products");
-    wrapper.removeAttribute("style");
-    wrapper.querySelectorAll(".product-slider,.products-block,.product").forEach((node) => node.removeAttribute("style"));
+    simplifyProductSlider(wrapper, 8);
     section.append(heading, wrapper);
     host.appendChild(section);
   };
@@ -338,6 +372,7 @@
     }
 
     if (benefits) {
+      cleanBenefitBanner(benefits);
       benefits.classList.add("ds9-native-benefits");
       home.querySelector(".ds9-benefits-slot")?.appendChild(benefits);
     }
@@ -375,6 +410,10 @@
       related.parentNode.insertBefore(intro, related);
       related.classList.add("ds9-related-products");
     }
+
+    document.querySelectorAll(".p-detail > .benefitBanner").forEach(cleanBenefitBanner);
+    simplifyProductSlider(document.querySelector(".products-related-wrapper"), 4);
+    simplifyProductSlider(document.querySelector(".products-alternative-wrapper"), 4);
   };
 
   const enhanceCart = () => {
