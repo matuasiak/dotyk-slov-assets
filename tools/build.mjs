@@ -10,11 +10,13 @@ const sourceJsPath = resolve(root, "src/dotyk-slov.js");
 const sourceConfigPath = resolve(root, "src/dotyk-slov.config.js");
 
 const currentRelease = await readFile(releaseCssPath, "utf8");
-const marker = "/* Dotyk Slov v9";
-const markerIndex = currentRelease.indexOf(marker);
+const boundaryMarkers = ["/* Dotyk Slov custom layer", "/* Dotyk Slov v9"];
+const markerIndex = boundaryMarkers
+  .map((marker) => currentRelease.indexOf(marker))
+  .find((index) => index >= 0);
 
-if (markerIndex < 0) {
-  throw new Error("The DS9 boundary marker is missing from css/dotyk-slov.css.");
+if (markerIndex === undefined) {
+  throw new Error("The Dotyk Slov custom CSS boundary marker is missing.");
 }
 
 const shoptetClassic = currentRelease.slice(0, markerIndex).trimEnd();
@@ -26,8 +28,8 @@ if (!shoptetClassic.includes("normalize.css") || shoptetClassic.length < 200_000
   throw new Error("The extracted Shoptet Classic bundle does not look complete.");
 }
 
-if (/ds-clean-theme|ds8-theme/.test(customCss)) {
-  throw new Error("A legacy theme selector leaked into the DS9 CSS source.");
+if (/\.appendChild\((bannerRow|benefits|wrapper|heading)\)|\.append\((bannerRow|benefits|wrapper|heading)\)/.test(sourceJs)) {
+  throw new Error("A native Shoptet commerce block is being moved by the custom JavaScript.");
 }
 
 await Promise.all([
