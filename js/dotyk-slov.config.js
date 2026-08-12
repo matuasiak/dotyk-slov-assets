@@ -2,7 +2,7 @@
   "use strict";
 
   window.DOTYK_SLOV_THEME = {
-    release: "9.2.0",
+    release: "9.3.0",
     design: {
       ink: "#0b0b0b",
       paper: "#f5f4f0",
