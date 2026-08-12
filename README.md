@@ -1,18 +1,35 @@
-# Dotyk Slov — Shoptet DS9.2
+# Dotyk Slov — Shoptet Classic custom theme
 
-Editovateľná editorial commerce vrstva pre Shoptet Classic.
+Postupná vizuálna vrstva nad oficiálnym základom Shoptet Classic v Blank template režime.
 
-- [Vizuálny editor šablóny](https://dotyk-slov-template-admin.matuasiak.chatgpt.site)
-- [Návod: čo sa upravuje v Shoptete a čo v editore](SHOPTET-TEMPLATE.md)
-- Produkty, ceny, sklad, doprava a objednávky zostávajú natívne v Shoptete.
-- `src/` obsahuje jednu izolovanú DS9 vrstvu; `css/` a `js/` sú publikované release súbory.
+- Classic CSS a JavaScript zabezpečujú produkty, varianty, košík, objednávku a doplnky.
+- `src/dotyk-slov.css` upravuje iba vybrané sub-elementy pôvodnej šablóny.
+- `src/dotyk-slov.js` pridáva samostatné obsahové bloky a značkuje natívne prvky; nepresúva hlavičku, produktové skupiny ani detail produktu do vlastného DOM.
+- Bežné voľby sú v `src/dotyk-slov.config.js` podobne ako v šablóne Apollo.
 
-Nasadené súbory:
+## Nasadenie na testovací Shoptet
+
+Do `HEAD`:
 
 ```html
-<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/dotyk-slov.css?v=9.2.0">
-<script src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js?v=9.2.0"></script>
-<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.js?v=9.2.0"></script>
+<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/dotyk-slov.css?v=10.0.0">
 ```
 
-Release sa skladá príkazom `node tools/build.mjs`.
+Do konca `BODY`, v tomto poradí:
+
+```html
+<script src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js?v=10.0.0"></script>
+<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.js?v=10.0.0"></script>
+```
+
+Nevkladať súčasne staré DS8/DS9 súbory. Produkčný e-shop sa touto revíziou nemení.
+
+## Vývoj
+
+```bash
+node --check src/dotyk-slov.js
+node tools/check-progressive.mjs
+node tools/build.mjs
+```
+
+Build zachová kompletný Shoptet Classic CSS balík a nahradí iba vlastnú Dotyk Slov vrstvu.

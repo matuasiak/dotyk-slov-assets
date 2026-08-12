@@ -1,67 +1,46 @@
-# Dotyk Slov DS9.2 — návod k šablóne
+# Dotyk Slov 10 — postupná téma nad Classic
 
-DS9.2 je jedna čistá prezentačná vrstva nad oficiálnym základom Shoptet Classic. Produkty, ceny, sklad, varianty, doprava ani objednávky sa nekopírujú do vlastného kódu. Shoptet zostáva jediným zdrojom pravdy pre obchod a samostatný editor spravuje iba obsahovú a vizuálnu vrstvu.
+Blank template v Shoptete je založený na HTML šablóny Classic. Cieľom tejto témy preto nie je vytvoriť druhý web nad Shoptetom, ale upravovať pôvodné sub-elementy a zachovať ich triedy, udalosti a napojenia doplnkov.
 
-## Čo sa upravuje kde
+## Čo zostáva natívne v Shoptete
 
-| Obsah | Miesto úpravy | Poznámka |
-| --- | --- | --- |
-| Produkty na titulnej strane | Shoptet → Produkty → Titulná strana | Téma z natívnych skupín vytvorí prepínateľné kolekcie a ukáže najviac 8 produktov. |
-| Cena, sklad, varianty | Detail produktu v Shoptete | Nikde sa neduplikujú. |
-| Hlavný banner | Shoptet → Vzhľad a obsah → Bannery | Prvý banner titulnej strany má prednosť pred záložným hero obrázkom. |
-| Výhody pod hero sekciou | Shoptet → Vzhľad a obsah → Bannery → Výhody | Téma ponechá natívny obsah a upraví iba vzhľad. |
-| Navigácia a kategórie obchodu | Shoptet → Vzhľad a obsah → Menu | Hlavička používa natívne Shoptet menu. |
-| Súvisiace a podobné produkty | Konkrétny produkt v Shoptete | Zobrazia sa ako prirodzené odporúčania na detaile. |
-| Hranica dopravy zdarma | Nastavenie dopravy v Shoptete | Košík používa natívny výpočet. |
-| Texty, farby, nálady, obrázky a vlastné sekcie | Editor DS9.2 | Zmena sa uloží jedným tlačidlom a web ju načíta automaticky. |
+| Časť | Správa |
+| --- | --- |
+| Produkty, ceny, sklad a varianty | Shoptet → Produkty |
+| Produkty na titulnej strane | Shoptet → Produkty → Titulná strana |
+| Hero obrázky | Shoptet → Bannery → Carousel |
+| Výhody | Shoptet → Bannery → Výhody |
+| Navigácia a kategórie | Shoptet → Menu a kategórie |
+| Galéria, košík, objednávka, recenzie a doplnky | Natívny Classic runtime |
 
-## Bežný postup bez programovania
+Vlastná vrstva natívne uzly nepresúva. Pridá im iba pomocnú triedu a zmení vzhľad. Samostatné editorial sekcie sú vložené ako oddelené bloky a možno ich celé vypnúť.
 
-1. Otvor [editor šablóny Dotyk Slov](https://dotyk-slov-template-admin.matuasiak.chatgpt.site).
-2. Vyber sekciu v ľavom menu.
-3. Uprav text, farbu, odkaz alebo nahraj obrázok.
-4. Skontroluj živý náhľad.
-5. Klikni **Uložiť zmeny**.
+## Jednoduché nastavenia
 
-Každé uloženie vytvorí samostatnú verziu. V časti **História** sa dá starší stav obnoviť bez zásahu do kódu.
+V `dotyk-slov.config.js` je blok `features`. Každá voľba je `true` alebo `false`:
 
-## Kód vložený v Shoptete
-
-```html
-<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/dotyk-slov.css?v=9.2.0">
-<script src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js?v=9.2.0"></script>
-<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.js?v=9.2.0"></script>
+```js
+features: {
+  announcement: true,
+  stickyHeader: true,
+  heroOverlay: true,
+  quickCategories: true,
+  productTabs: true,
+  editorialSections: true,
+  productAssurances: true,
+  cartConfidence: true,
+  footerBrand: true,
+  postPurchase: true,
+}
 ```
 
-Hlavný JavaScript si najprv vyžiada uloženú konfiguráciu z editora. Statický `dotyk-slov.config.js` zostáva ako bezpečná záloha, takže dočasná nedostupnosť editora nerozbije e-shop. Nevkladaj súčasne staré v6/v8 súbory.
+Texty, odkazy a farby sú v rovnakom konfiguračnom súbore. Produkty, ceny ani sklad sa doň nikdy nepíšu.
 
-## Conversion journey
+## Poradie ďalšieho vývoja
 
-DS9.2 používa konverzné princípy bez agresívnych popupov:
+1. Stabilizovať hlavičku a produktový detail na desktope aj mobile.
+2. Doladiť natívne produktové karty a skupiny na homepage.
+3. Skontrolovať kategóriu, vyhľadávanie, košík a objednávku.
+4. Až potom pridávať nové samostatné komponenty ako UGC galéria alebo shop-the-look.
 
-- na detaile produktu: istoty pri nákupe a natívne súvisiace produkty,
-- v košíku: natívny progres k doprave zdarma, dôvera a nenásilný odkaz na doplnky,
-- po nákupe: značkový obsah a prirodzená cesta k ďalším náladám.
-
-Recenzie, produktové balíčky a darčeky sa zapínajú až vtedy, keď sú v Shoptete reálne nakonfigurované. Téma nevytvára falošné ponuky ani ceny.
-
-## Technická údržba
-
-Zdrojové súbory sú v `src/`. Release sa vytvára príkazom:
-
-```bash
-node tools/build.mjs
-```
-
-Kontrola pred publikovaním:
-
-```bash
-node --check src/dotyk-slov.js
-node --check src/dotyk-slov.config.js
-```
-
-Release CSS sa vždy skladá z čistého Shoptet Classic základu a presne jednej DS9 vrstvy. Staré triedy `ds-clean-theme` a `ds8-theme` sa nesmú znovu aktivovať.
-
-## Bezpečný návrat
-
-Ak sa nový release nepodarí, v Shoptete zmeň `?v=9.2.0` späť na poslednú overenú verziu. Produkty, objednávky a sklad tým nie sú dotknuté, pretože DS9 mení iba prezentačnú vrstvu.
+Každý nový komponent musí fungovať aj po vypnutí a nesmie meniť poradie natívnych obchodných uzlov.
