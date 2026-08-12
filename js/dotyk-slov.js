@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const REMOTE_CONFIG_URL = "https://dotyk-slov-template-admin.matuasiak.chatgpt.site/api/config";
+  const REMOTE_CONFIG_URL = "https://dotyk-slov-theme-config.matuasiak.chatgpt.site/api/config";
   const FALLBACK_CONFIG_URL = "https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js";
   let CONFIG = window.DOTYK_SLOV_THEME || {};
   let started = false;
