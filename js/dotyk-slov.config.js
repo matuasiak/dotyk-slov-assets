@@ -6,14 +6,19 @@
    * true = zapnuté, false = vypnuté.
    */
   window.DOTYK_SLOV_THEME = {
-    release: "10.0.0",
+    release: "10.1.0",
     features: {
-      announcement: true,
+      announcement: false,
       stickyHeader: true,
       heroOverlay: true,
       quickCategories: true,
       productTabs: true,
       editorialSections: true,
+      editorialStatement: false,
+      editorialMoods: true,
+      editorialCustom: false,
+      editorialStory: false,
+      editorialNewsletter: false,
       productAssurances: true,
       cartConfidence: true,
       footerBrand: true,
