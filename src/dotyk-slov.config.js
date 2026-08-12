@@ -1,14 +1,33 @@
 (() => {
   "use strict";
 
+  /*
+   * Toto je jediné miesto s bežnými nastaveniami témy.
+   * true = zapnuté, false = vypnuté.
+   */
   window.DOTYK_SLOV_THEME = {
-    release: "9.2.0",
+    release: "10.0.0",
+    features: {
+      announcement: true,
+      stickyHeader: true,
+      heroOverlay: true,
+      quickCategories: true,
+      productTabs: true,
+      editorialSections: true,
+      productAssurances: true,
+      cartConfidence: true,
+      footerBrand: true,
+      postPurchase: true,
+    },
     design: {
       ink: "#0b0b0b",
       paper: "#f5f4f0",
       accent: "#d9ff45",
       violet: "#5c46ed",
-      cornerRadius: 26,
+      cornerRadius: 24,
+    },
+    header: {
+      searchPlaceholder: "Čo chceš povedať bez slov?",
     },
     announcement: [
       "Doprava zdarma nad 50 €",
@@ -20,12 +39,9 @@
       headline: "Nie všetko treba povedať nahlas.",
       copy: "Niekedy stačí, keď to máš na sebe.",
       primaryLabel: "Pozrieť novinky",
-      primaryUrl: "#ds9-products",
+      primaryUrl: "#ds-products",
       secondaryLabel: "Vybrať podľa nálady",
-      secondaryUrl: "#ds9-moods",
-      fallbackImage: "https://matuasiak.github.io/dotyk-slov-assets/images/dotyk-hero.webp",
-      floatingLabel: "VNÚTORNÝ MONOLÓG",
-      floatingValue: "ON / OFF",
+      secondaryUrl: "#ds-editorial",
     },
     categories: [
       { label: "Tričká", url: "/unisex-tricka/" },
@@ -35,16 +51,6 @@
       { label: "Doplnky", url: "/doplnky/" },
       { label: "Všetko", url: "/oblecenie/" },
     ],
-    products: {
-      eyebrow: "VYBRANÉ PRE TEBA",
-      headline: "Veci, ktoré hovoria za teba.",
-      allLabel: "Pozrieť všetko",
-      allUrl: "/oblecenie/",
-    },
-    bridge: {
-      words: ["SLOVÁ", "KTORÉ", "NOSÍŠ"],
-      copy: "Niektoré vety ostanú v hlave. Iné idú s tebou.",
-    },
     statement: {
       eyebrow: "DOTYK SLOV / OD 2022",
       headline: "Nie merch. Nálada, ktorú si môžeš obliecť.",
@@ -106,9 +112,6 @@
         "Doprava zdarma od 50 €",
         "Bezpečná platba",
       ],
-      relatedEyebrow: "DÁVA ZMYSEL SPOLU",
-      relatedHeadline: "Ešte jedna veta do nálady.",
-      relatedCopy: "Doplnky a kúsky, ktoré sa k tomuto produktu prirodzene hodia.",
     },
     cart: {
       confidence: ["Lokálna výroba", "Bezpečná platba", "Doprava zdarma od 50 €"],
