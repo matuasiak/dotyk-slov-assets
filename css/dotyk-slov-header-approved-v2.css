@@ -1,0 +1,38 @@
+@import url("./dotyk-slov-header-approved.css?v=3.0.0");
+
+/* Remove Shoptet icon-font pseudo-elements. Approved v2 uses inline SVG only. */
+#header .navigation-buttons .ds-approved-action::before,
+#header .navigation-buttons .ds-approved-action::after,
+#header .navigation-buttons .cart-count::before,
+#header .search-form .btn::before,
+#header .search-form .btn::after {
+  content: none !important;
+  display: none !important;
+}
+
+#header .navigation-buttons .ds-approved-action > svg,
+#header .navigation-buttons .cart-count > .ds-cart-svg,
+#header .search-form .btn > .ds-search-svg {
+  display: block !important;
+  width: 21px !important;
+  height: 21px !important;
+  margin: 0 !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+#header .search-form .btn > .ds-search-svg {
+  color: #fff !important;
+}
+
+#header .navigation-buttons .cart-count > .ds-cart-svg {
+  color: #1c1820 !important;
+}
+
+/* Categories always come from Shoptet administration, never from custom code. */
+#navigation .menu-level-1 > li {
+  border: 0 !important;
+}
