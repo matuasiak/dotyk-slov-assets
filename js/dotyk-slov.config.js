@@ -6,33 +6,30 @@
    * true = zapnuté, false = vypnuté.
    */
   window.DOTYK_SLOV_THEME = {
-    release: "10.1.0",
+    release: "11.0.0",
     features: {
-      announcement: false,
+      announcement: true,
       stickyHeader: true,
       heroOverlay: true,
       quickCategories: true,
       productTabs: true,
       editorialSections: true,
-      editorialStatement: false,
-      editorialMoods: true,
-      editorialCustom: false,
-      editorialStory: false,
-      editorialNewsletter: false,
       productAssurances: true,
       cartConfidence: true,
       footerBrand: true,
       postPurchase: true,
     },
     design: {
-      ink: "#0b0b0b",
-      paper: "#f5f4f0",
-      accent: "#d9ff45",
-      violet: "#5c46ed",
+      ink: "#211a22",
+      paper: "#fff9ef",
+      accent: "#ef4f96",
+      violet: "#663bd8",
       cornerRadius: 24,
     },
     header: {
       searchPlaceholder: "Čo chceš povedať bez slov?",
+      serviceLine: "Doprava zadarmo od 50 € · Odosielame do 2–3 dní",
+      supportLine: "Podpora: ahoj@dotykslov.sk",
     },
     announcement: [
       "Doprava zdarma nad 50 €",
@@ -40,14 +37,30 @@
       "Ručne a lokálne potlačené",
     ],
     hero: {
-      eyebrow: "NOVÝ DROP / 08—26",
-      headline: "Nie všetko treba povedať nahlas.",
-      copy: "Niekedy stačí, keď to máš na sebe.",
-      primaryLabel: "Pozrieť novinky",
+      eyebrow: "4,9 / 5 · ĽUDIA SA V TOM NAŠLI",
+      headline: "Slová, ktoré si netrúfaš povedať nahlas.",
+      copy: "Myšlienky, emócie a jemný chaos. Na kúskoch, ktoré povedia dosť aj bez vysvetľovania.",
+      primaryLabel: "Nakupovať",
       primaryUrl: "#ds-products",
-      secondaryLabel: "Vybrať podľa nálady",
+      secondaryLabel: "Nové hlášky",
       secondaryUrl: "#ds-editorial",
     },
+    promos: [
+      {
+        eyebrow: "NOVÝ DROP",
+        headline: "Mám toho dosť. Ale esteticky.",
+        buttonLabel: "Pozrieť kolekciu",
+        url: "/produkty-podla-textu/",
+        image: "https://matuasiak.github.io/dotyk-slov-assets/images/dotyk-editorial-cream.webp",
+      },
+      {
+        eyebrow: "TVOJE SLOVÁ",
+        headline: "Veta, ktorú nikto iný nemá.",
+        buttonLabel: "Vytvoriť vlastný kúsok",
+        url: "/vytvor-si-vlastne-tricko-2/",
+        image: "https://matuasiak.github.io/dotyk-slov-assets/images/dotyk-product-black.webp",
+      },
+    ],
     categories: [
       { label: "Tričká", url: "/unisex-tricka/" },
       { label: "Cropy", url: "/crop-topy/" },
@@ -57,12 +70,10 @@
       { label: "Všetko", url: "/oblecenie/" },
     ],
     statement: {
-      eyebrow: "DOTYK SLOV / OD 2022",
-      headline: "Nie merch. Nálada, ktorú si môžeš obliecť.",
-      facts: [
-        { value: "lokálne", label: "potlačené u nás" },
-        { value: "od 1 kusa", label: "žiadna masovka" },
-        { value: "7 000+", label: "ľudí v komunite" },
+      messages: [
+        "Ak to chápeš, patríš sem",
+        "Nie všetko treba povedať nahlas",
+        "Mám toho dosť, ale esteticky",
       ],
     },
     moods: {
@@ -108,6 +119,7 @@
     newsletter: {
       eyebrow: "TICHÁ POŠTA",
       headline: "Občas ti niečo povieme. Nahlas nie.",
+      copy: "Nové hlášky, limitované kúsky a veci, ktoré nedávame všetkým.",
       placeholder: "tvoj@email.sk",
       buttonLabel: "Chcem byť pri tom",
     },

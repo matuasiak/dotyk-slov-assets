@@ -13,7 +13,9 @@ const checks = [
   ["Classic product detail restored", /\.p-detail \{ display: block !important;/.test(css)],
   ["native product inner layout used", /\.p-detail-inner > \.p-image-wrapper/.test(css) && /\.p-detail-inner > \.p-data-wrapper/.test(css)],
   ["feature switches available", /features: \{/.test(config) && /productTabs: true/.test(config)],
-  ["release aligned", /release: \"10\.0\.0\"/.test(config)],
+  ["Lovable promo rail is independent", /ds-promo-rail/.test(js) && /insertAdjacentElement\(\"afterend\", rail\)/.test(js)],
+  ["native logo remains visible", !/\.site-name img \{ display: none; \}/.test(css)],
+  ["release aligned", /release: \"11\.0\.0\"/.test(config)],
 ];
 
 const failed = checks.filter(([, passed]) => !passed);

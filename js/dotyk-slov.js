@@ -45,7 +45,7 @@
     if (document.querySelector('link[data-ds-font]')) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap";
+    link.href = "https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;600;700&display=swap";
     link.dataset.dsFont = "true";
     document.head.appendChild(link);
   };
@@ -57,10 +57,10 @@
     };
     const radius = Number(get("design.cornerRadius", 24));
     const root = document.documentElement;
-    root.style.setProperty("--ds-ink", color("design.ink", "#0b0b0b"));
-    root.style.setProperty("--ds-paper", color("design.paper", "#f5f4f0"));
-    root.style.setProperty("--ds-accent", color("design.accent", "#d9ff45"));
-    root.style.setProperty("--ds-violet", color("design.violet", "#5c46ed"));
+    root.style.setProperty("--ds-ink", color("design.ink", "#211a22"));
+    root.style.setProperty("--ds-paper", color("design.paper", "#fff9ef"));
+    root.style.setProperty("--ds-accent", color("design.accent", "#ef4f96"));
+    root.style.setProperty("--ds-violet", color("design.violet", "#663bd8"));
     root.style.setProperty("--ds-radius", `${Math.max(12, Math.min(40, Number.isFinite(radius) ? radius : 24))}px`);
   };
 
@@ -74,9 +74,8 @@
     bar.className = "ds-announcement";
     bar.dataset.dsOwned = "announcement";
     bar.setAttribute("aria-label", "Informácie o nákupe");
-    bar.innerHTML = `<div class="ds-announcement__track">${messages
-      .map((message) => `<span>${escapeHTML(message)}</span>`)
-      .join("")}</div>`;
+    const messageMarkup = messages.map((message) => `<span>${escapeHTML(message)}</span>`).join("");
+    bar.innerHTML = `<div class="ds-announcement__track"><div>${messageMarkup}</div><div aria-hidden="true">${messageMarkup}</div></div>`;
     header.prepend(bar);
   };
 
@@ -85,6 +84,13 @@
     if (!header) return;
     header.classList.add("ds-header");
     if (enabled("stickyHeader")) header.classList.add("ds-header--sticky");
+    if (!header.querySelector(":scope > .ds-service-bar")) {
+      const serviceBar = document.createElement("div");
+      serviceBar.className = "ds-service-bar";
+      serviceBar.dataset.dsOwned = "service-bar";
+      serviceBar.innerHTML = `<span>${escapeHTML(get("header.serviceLine", "Doprava zadarmo od 50 € · Odosielame do 2–3 dní"))}</span><span>${escapeHTML(get("header.supportLine", "Podpora: ahoj@dotykslov.sk"))}</span>`;
+      header.querySelector(".header-top")?.insertAdjacentElement("beforebegin", serviceBar);
+    }
     const input = header.querySelector(".search-input");
     if (input) input.placeholder = get("header.searchPlaceholder", "Čo chceš povedať bez slov?");
   };
@@ -96,8 +102,12 @@
       { label: "Mikiny", url: "/mikiny/" },
       { label: "Doplnky", url: "/doplnky/" },
     ])
-      .slice(0, 6)
-      .map((item) => `<a href="${safeURL(item.url)}"><span>${escapeHTML(item.label)}</span><i aria-hidden="true">↗</i></a>`)
+      .slice(0, 4)
+      .map((item, index) => {
+        const fallbacks = ["dotyk-editorial-cream.webp", "dotyk-product-black.webp", "dotyk-hero.webp"];
+        const image = safeURL(item.image, `${ASSET_ROOT}/${fallbacks[index % fallbacks.length]}`);
+        return `<a href="${safeURL(item.url)}"><img src="${image}" alt="" loading="lazy"><span>${escapeHTML(item.label)}</span><i aria-hidden="true">↗</i></a>`;
+      })
       .join("");
 
   const enhanceHero = (content) => {
@@ -128,6 +138,23 @@
     nav.setAttribute("aria-label", "Kategórie");
     nav.innerHTML = categoryMarkup();
     hero.insertAdjacentElement("afterend", nav);
+  };
+
+  const enhancePromoRail = (hero) => {
+    if (!hero || document.querySelector(".ds-promo-rail")) return;
+    const promos = list("promos", []).slice(0, 2);
+    if (!promos.length) return;
+    const rail = document.createElement("aside");
+    rail.className = "ds-promo-rail";
+    rail.dataset.dsOwned = "promo-rail";
+    rail.setAttribute("aria-label", "Odporúčané kolekcie");
+    rail.innerHTML = promos.map((promo) => `
+      <a class="ds-promo-card" href="${safeURL(promo.url, "/produkty-podla-textu/")}">
+        <img src="${safeURL(promo.image, `${ASSET_ROOT}/dotyk-editorial-cream.webp`)}" alt="" loading="lazy">
+        <span></span>
+        <div><p>${escapeHTML(promo.eyebrow || "DOTYK SLOV")}</p><h2>${escapeHTML(promo.headline || "Nájdi sa v slovách.")}</h2><b>${escapeHTML(promo.buttonLabel || "Pozrieť")} →</b></div>
+      </a>`).join("");
+    hero.insertAdjacentElement("afterend", rail);
   };
 
   const collectProductGroups = (content) => {
@@ -196,11 +223,11 @@
         </a>`)
       .join("");
 
-  const factsMarkup = () =>
-    list("statement.facts", [])
-      .slice(0, 3)
-      .map((fact) => `<span><strong>${escapeHTML(fact.value)}</strong>${escapeHTML(fact.label)}</span>`)
-      .join("");
+  const statementMarkup = () => {
+    const messages = list("statement.messages", ["Nie všetko treba povedať nahlas"]);
+    const items = messages.map((message) => `<span>${escapeHTML(message)}</span><i aria-hidden="true">✳</i>`).join("");
+    return `<div>${items}</div><div aria-hidden="true">${items}</div>`;
+  };
 
   const thoughtsMarkup = () =>
     list("custom.thoughts", ["mám toho dosť", "ale esteticky", "...", "asi som v pohode", "neodpisujem"])
@@ -208,34 +235,24 @@
       .map((thought, index) => `<span class="ds-thought ds-thought--${index + 1}">${escapeHTML(thought)}</span>`)
       .join("");
 
-  const editorialMarkup = () => [
-    enabled("editorialStatement", false) ? `
-    <section class="ds-statement ds-reveal">
-      <p class="ds-eyebrow ds-eyebrow--light">${escapeHTML(get("statement.eyebrow", "DOTYK SLOV / OD 2022"))}</p>
-      <h2>${escapeHTML(get("statement.headline", "Nie merch. Nálada, ktorú si môžeš obliecť."))}</h2>
-      <div>${factsMarkup()}</div>
-    </section>` : "",
-    enabled("editorialMoods", true) ? `
+  const editorialMarkup = () => `
+    <section class="ds-statement-strip" aria-label="Dotyk Slov">${statementMarkup()}</section>
     <section class="ds-moods">
       <div class="ds-section-title ds-reveal"><p class="ds-eyebrow">${escapeHTML(get("moods.eyebrow", "PODĽA NÁLADY"))}</p><h2>${escapeHTML(get("moods.headline", "Nájdi sa. Alebo sa aspoň skús."))}</h2></div>
       <div class="ds-mood-grid">${moodMarkup()}</div>
-    </section>` : "",
-    enabled("editorialCustom", false) ? `
+    </section>
     <section class="ds-custom ds-reveal">
       <div><p class="ds-eyebrow ds-eyebrow--light">${escapeHTML(get("custom.eyebrow", "TVOJE SLOVÁ"))}</p><h2>${escapeHTML(get("custom.headline", "Máš vetu, ktorú nikto iný nemá?"))}</h2><p>${escapeHTML(get("custom.copy", "Pošli ju nám. My ju prenesieme na kúsok, ktorý bude iba tvoj."))}</p><a class="ds-button ds-button--light" href="${safeURL(get("custom.buttonUrl", "/vytvor-si-vlastne-tricko-2/"))}">${escapeHTML(get("custom.buttonLabel", "Vytvoriť vlastný kúsok"))}</a></div>
       <div class="ds-thoughts" aria-hidden="true">${thoughtsMarkup()}</div>
-    </section>` : "",
-    enabled("editorialStory", false) ? `
+    </section>
     <section class="ds-story ds-reveal">
       <div><img src="${safeURL(get("story.image", `${ASSET_ROOT}/dotyk-editorial-cream.webp`))}" alt="Dotyk Slov editorial" loading="lazy"></div>
       <article><p class="ds-eyebrow">${escapeHTML(get("story.eyebrow", "ZNAČKA S VLASTNÝM HLASOM"))}</p><h2>${escapeHTML(get("story.headline", "Vzniklo to z viet, ktoré ostali v hlave."))}</h2><p>${escapeHTML(get("story.copy", "Dotyk Slov je pre ľudí, ktorí cítia veľa, hovoria málo a humor používajú ako obranný mechanizmus."))}</p><a class="ds-text-link" href="${safeURL(get("story.buttonUrl", "/o-nas/"))}">${escapeHTML(get("story.buttonLabel", "Náš príbeh"))} →</a></article>
-    </section>` : "",
-    enabled("editorialNewsletter", false) ? `
+    </section>
     <section class="ds-newsletter ds-reveal">
-      <div><p class="ds-eyebrow">${escapeHTML(get("newsletter.eyebrow", "TICHÁ POŠTA"))}</p><h2>${escapeHTML(get("newsletter.headline", "Občas ti niečo povieme. Nahlas nie."))}</h2></div>
+      <div><p class="ds-eyebrow">${escapeHTML(get("newsletter.eyebrow", "TICHÁ POŠTA"))}</p><h2>${escapeHTML(get("newsletter.headline", "Občas ti niečo povieme. Nahlas nie."))}</h2><span>${escapeHTML(get("newsletter.copy", "Nové hlášky a veci, ktoré nedávame všetkým."))}</span></div>
       <a href="#formNewsletterWidget"><span>${escapeHTML(get("newsletter.placeholder", "tvoj@email.sk"))}</span><strong>${escapeHTML(get("newsletter.buttonLabel", "Chcem byť pri tom"))} →</strong></a>
-    </section>` : "",
-  ].join("");
+    </section>`;
 
   const enhanceEditorial = (content, groups) => {
     if (!enabled("editorialSections") || content.querySelector(":scope > .ds-editorial")) return;
@@ -243,9 +260,7 @@
     section.className = "ds-editorial";
     section.id = "ds-editorial";
     section.dataset.dsOwned = "editorial";
-    const markup = editorialMarkup();
-    if (!markup.trim()) return;
-    section.innerHTML = markup;
+    section.innerHTML = editorialMarkup();
     const anchor = groups.at(-1)?.wrapper || content.lastElementChild;
     if (anchor) anchor.insertAdjacentElement("afterend", section);
     else content.appendChild(section);
@@ -258,6 +273,7 @@
     document.body.classList.add("ds-home-page");
     const hero = enhanceHero(content);
     enhanceQuickCategories(hero);
+    enhancePromoRail(hero);
     content.querySelector(":scope > .benefitBanner")?.classList.add("ds-native-benefits");
     const groups = enhanceProductGroups(content);
     enhanceEditorial(content, groups);
