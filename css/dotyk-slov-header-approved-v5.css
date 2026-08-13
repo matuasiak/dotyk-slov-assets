@@ -1,0 +1,86 @@
+@import url("./dotyk-slov-header-approved-v4.css?v=3.0.3");
+
+@keyframes ds-cart-reveal {
+  from { opacity: 0; transform: translateY(8px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (min-width: 992px) {
+  .user-action .popup-widget.cart-widget {
+    width: 500px !important;
+    margin-top: 76px !important;
+    transform-origin: calc(100% - 24px) top;
+    animation: ds-cart-reveal 180ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+
+  .user-action .popup-widget.cart-widget::before {
+    right: 14px !important;
+  }
+}
+
+.cart-widget .cart-widget-inner::before {
+  content: "Tvoj košík";
+  display: block;
+  margin: 0 14px;
+  padding: 16px 4px 11px;
+  border-bottom: 1px solid rgba(28, 24, 32, .1);
+  color: #1c1820;
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: -.01em;
+  text-align: left;
+}
+
+.cart-widget .cart-widget-product-image {
+  border: 1px solid rgba(28, 24, 32, .06);
+  border-radius: 12px !important;
+  background: #f7f2ec !important;
+}
+
+.cart-widget .cart-widget-product-name a {
+  transition: color 160ms ease;
+}
+
+.cart-widget .cart-widget-product-name a:hover {
+  color: #ec4c9a !important;
+}
+
+.cart-widget .cart-free-shipping {
+  margin: 6px 14px 10px !important;
+  padding: 12px 14px !important;
+  border: 1px solid rgba(236, 76, 154, .14) !important;
+  border-radius: 12px !important;
+  background: linear-gradient(120deg, rgba(236, 76, 154, .07), rgba(117, 64, 200, .06)) !important;
+}
+
+.cart-widget .cart-free-shipping strong {
+  color: #7540c8 !important;
+}
+
+.cart-widget .cart-widget-button {
+  padding-top: 13px !important;
+}
+
+.cart-widget .cart-widget-button .btn {
+  background: linear-gradient(120deg, #ec4c9a, #7540c8) !important;
+  box-shadow: 0 12px 28px -16px rgba(117, 64, 200, .8) !important;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease !important;
+}
+
+.cart-widget .cart-widget-button .btn:hover {
+  filter: saturate(1.08) brightness(1.03);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px -16px rgba(117, 64, 200, .9) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .user-action .popup-widget.cart-widget { animation: none !important; }
+  .cart-widget .cart-widget-button .btn { transition: none !important; }
+}
+
+@media (max-width: 991px) {
+  .cart-widget .cart-widget-inner::before {
+    padding-top: 18px;
+    font-size: 16px;
+  }
+}
