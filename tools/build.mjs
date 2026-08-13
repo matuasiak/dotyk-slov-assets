@@ -1,47 +1,29 @@
-import { readFile, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import less from 'less';
+import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import path from 'node:path';
 
-const here = dirname(fileURLToPath(import.meta.url));
-const root = resolve(here, "..");
-const releaseCssPath = resolve(root, "css/dotyk-slov.css");
-const sourceCssPath = resolve(root, "src/dotyk-slov.css");
-const sourceJsPath = resolve(root, "src/dotyk-slov.js");
-const sourceConfigPath = resolve(root, "src/dotyk-slov.config.js");
+const root = path.resolve(import.meta.dirname, '..');
+const upstream = path.join(root, '.vendor/templates-assets');
+const cssInput = path.join(root, 'src/main.less');
 
-const currentRelease = await readFile(releaseCssPath, "utf8");
-const boundaryMarkers = ["/* Dotyk Slov custom layer", "/* Dotyk Slov v9"];
-const markerIndex = boundaryMarkers
-  .map((marker) => currentRelease.indexOf(marker))
-  .find((index) => index >= 0);
+await mkdir(path.join(root, 'css'), { recursive: true });
+await mkdir(path.join(root, 'js'), { recursive: true });
+await mkdir(path.join(root, 'fonts/shoptet'), { recursive: true });
 
-if (markerIndex === undefined) {
-  throw new Error("The Dotyk Slov custom CSS boundary marker is missing.");
-}
-
-const shoptetClassic = currentRelease.slice(0, markerIndex).trimEnd();
-const customCss = (await readFile(sourceCssPath, "utf8")).trim();
-const sourceJs = (await readFile(sourceJsPath, "utf8")).trim();
-const sourceConfig = (await readFile(sourceConfigPath, "utf8")).trim();
-
-if (!shoptetClassic.includes("normalize.css") || shoptetClassic.length < 200_000) {
-  throw new Error("The extracted Shoptet Classic bundle does not look complete.");
-}
-
-if (/\.appendChild\((bannerRow|benefits|wrapper|heading)\)|\.append\((bannerRow|benefits|wrapper|heading)\)/.test(sourceJs)) {
-  throw new Error("A native Shoptet commerce block is being moved by the custom JavaScript.");
-}
+const source = await readFile(cssInput, 'utf8');
+const result = await less.render(source, {
+  filename: cssInput,
+  paths: [path.dirname(cssInput), upstream],
+  compress: true,
+  javascriptEnabled: true,
+  math: 'always',
+});
 
 await Promise.all([
-  writeFile(releaseCssPath, `${shoptetClassic}\n\n${customCss}\n`, "utf8"),
-  writeFile(resolve(root, "js/dotyk-slov.js"), `${sourceJs}\n`, "utf8"),
-  writeFile(resolve(root, "js/dotyk-slov.config.js"), `${sourceConfig}\n`, "utf8"),
+  writeFile(path.join(root, 'css/dotyk-slov.css'), result.css),
+  cp(path.join(root, 'src/theme.js'), path.join(root, 'js/dotyk-slov.js')),
+  cp(path.join(upstream, '11/fonts/shoptet'), path.join(root, 'fonts/shoptet'), { recursive: true }),
 ]);
 
-console.log(JSON.stringify({
-  classicBytes: Buffer.byteLength(shoptetClassic),
-  customCssBytes: Buffer.byteLength(customCss),
-  releaseCssBytes: Buffer.byteLength(`${shoptetClassic}\n\n${customCss}\n`),
-  releaseJsBytes: Buffer.byteLength(`${sourceJs}\n`),
-  releaseConfigBytes: Buffer.byteLength(`${sourceConfig}\n`),
-}, null, 2));
+console.log('Built css/dotyk-slov.css and js/dotyk-slov.js.');
+
