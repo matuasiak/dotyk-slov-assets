@@ -1,0 +1,245 @@
+// Approved Dotyk Slov header on the official Classic/Blank base.
+@import '../.vendor/templates-assets/11/css/main-11.less';
+@fontPath: '../fonts/shoptet/';
+@import '../.vendor/templates-assets/11/css/modules/font-shoptet.less';
+
+@ink: #1c1820;
+@cream: #faf7f0;
+@pink: #ec4c9a;
+@purple: #7540c8;
+@soft: #f0eae3;
+@border: rgba(28, 24, 32, .13);
+
+.top-navigation-bar {
+  display: block !important;
+  min-height: 32px;
+  border: 0;
+  background: @ink;
+  .container {
+    display: flex !important;
+    min-height: 32px;
+    align-items: center;
+    justify-content: center;
+    &::before {
+      content: "Doprava zdarma pri nákupe nad 60 €";
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    > * { display: none !important; }
+  }
+}
+
+#header {
+  position: relative;
+  z-index: 30;
+  margin: 0;
+  background: @cream;
+  border-bottom: 1px solid rgba(28, 24, 32, .1);
+  box-shadow: none;
+  > .container {
+    width: min(calc(100% - 48px), 1280px);
+    max-width: 1280px;
+    padding: 0;
+  }
+}
+
+#header .header-top {
+  display: grid;
+  grid-template-columns: 220px minmax(360px, 1fr) 164px;
+  gap: 38px;
+  height: 92px;
+  min-height: 92px;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  > div { min-width: 0; }
+}
+
+#header .site-name-wrapper { position: static; }
+#header .site-name {
+  text-align: left;
+  a { display: flex; align-items: center; }
+  img { display: block; width: auto; max-width: 210px; max-height: 58px; margin: 0; }
+}
+
+#header .search { display: block; }
+#header .search-form {
+  display: block;
+  margin: 0;
+  fieldset { position: relative; display: flex; margin: 0; }
+  .search-input {
+    width: 100%;
+    height: 54px;
+    padding: 0 64px 0 23px;
+    border: 1px solid @border;
+    border-radius: 999px;
+    background: @soft;
+    box-shadow: none;
+    color: @ink;
+    font-size: 15px;
+    outline: 0;
+    transition: border-color .2s, background .2s, box-shadow .2s;
+    &:focus { border-color: @purple; background: #fff; box-shadow: 0 0 0 4px rgba(117, 64, 200, .09); }
+    &::placeholder { color: #817881; opacity: 1; }
+  }
+  .btn {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    place-items: center;
+    overflow: hidden;
+    border: 0;
+    border-radius: 50%;
+    background: @ink;
+    color: transparent;
+    font-size: 0;
+    transition: background .2s, transform .2s;
+    &::after {
+      content: "";
+      display: block;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='6.5' fill='none' stroke='black' stroke-width='2'/%3E%3Cpath d='m16 16 4 4' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='6.5' fill='none' stroke='black' stroke-width='2'/%3E%3Cpath d='m16 16 4 4' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;
+    }
+    &:hover { background: @purple; transform: scale(1.03); }
+  }
+}
+
+#header .navigation-buttons {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  text-align: left;
+  .ds-approved-action,
+  .cart-count {
+    position: relative;
+    inset: auto;
+    display: grid;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    place-items: center;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: transparent;
+    color: @ink;
+    text-decoration: none;
+    box-shadow: none;
+    transition: color .2s, background .2s, transform .2s;
+    &:hover { background: #fff; color: @pink; transform: translateY(-1px); }
+  }
+  .ds-approved-action svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .cart-count {
+    &::before {
+      content: "" !important;
+      width: 22px;
+      height: 22px;
+      margin: 0;
+      background: currentColor;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 8h12l-1 12H7L6 8Z M9 9V6a3 3 0 0 1 6 0v3' fill='none' stroke='black' stroke-width='1.8' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 8h12l-1 12H7L6 8Z M9 9V6a3 3 0 0 1 6 0v3' fill='none' stroke='black' stroke-width='1.8' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+    }
+    .cart-price { display: none !important; }
+    i { right: 0; top: 0; background: @pink; color: #fff; }
+  }
+  .ds-tooltip {
+    position: absolute;
+    z-index: 20;
+    top: 52px;
+    left: 50%;
+    padding: 6px 9px;
+    border-radius: 8px;
+    background: @ink;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -3px);
+    transition: .2s;
+    white-space: nowrap;
+  }
+  .ds-approved-action:hover .ds-tooltip { opacity: 1; transform: translate(-50%, 0); }
+  .ds-mobile-action { display: none; }
+}
+
+#navigation {
+  height: 56px;
+  border-top: 1px solid rgba(28, 24, 32, .1);
+  background: transparent;
+  .navigation-in { display: flex; width: 100%; height: 56px; background: transparent; }
+  .menu-level-1 {
+    display: flex;
+    flex: 1;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 26px;
+    margin: 0;
+    padding: 0;
+    > li,
+    > li.splitted { display: list-item !important; visibility: visible !important; border: 0; }
+    > li > a {
+      position: relative;
+      display: flex;
+      height: 56px;
+      min-height: 56px;
+      align-items: center;
+      padding: 0;
+      border: 0;
+      color: @ink;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: none;
+      white-space: nowrap;
+      transition: color .2s;
+      &::after { content: ""; position: absolute; right: 0; bottom: 8px; left: 0; height: 3px; border-radius: 3px; background: @pink; transform: scaleX(0); transition: transform .2s; }
+    }
+    > li:hover > a,
+    > li.active > a { color: @pink; background: transparent; }
+    > li:hover > a::after,
+    > li.active > a::after { transform: scaleX(1); }
+  }
+  .menu-level-2 {
+    border: 1px solid rgba(28, 24, 32, .1);
+    border-radius: 0 0 16px 16px;
+    background: #fff;
+    box-shadow: 0 22px 44px -28px rgba(28, 24, 32, .5);
+    a:hover { color: @pink; background: @cream; }
+  }
+}
+
+#header .menu-helper { display: none !important; }
+
+.popup-widget { border: 1px solid rgba(28,24,32,.1); border-radius: 18px; background: #fff; box-shadow: 0 24px 55px -22px rgba(28,24,32,.5); }
+.cart-widget-button { padding: 0 14px 14px; }
+.cart-widget-button .btn { width: 100%; border-radius: 999px; background: @ink; border-color: @ink; color: #fff; }
+
+@media (max-width: 991px) {
+  #header .header-top { grid-template-columns: 180px minmax(260px, 1fr) 150px; gap: 20px; }
+  #header .site-name img { max-width: 175px; }
+  #navigation .menu-level-1 { gap: 19px; }
+}
+
+@media (max-width: 767px) {
+  .top-navigation-bar { min-height: 29px; .container { min-height: 29px; } }
+  #header > .container { width: 100%; padding: 0 12px; }
+  #header .header-top { display: grid; grid-template-columns: 46px 1fr 92px; gap: 0; height: 66px; min-height: 66px; }
+  #header .site-name-wrapper { grid-column: 2; justify-self: center; }
+  #header .site-name img { max-width: 175px; max-height: 42px; margin: auto; }
+  #header .search { display: none; }
+  #header .navigation-buttons { grid-column: 3; gap: 0; .ds-contact, .ds-account { display: none; } .ds-mobile-action { display: grid; } .ds-mobile-menu { position: absolute; left: 12px; } .ds-approved-action, .cart-count { width: 42px; height: 42px; } }
+  #navigation { height: auto; border: 0; .navigation-in { display: block; height: auto; } .menu-level-1 { display: block; } }
+}
