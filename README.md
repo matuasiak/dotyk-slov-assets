@@ -1,35 +1,36 @@
-# Dotyk Slov — Shoptet Classic custom theme
+# Dotyk Slov — Shoptet Blank
 
-Postupná vizuálna vrstva nad oficiálnym základom Shoptet Classic v Blank template režime.
+Čistá téma pre testovací e-shop `808782.myshoptet.com`.
 
-- Classic CSS a JavaScript zabezpečujú produkty, varianty, košík, objednávku a doplnky.
-- `src/dotyk-slov.css` upravuje iba vybrané sub-elementy pôvodnej šablóny.
-- `src/dotyk-slov.js` pridáva samostatné obsahové bloky a značkuje natívne prvky; nepresúva hlavičku, produktové skupiny ani detail produktu do vlastného DOM.
-- Bežné voľby sú v `src/dotyk-slov.config.js` podobne ako v šablóne Apollo.
+## Ako je postavená
 
-## Nasadenie na testovací Shoptet
+- základom je aktuálny Shoptet Classic (`templates-assets/11`), pretože Blank vychádza z Classic;
+- oficiálne Shoptet zdroje sa sťahujú do `.vendor/` a nikdy sa neupravujú;
+- všetky naše zmeny sú iba v `src/`;
+- build vytvorí `css/dotyk-slov.css` a `js/dotyk-slov.js`;
+- testovací Shoptet má momentálne vypnuté iba natívne CSS, preto používame natívny Shoptet JavaScript a nepridávame jeho druhú kópiu.
 
-Do `HEAD`:
-
-```html
-<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/dotyk-slov.css?v=11.0.0">
-```
-
-Do konca `BODY`, v tomto poradí:
-
-```html
-<script src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js?v=11.0.0"></script>
-<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.js?v=11.0.0"></script>
-```
-
-Nevkladať súčasne staré DS8/DS9 súbory. Produkčný e-shop sa touto revíziou nemení.
-
-## Vývoj
+## Lokálny build
 
 ```bash
-node --check src/dotyk-slov.js
-node tools/check-progressive.mjs
-node tools/build.mjs
+npm install
+npm run setup
+npm run verify
 ```
 
-Build zachová kompletný Shoptet Classic CSS balík a nahradí iba vlastnú Dotyk Slov vrstvu.
+## Testovací Shoptet
+
+V hlavičke:
+
+```html
+<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/dotyk-slov.css?v=1.0.0">
+```
+
+Pred koncom `body`:
+
+```html
+<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.js?v=1.0.0"></script>
+```
+
+Produkčný e-shop `dotykslov.sk` sa týmto repozitárom nemení.
+
