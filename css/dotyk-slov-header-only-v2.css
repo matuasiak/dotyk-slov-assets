@@ -1,0 +1,26 @@
+@import url("./dotyk-slov-header-only.css?v=2.0.0");
+
+/* Navigation integration fix: this shop has only a few categories, so keep
+   every native item visible and remove the unnecessary overflow helper. */
+@media (min-width: 768px) {
+  #navigation {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  #navigation .navigation-in,
+  #navigation .menu-level-1 {
+    display: flex !important;
+    width: 100% !important;
+  }
+
+  #navigation .menu-level-1 > li,
+  #navigation .menu-level-1 > li.splitted {
+    display: list-item !important;
+    visibility: visible !important;
+  }
+
+  #header .menu-helper {
+    display: none !important;
+  }
+}
