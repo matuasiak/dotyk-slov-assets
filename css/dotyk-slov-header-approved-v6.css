@@ -1,0 +1,27 @@
+@import url("./dotyk-slov-header-approved-v5.css?v=3.1.0");
+
+/* Final cart trigger alignment and focus treatment. */
+@media (min-width: 992px) {
+  .user-action .popup-widget.cart-widget {
+    margin-top: 54px !important;
+  }
+}
+
+#header .navigation-buttons .cart-count,
+#header .navigation-buttons .cart-count:hover,
+#header .navigation-buttons .cart-count:active,
+#header .navigation-buttons .cart-count:focus {
+  outline: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+#header .navigation-buttons .cart-count:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+#header .navigation-buttons .cart-count:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(236, 76, 154, .22) !important;
+}
