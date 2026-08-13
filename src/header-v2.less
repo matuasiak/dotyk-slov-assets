@@ -1,0 +1,44 @@
+// Header v2: integration fixes verified against project 808782 Classic/Blank markup.
+@ink: #1c1820;
+@cream: #faf7f0;
+@pink: #ec4c9a;
+@purple: #7540c8;
+@border: rgba(28, 24, 32, .12);
+
+.top-navigation-bar {
+  min-height: 34px; border-color: @border; background: @ink; color: #fff;
+  a, button, .project-phone, .project-email { color: #fff; }
+  .container { min-height: 34px; }
+}
+#header {
+  position: relative; z-index: 30; margin-bottom: 0; background: @cream;
+  border-bottom: 1px solid @border; box-shadow: none;
+  .header-top { height: 92px; min-height: 92px; padding-top: 16px; padding-bottom: 16px; }
+  .site-name img { width: auto; max-height: 54px; }
+  .search-form fieldset { display: flex; align-items: center; }
+  .search-form input[type="search"] { height: 42px; border: 1px solid rgba(28,24,32,.14); border-radius: 999px 0 0 999px; background: #fff; box-shadow: none; }
+  .search-form .btn { height: 42px; margin-left: -1px; padding: 0 20px 0 18px; border-radius: 0 999px 999px 0; background: @ink; border-color: @ink; color: #fff; }
+  .btn.cart-count { color: @ink; font-weight: 700; }
+}
+#navigation { height: auto; border-top: 1px solid @border; background: transparent; }
+.navigation-in {
+  background: transparent;
+  .menu-level-1 { justify-content: flex-start; }
+  .menu-level-1 > li > a { position: relative; min-height: 51px; padding: 17px 15px; color: @ink; font-size: 13px; font-weight: 800; letter-spacing: .015em; text-transform: none; white-space: nowrap; }
+  .menu-level-1 > li > a::after { content: ""; position: absolute; right: 14px; bottom: 7px; left: 14px; height: 2px; background: @pink; transform: scaleX(0); transition: transform .2s ease; }
+  .menu-level-1 > li:hover > a::after, .menu-level-1 > li.active > a::after { transform: scaleX(1); }
+  .menu-level-2 { border-radius: 0 0 20px 20px; box-shadow: 0 20px 42px -24px rgba(28,24,32,.4); }
+}
+.menu-helper { color: @ink; }
+.menu-helper > span::before { background: @ink; color: #fff; }
+.popup-widget { border: 1px solid @border; border-radius: 20px; background: #fff; box-shadow: 0 24px 55px -22px rgba(28,24,32,.5); }
+.popup-widget .popup-widget-inner { border-radius: 20px 20px 0 0; }
+.cart-widget-button { padding: 0 14px 14px; }
+.cart-widget-button .btn { width: 100%; border-radius: 999px; background: @ink; border-color: @ink; color: #fff; }
+.cart-widget-button .btn:hover { background: @purple; border-color: @purple; }
+@media (max-width: 767px) {
+  .top-navigation-bar { min-height: 30px; }
+  #header .header-top { height: 68px; min-height: 68px; padding-top: 0; padding-bottom: 0; }
+  #header .site-name img { max-height: 44px; }
+  .navigation-buttons > a { color: @ink; }
+}
