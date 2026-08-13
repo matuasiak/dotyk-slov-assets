@@ -12,14 +12,14 @@ Postupná vizuálna vrstva nad oficiálnym základom Shoptet Classic v Blank tem
 Do `HEAD`:
 
 ```html
-<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/dotyk-slov.css?v=10.0.0">
+<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/dotyk-slov.css?v=11.0.0">
 ```
 
 Do konca `BODY`, v tomto poradí:
 
 ```html
-<script src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js?v=10.0.0"></script>
-<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.js?v=10.0.0"></script>
+<script src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.config.js?v=11.0.0"></script>
+<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.js?v=11.0.0"></script>
 ```
 
 Nevkladať súčasne staré DS8/DS9 súbory. Produkčný e-shop sa touto revíziou nemení.
