@@ -1,0 +1,23 @@
+@import 'main-banner.less';
+
+/* Break the native carousel out of Shoptet's fixed container on every viewport. */
+body.in-index .banners-row {
+  --ds-banner-gutter: clamp(36px, 6vw, 112px);
+  width: calc(100vw - var(--ds-banner-gutter));
+  margin-right: calc(50% - 50vw + var(--ds-banner-gutter) / 2);
+  margin-left: calc(50% - 50vw + var(--ds-banner-gutter) / 2);
+}
+
+@media (max-width: 991px) {
+  body.in-index .banners-row {
+    --ds-banner-gutter: 32px;
+    width: calc(100vw - var(--ds-banner-gutter));
+  }
+}
+
+@media (max-width: 767px) {
+  body.in-index .banners-row {
+    --ds-banner-gutter: 24px;
+    width: calc(100vw - var(--ds-banner-gutter));
+  }
+}
