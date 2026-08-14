@@ -1,0 +1,315 @@
+/*
+ * Dotyk Slov main Shoptet banner
+ *
+ * The markup, image, link, order and interval stay owned by Shoptet.
+ * This file only styles the native #carousel rendered from Admin banners.
+ */
+
+body.in-index .banners-row {
+  position: relative;
+  width: calc(100% - clamp(36px, 6vw, 112px));
+  max-width: none;
+  margin: clamp(18px, 2.2vw, 36px) auto clamp(38px, 4vw, 72px);
+}
+
+body.in-index .banners-row > .wide-carousel {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  overflow: visible;
+  padding: 0;
+}
+
+body.in-index .banners-row > .wide-carousel::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: clamp(8px, 1vw, 18px);
+  bottom: clamp(-10px, -.7vw, -6px);
+  left: clamp(8px, 1vw, 18px);
+  height: 36%;
+  border-radius: 0 0 30px 30px;
+  background: linear-gradient(90deg, rgba(236, 76, 154, .48), rgba(117, 64, 200, .5));
+  filter: blur(18px);
+  opacity: .42;
+  pointer-events: none;
+}
+
+body.in-index #carousel {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(28, 24, 32, .08);
+  border-radius: clamp(18px, 2vw, 32px);
+  background: #efe9e1;
+  box-shadow: 0 26px 70px -42px rgba(28, 24, 32, .72);
+}
+
+body.in-index #carousel .carousel-inner,
+body.in-index #carousel .item,
+body.in-index #carousel .item > a {
+  width: 100%;
+}
+
+body.in-index #carousel .item > a {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+}
+
+body.in-index #carousel .item > a:focus-visible {
+  outline: 3px solid #ec4c9a;
+  outline-offset: -7px;
+}
+
+body.in-index #carousel .item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1920 / 450;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 700ms cubic-bezier(.22, 1, .36, 1), filter 300ms ease;
+}
+
+body.in-index #carousel .item > a:hover img {
+  filter: saturate(1.035) contrast(1.015);
+  transform: scale(1.012);
+}
+
+/* The gradient appears only when extended texts are enabled in Shoptet. */
+body.in-index #carousel .item > a:not(.extended-empty)::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(28, 24, 32, .72), rgba(28, 24, 32, .12) 58%, transparent 78%);
+  pointer-events: none;
+}
+
+body.in-index #carousel .extended-banner-texts {
+  z-index: 2;
+  display: flex;
+  max-width: min(620px, 52%);
+  padding: clamp(28px, 4vw, 72px);
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+body.in-index #carousel .extended-banner-title,
+body.in-index #carousel .extended-banner-text,
+body.in-index #carousel .extended-banner-link {
+  position: static;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, .24);
+}
+
+body.in-index #carousel .extended-banner-title {
+  font-size: clamp(32px, 4.3vw, 76px);
+  font-weight: 800;
+  line-height: .98;
+  letter-spacing: -.045em;
+}
+
+body.in-index #carousel .extended-banner-text {
+  max-width: 46ch;
+  font-size: clamp(14px, 1.25vw, 19px);
+  line-height: 1.5;
+}
+
+body.in-index #carousel .extended-banner-link {
+  margin-top: 10px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  background: #fff;
+  color: #1c1820;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: none;
+}
+
+body.in-index #carousel .carousel-control {
+  top: 50%;
+  bottom: auto;
+  width: 52px;
+  height: 52px;
+  margin-top: -26px;
+  border: 1px solid rgba(255, 255, 255, .58);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .92);
+  color: #1c1820;
+  opacity: 0;
+  box-shadow: 0 12px 32px -16px rgba(28, 24, 32, .65);
+  text-shadow: none;
+  transform: scale(.9);
+  transition: opacity .2s ease, transform .2s ease, background .2s ease;
+}
+
+body.in-index #carousel .carousel-control.left {
+  left: 18px;
+}
+
+body.in-index #carousel .carousel-control.right {
+  right: 18px;
+}
+
+body.in-index #carousel .carousel-control::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  border: 0;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0;
+  line-height: 0;
+}
+
+body.in-index #carousel .carousel-control.left::before {
+  transform: translate(-35%, -50%) rotate(135deg);
+}
+
+body.in-index #carousel .carousel-control.right::before {
+  transform: translate(-65%, -50%) rotate(-45deg);
+}
+
+body.in-index #carousel:hover .carousel-control,
+body.in-index #carousel .carousel-control:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+body.in-index #carousel .carousel-control:hover {
+  background: #fff;
+  color: #ec4c9a;
+}
+
+body.in-index #carousel .carousel-indicators {
+  right: auto;
+  bottom: 16px;
+  left: 50%;
+  display: flex;
+  width: auto;
+  min-height: 28px;
+  margin: 0;
+  padding: 8px 10px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, .38);
+  border-radius: 999px;
+  background: rgba(28, 24, 32, .36);
+  backdrop-filter: blur(10px);
+  transform: translateX(-50%);
+}
+
+body.in-index #carousel .carousel-indicators li {
+  width: 7px;
+  height: 7px;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .55);
+  transition: width .25s ease, background .25s ease;
+}
+
+body.in-index #carousel .carousel-indicators .active {
+  width: 25px;
+  height: 7px;
+  background: #fff;
+}
+
+@media (max-width: 991px) {
+  body.in-index .banners-row {
+    width: calc(100% - 32px);
+    margin-top: 18px;
+    margin-bottom: 42px;
+  }
+
+  body.in-index #carousel {
+    border-radius: 22px;
+  }
+
+  body.in-index #carousel .item img {
+    min-height: 220px;
+    aspect-ratio: 16 / 5;
+  }
+
+  body.in-index #carousel .extended-banner-texts {
+    max-width: 68%;
+    padding: 34px;
+  }
+}
+
+@media (max-width: 767px) {
+  body.in-index .banners-row {
+    width: calc(100% - 24px);
+    margin-top: 12px;
+    margin-bottom: 32px;
+  }
+
+  body.in-index #carousel {
+    border-radius: 16px;
+  }
+
+  body.in-index #carousel .item img {
+    min-height: 180px;
+    aspect-ratio: 16 / 7;
+  }
+
+  body.in-index #carousel .extended-banner-texts {
+    max-width: 82%;
+    padding: 22px;
+    gap: 8px;
+  }
+
+  body.in-index #carousel .extended-banner-title {
+    font-size: clamp(25px, 8vw, 42px);
+  }
+
+  body.in-index #carousel .extended-banner-text {
+    display: none;
+  }
+
+  body.in-index #carousel .extended-banner-link {
+    margin-top: 4px;
+    padding: 10px 16px;
+    font-size: 11px;
+  }
+
+  body.in-index #carousel .carousel-control {
+    display: none;
+  }
+
+  body.in-index #carousel .carousel-indicators {
+    bottom: 9px;
+    min-height: 22px;
+    padding: 6px 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.in-index #carousel .item img,
+  body.in-index #carousel .carousel-control,
+  body.in-index #carousel .carousel-indicators li {
+    transition: none;
+  }
+}
