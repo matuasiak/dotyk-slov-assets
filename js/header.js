@@ -9,14 +9,181 @@
     cart: '<svg class="ds-cart-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>'
   };
 
+  const mobileMq = window.matchMedia('(max-width: 767px)');
+
   function makeAction({ className, label, icon, href = '#', target }) {
     const link = document.createElement('a');
     link.href = href;
     link.className = `ds-approved-action ${className}${target ? ' toggle-window' : ''}`;
     link.setAttribute('aria-label', label);
-    if (target) link.dataset.target = target;
+
+    if (target) {
+      link.dataset.target = target;
+      link.setAttribute('aria-expanded', 'false');
+    }
+
     link.innerHTML = `${icon}<span class="ds-tooltip">${label}</span>`;
     return link;
+  }
+
+  function closeMobileMenu() {
+    document.body.classList.remove('navigation-window-visible', 'ds-mobile-nav-open', 'submenu-visible');
+
+    document
+      .querySelectorAll('#navigation .menu-level-1 > li.ext.exp')
+      .forEach((item) => item.classList.remove('exp'));
+
+    document
+      .querySelectorAll('.ds-mobile-menu, [data-target="navigation"]')
+      .forEach((item) => item.setAttribute('aria-expanded', 'false'));
+  }
+
+  function openMobileMenu() {
+    if (!mobileMq.matches) return;
+
+    document.body.classList.add('navigation-window-visible', 'ds-mobile-nav-open');
+
+    document
+      .querySelectorAll('.ds-mobile-menu, [data-target="navigation"]')
+      .forEach((item) => item.setAttribute('aria-expanded', 'true'));
+  }
+
+  function toggleMobileMenu(event) {
+    if (!mobileMq.matches) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const isOpen =
+      document.body.classList.contains('navigation-window-visible') ||
+      document.body.classList.contains('ds-mobile-nav-open');
+
+    if (isOpen) closeMobileMenu();
+    else openMobileMenu();
+  }
+
+  function toggleMobileSearch(event) {
+    if (!mobileMq.matches) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const opening = !document.body.classList.contains('search-window-visible');
+
+    closeMobileMenu();
+    document.body.classList.toggle('search-window-visible', opening);
+
+    if (opening) {
+      window.setTimeout(() => {
+        const input = document.querySelector('#header .search-input');
+        if (input) input.focus();
+      }, 80);
+    }
+  }
+
+  function ensureMobileCloseButton() {
+    const navigation = document.querySelector('#navigation');
+    if (!navigation || navigation.querySelector('.navigation-close')) return;
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'navigation-close';
+    button.setAttribute('aria-label', 'Zavrieť menu');
+    navigation.prepend(button);
+  }
+
+  function bindMobileNavigation() {
+    ensureMobileCloseButton();
+
+    /*
+     * DÔLEŽITÉ:
+     * Custom hamburger vytvárame až po načítaní stránky, takže sa naň
+     * pôvodný Shoptet click handler nemusí pripojiť. Preto ho ovládame
+     * explicitne tu.
+     */
+    document.addEventListener(
+      'click',
+      function (event) {
+        const menuTrigger = event.target.closest(
+          '#header .ds-mobile-menu, #header [data-target="navigation"], .responsive-tools [data-target="navigation"]'
+        );
+
+        if (menuTrigger) {
+          toggleMobileMenu(event);
+          return;
+        }
+
+        const searchTrigger = event.target.closest(
+          '#header .ds-mobile-search, #header [data-target="search"], .responsive-tools [data-target="search"]'
+        );
+
+        if (searchTrigger) {
+          toggleMobileSearch(event);
+          return;
+        }
+
+        const closeButton = event.target.closest('#navigation .navigation-close');
+        if (closeButton) {
+          event.preventDefault();
+          event.stopPropagation();
+          closeMobileMenu();
+          return;
+        }
+
+        const submenuArrow = event.target.closest(
+          '#navigation .menu-level-1 > li.ext > a > .submenu-arrow'
+        );
+
+        if (submenuArrow && mobileMq.matches) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          const item = submenuArrow.closest('li.ext');
+          if (!item) return;
+
+          const willOpen = !item.classList.contains('exp');
+
+          document
+            .querySelectorAll('#navigation .menu-level-1 > li.ext.exp')
+            .forEach((other) => {
+              if (other !== item) other.classList.remove('exp');
+            });
+
+          item.classList.toggle('exp', willOpen);
+
+          const anyOpen = !!document.querySelector(
+            '#navigation .menu-level-1 > li.ext.exp'
+          );
+
+          document.body.classList.toggle('submenu-visible', anyOpen);
+          submenuArrow.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+          return;
+        }
+
+        if (
+          mobileMq.matches &&
+          document.body.classList.contains('ds-mobile-nav-open') &&
+          !event.target.closest('#navigation') &&
+          !event.target.closest('#header .ds-mobile-menu')
+        ) {
+          closeMobileMenu();
+        }
+      },
+      true
+    );
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        closeMobileMenu();
+        document.body.classList.remove('search-window-visible');
+      }
+    });
+
+    if (mobileMq.addEventListener) {
+      mobileMq.addEventListener('change', function (event) {
+        if (!event.matches) closeMobileMenu();
+      });
+    }
   }
 
   function mountHeader() {
@@ -25,12 +192,38 @@
     if (!actions || !cart) return;
 
     actions.querySelectorAll('.ds-approved-action').forEach((node) => node.remove());
-    [
-      makeAction({ className: 'ds-mobile-action ds-mobile-menu', label: 'Menu', icon: icons.menu, target: 'navigation' }),
-      makeAction({ className: 'ds-contact', label: 'Kontakt', icon: icons.contact, href: '/kontakty/' }),
-      makeAction({ className: 'ds-account', label: 'Môj účet', icon: icons.account, target: 'login' }),
-      makeAction({ className: 'ds-mobile-action ds-mobile-search', label: 'Hľadať', icon: icons.search, target: 'search' })
-    ].forEach((item) => actions.insertBefore(item, cart));
+
+    const menuAction = makeAction({
+      className: 'ds-mobile-action ds-mobile-menu',
+      label: 'Menu',
+      icon: icons.menu,
+      target: 'navigation'
+    });
+
+    const contactAction = makeAction({
+      className: 'ds-contact',
+      label: 'Kontakt',
+      icon: icons.contact,
+      href: '/kontakty/'
+    });
+
+    const accountAction = makeAction({
+      className: 'ds-account',
+      label: 'Môj účet',
+      icon: icons.account,
+      target: 'login'
+    });
+
+    const searchAction = makeAction({
+      className: 'ds-mobile-action ds-mobile-search',
+      label: 'Hľadať',
+      icon: icons.search,
+      target: 'search'
+    });
+
+    [menuAction, contactAction, accountAction, searchAction].forEach((item) =>
+      actions.insertBefore(item, cart)
+    );
 
     cart.querySelector('.ds-cart-svg')?.remove();
     cart.insertAdjacentHTML('afterbegin', icons.cart);
@@ -46,7 +239,9 @@
   function startTyping() {
     const input = document.querySelector('#header .search-input');
     if (!input || input.dataset.typingActive) return;
+
     input.dataset.typingActive = 'true';
+
     const suggestions = [
       'Nie som nasratá, len sa tak tvárim',
       'Need money for letenka do prdele',
@@ -54,6 +249,7 @@
       'Všetko prejde',
       'Ja nekričím, ja tak rozprávam'
     ];
+
     let suggestion = 0;
     let character = 0;
     let deleting = false;
@@ -63,10 +259,14 @@
         setTimeout(type, 500);
         return;
       }
+
       const text = suggestions[suggestion];
       character += deleting ? -1 : 1;
+
       input.placeholder = `Skúste napríklad: ${text.slice(0, character)}`;
+
       let delay = deleting ? 34 : 62;
+
       if (!deleting && character === text.length) {
         deleting = true;
         delay = 1700;
@@ -75,16 +275,22 @@
         suggestion = (suggestion + 1) % suggestions.length;
         delay = 350;
       }
+
       setTimeout(type, delay);
     }
+
     type();
   }
 
   function boot() {
     mountHeader();
+    bindMobileNavigation();
     startTyping();
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
-  else boot();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
 })();
