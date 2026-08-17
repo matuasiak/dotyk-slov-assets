@@ -518,7 +518,7 @@
 
   #header > .container {
     width: calc(100% - 48px) !important;
-    max-width: 1920px !important;
+    max-width: 2400px !important;
     margin-right: auto !important;
     margin-left: auto !important;
     padding-right: 0 !important;
@@ -656,9 +656,15 @@
   }
 
   #navigation .navigation-in {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+
     display: flex !important;
     width: calc(100% - 48px) !important;
-    max-width: 1920px !important;
+    max-width: 2400px !important;
     margin-right: auto !important;
     margin-left: auto !important;
     background: #fff !important;
@@ -695,28 +701,6 @@
     text-decoration: none !important;
     text-transform: none !important;
     white-space: nowrap !important;
-  }
-
-  /* Šípky pri kategóriách so submenu */
-  #navigation .menu-level-1 > li:nth-child(1) > a,
-  #navigation .menu-level-1 > li:nth-child(2) > a,
-  #navigation .menu-level-1 > li:nth-child(3) > a {
-    padding-right: 18px !important;
-  }
-
-  #navigation .menu-level-1 > li:nth-child(1) > a::before,
-  #navigation .menu-level-1 > li:nth-child(2) > a::before,
-  #navigation .menu-level-1 > li:nth-child(3) > a::before {
-    content: "" !important;
-    position: absolute !important;
-    top: 50% !important;
-    right: 2px !important;
-    width: 7px !important;
-    height: 7px !important;
-    border-right: 1.5px solid currentColor !important;
-    border-bottom: 1.5px solid currentColor !important;
-    transform: translateY(-70%) rotate(45deg) !important;
-    transform-origin: center !important;
   }
 
   /* Jemný hover bez rozťahovania layoutu */
@@ -772,10 +756,199 @@
     background: #e62518 !important;
   }
 
-  /* Dropdowny zostanú nad obsahom */
-  #navigation .menu-level-1 > li.ext > ul {
-    border-radius: 0 0 12px 12px !important;
+  /* =====================================================
+     NATÍVNA ŠÍPKA PRI POLOŽKÁCH SO SUBMENU
+     ===================================================== */
+
+  #navigation .menu-level-1 > li.ext > a > .submenu-arrow {
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 0 0 9px !important;
+    color: currentColor !important;
+    font-size: 9px !important;
+    line-height: 1 !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > a > .submenu-arrow::after {
+    display: inline-block !important;
+  }
+
+
+  /* =====================================================
+     MEGA MENU
+     - funguje so Shoptet .submenu-visible + .exp
+     - zároveň má hover fallback na desktop
+     ===================================================== */
+
+  #navigation {
+    z-index: 50 !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 {
+    position: absolute !important;
+    z-index: 1002 !important;
+
+    top: 60px !important;
+    left: 50% !important;
+
+    display: none !important;
+    width: 100vw !important;
+    max-width: none !important;
+    min-height: 230px !important;
+    max-height: min(520px, calc(100vh - 150px)) !important;
+
+    margin: 0 !important;
+    padding: 32px max(24px, calc((100vw - 2400px) / 2 + 24px)) 36px !important;
+
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+
+    border: 0 !important;
+    border-top: 1px solid #e7e7e7 !important;
+    border-radius: 0 !important;
+
     background: #fff !important;
-    box-shadow: 0 22px 52px -30px rgba(0, 0, 0, .38) !important;
+    box-shadow: 0 20px 38px -32px rgba(0, 0, 0, .34) !important;
+
+    transform: translateX(-50%) !important;
+
+    align-items: start !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    column-gap: clamp(34px, 4vw, 80px) !important;
+    row-gap: 26px !important;
+  }
+
+  /* otvorenie cez Shoptet JS */
+  body.submenu-visible
+  #navigation .menu-level-1 > li.ext.exp > ul.menu-level-2,
+
+  /* fallback: funguje aj čisto na hover */
+  #navigation .menu-level-1 > li.ext:hover > ul.menu-level-2 {
+    display: grid !important;
+  }
+
+
+  /* Jednotlivé stĺpce / kategórie */
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li {
+    display: block !important;
+    width: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+
+  /* Obrázky v menu teraz schováme — referencia je textová */
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > a.menu-image {
+    display: none !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div {
+    display: block !important;
+    width: 100% !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Názov hlavnej podkategórie */
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > a:not(.menu-image),
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div > a {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 11px !important;
+    padding: 0 !important;
+
+    color: #151515 !important;
+    background: transparent !important;
+
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    line-height: 1.35 !important;
+    text-decoration: none !important;
+  }
+
+  /* Tretia úroveň — odkazy pod nadpisom */
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div > ul {
+    display: flex !important;
+    max-height: none !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div > ul > li {
+    display: block !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div > ul > li > a {
+    display: inline-block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    color: #737373 !important;
+    background: transparent !important;
+
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 1.35 !important;
+    text-decoration: none !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 a:hover,
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 a:focus-visible {
+    color: #111 !important;
+    background: transparent !important;
+    text-decoration: underline !important;
+    text-underline-offset: 3px !important;
+  }
+
+
+  /* =====================================================
+     STMAVENIE OBSAHU POD OTVORENÝM MEGA MENU
+     ===================================================== */
+
+  #navigation::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 1000 !important;
+
+    top: 60px !important;
+    left: 50% !important;
+
+    display: none !important;
+    width: 100vw !important;
+    height: calc(100vh - 60px) !important;
+
+    background: rgba(0, 0, 0, .24) !important;
+    pointer-events: none !important;
+
+    transform: translateX(-50%) !important;
+  }
+
+  body.submenu-visible #navigation::after {
+    display: block !important;
+  }
+
+  @supports selector(#navigation:has(.menu-level-1 > li.ext:hover)) {
+    #navigation:has(.menu-level-1 > li.ext:hover)::after {
+      display: block !important;
+    }
+  }
+
+
+  /* Menší desktop: 3 stĺpce */
+  @media (max-width: 1350px) {
+    #navigation .menu-level-1 > li.ext > ul.menu-level-2 {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
   }
 }
