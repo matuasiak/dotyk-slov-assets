@@ -1,0 +1,120 @@
+@import url("./dotyk-slov-header-approved-v7.css?v=3.2.0");
+
+/* Clean, more readable desktop header. Native Shoptet menu data stay untouched. */
+@media (min-width: 992px) {
+  #header {
+    background: #fff !important;
+    border-bottom-color: transparent !important;
+  }
+
+  #header > .container {
+    width: calc(100% - clamp(36px, 4.2vw, 80px)) !important;
+  }
+
+  #header .header-top {
+    min-height: 76px !important;
+    height: 76px !important;
+    grid-template-columns:
+      clamp(170px, 11vw, 215px)
+      minmax(380px, 1fr)
+      clamp(145px, 10vw, 180px) !important;
+    gap: clamp(22px, 2.2vw, 42px) !important;
+  }
+
+  #header .site-name img {
+    max-width: clamp(170px, 10.5vw, 205px) !important;
+    max-height: 52px !important;
+  }
+
+  #header .search-form .search-input {
+    height: 44px !important;
+    padding-right: 52px !important;
+    padding-left: 22px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: #f4f4f4 !important;
+    color: #242729 !important;
+    font-size: 14px !important;
+    box-shadow: none !important;
+  }
+
+  #header .search-form .search-input:focus {
+    background: #f0f0f0 !important;
+    box-shadow: 0 0 0 2px rgba(36, 39, 41, .08) !important;
+  }
+
+  #header .search-form .btn {
+    top: 4px !important;
+    right: 4px !important;
+    width: 36px !important;
+    height: 36px !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #646b70 !important;
+    box-shadow: none !important;
+  }
+
+  #header .search-form .btn:hover,
+  #header .search-form .btn:focus-visible {
+    background: #e8e8e8 !important;
+    color: #111 !important;
+    transform: none !important;
+  }
+
+  #header .navigation-buttons a,
+  #header .navigation-buttons .cart-count {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  #header .navigation-buttons a:hover,
+  #header .navigation-buttons .cart-count:hover {
+    background: #f5f5f5 !important;
+    color: #111 !important;
+    transform: none !important;
+  }
+
+  #navigation,
+  #navigation .navigation-in,
+  #navigation .menu-level-1,
+  #navigation .menu-level-1 > li,
+  #navigation .menu-level-1 > li > a {
+    min-height: 58px !important;
+    height: 58px !important;
+  }
+
+  #navigation {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    background: #fff !important;
+  }
+
+  #navigation .menu-level-1 {
+    justify-content: space-between !important;
+    gap: clamp(16px, 1.55vw, 34px) !important;
+  }
+
+  #navigation .menu-level-1 > li > a {
+    color: #242729 !important;
+    font-size: clamp(13px, .78vw, 15px) !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -.01em !important;
+  }
+
+  #navigation .menu-level-1 > li > a::after {
+    bottom: 7px !important;
+    height: 2px !important;
+    background: #242729 !important;
+  }
+
+  #navigation .menu-level-1 > li:hover > a,
+  #navigation .menu-level-1 > li > a:focus-visible {
+    color: #111 !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul {
+    border-radius: 0 0 12px 12px !important;
+    box-shadow: 0 22px 52px -30px rgba(0, 0, 0, .38) !important;
+  }
+}
