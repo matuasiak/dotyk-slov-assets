@@ -16,35 +16,54 @@
     link.href = href;
     link.className = `ds-approved-action ${className}${target ? ' toggle-window' : ''}`;
     link.setAttribute('aria-label', label);
-
     if (target) {
       link.dataset.target = target;
       link.setAttribute('aria-expanded', 'false');
     }
-
     link.innerHTML = `${icon}<span class="ds-tooltip">${label}</span>`;
     return link;
+  }
+
+  function hideDuplicateMobileTopbar() {
+    if (!mobileMq.matches) return;
+    const topbar = document.querySelector('.top-navigation-bar');
+    if (!topbar) return;
+
+    topbar.style.setProperty('display', 'none', 'important');
+    topbar.style.setProperty('height', '0', 'important');
+    topbar.style.setProperty('min-height', '0', 'important');
+    topbar.style.setProperty('visibility', 'hidden', 'important');
+  }
+
+  function syncCartAnchor() {
+    if (mobileMq.matches) return;
+
+    const cart = document.querySelector('#header .navigation-buttons .cart-count');
+    if (!cart) return;
+
+    const rect = cart.getBoundingClientRect();
+    const right = Math.max(12, Math.round(window.innerWidth - rect.right));
+    const top = Math.round(rect.bottom + 8);
+
+    document.documentElement.style.setProperty('--ds-cart-right', `${right}px`);
+    document.documentElement.style.setProperty('--ds-cart-top', `${top}px`);
   }
 
   function closeMobileMenu() {
     document.body.classList.remove('navigation-window-visible', 'ds-mobile-nav-open', 'submenu-visible');
 
-    document
-      .querySelectorAll('#navigation .menu-level-1 > li.ext.exp')
+    document.querySelectorAll('#navigation .menu-level-1 > li.ext.exp')
       .forEach((item) => item.classList.remove('exp'));
 
-    document
-      .querySelectorAll('.ds-mobile-menu, [data-target="navigation"]')
+    document.querySelectorAll('.ds-mobile-menu, [data-target="navigation"]')
       .forEach((item) => item.setAttribute('aria-expanded', 'false'));
   }
 
   function openMobileMenu() {
     if (!mobileMq.matches) return;
-
     document.body.classList.add('navigation-window-visible', 'ds-mobile-nav-open');
 
-    document
-      .querySelectorAll('.ds-mobile-menu, [data-target="navigation"]')
+    document.querySelectorAll('.ds-mobile-menu, [data-target="navigation"]')
       .forEach((item) => item.setAttribute('aria-expanded', 'true'));
   }
 
@@ -69,15 +88,11 @@
     event.stopPropagation();
 
     const opening = !document.body.classList.contains('search-window-visible');
-
     closeMobileMenu();
     document.body.classList.toggle('search-window-visible', opening);
 
     if (opening) {
-      window.setTimeout(() => {
-        const input = document.querySelector('#header .search-input');
-        if (input) input.focus();
-      }, 80);
+      setTimeout(() => document.querySelector('#header .search-input')?.focus(), 80);
     }
   }
 
@@ -95,82 +110,70 @@
   function bindMobileNavigation() {
     ensureMobileCloseButton();
 
-    /*
-     * DÔLEŽITÉ:
-     * Custom hamburger vytvárame až po načítaní stránky, takže sa naň
-     * pôvodný Shoptet click handler nemusí pripojiť. Preto ho ovládame
-     * explicitne tu.
-     */
-    document.addEventListener(
-      'click',
-      function (event) {
-        const menuTrigger = event.target.closest(
-          '#header .ds-mobile-menu, #header [data-target="navigation"], .responsive-tools [data-target="navigation"]'
+    document.addEventListener('click', function (event) {
+      const menuTrigger = event.target.closest(
+        '#header .ds-mobile-menu, #header [data-target="navigation"], .responsive-tools [data-target="navigation"]'
+      );
+
+      if (menuTrigger) {
+        toggleMobileMenu(event);
+        return;
+      }
+
+      const searchTrigger = event.target.closest(
+        '#header .ds-mobile-search, #header [data-target="search"], .responsive-tools [data-target="search"]'
+      );
+
+      if (searchTrigger) {
+        toggleMobileSearch(event);
+        return;
+      }
+
+      const closeButton = event.target.closest('#navigation .navigation-close');
+      if (closeButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        closeMobileMenu();
+        return;
+      }
+
+      const submenuArrow = event.target.closest(
+        '#navigation .menu-level-1 > li.ext > a > .submenu-arrow'
+      );
+
+      if (submenuArrow && mobileMq.matches) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const item = submenuArrow.closest('li.ext');
+        if (!item) return;
+
+        const willOpen = !item.classList.contains('exp');
+
+        document.querySelectorAll('#navigation .menu-level-1 > li.ext.exp')
+          .forEach((other) => {
+            if (other !== item) other.classList.remove('exp');
+          });
+
+        item.classList.toggle('exp', willOpen);
+        document.body.classList.toggle(
+          'submenu-visible',
+          !!document.querySelector('#navigation .menu-level-1 > li.ext.exp')
         );
 
-        if (menuTrigger) {
-          toggleMobileMenu(event);
-          return;
-        }
+        submenuArrow.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        return;
+      }
 
-        const searchTrigger = event.target.closest(
-          '#header .ds-mobile-search, #header [data-target="search"], .responsive-tools [data-target="search"]'
-        );
-
-        if (searchTrigger) {
-          toggleMobileSearch(event);
-          return;
-        }
-
-        const closeButton = event.target.closest('#navigation .navigation-close');
-        if (closeButton) {
-          event.preventDefault();
-          event.stopPropagation();
-          closeMobileMenu();
-          return;
-        }
-
-        const submenuArrow = event.target.closest(
-          '#navigation .menu-level-1 > li.ext > a > .submenu-arrow'
-        );
-
-        if (submenuArrow && mobileMq.matches) {
-          event.preventDefault();
-          event.stopPropagation();
-
-          const item = submenuArrow.closest('li.ext');
-          if (!item) return;
-
-          const willOpen = !item.classList.contains('exp');
-
-          document
-            .querySelectorAll('#navigation .menu-level-1 > li.ext.exp')
-            .forEach((other) => {
-              if (other !== item) other.classList.remove('exp');
-            });
-
-          item.classList.toggle('exp', willOpen);
-
-          const anyOpen = !!document.querySelector(
-            '#navigation .menu-level-1 > li.ext.exp'
-          );
-
-          document.body.classList.toggle('submenu-visible', anyOpen);
-          submenuArrow.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-          return;
-        }
-
-        if (
-          mobileMq.matches &&
-          document.body.classList.contains('ds-mobile-nav-open') &&
-          !event.target.closest('#navigation') &&
-          !event.target.closest('#header .ds-mobile-menu')
-        ) {
-          closeMobileMenu();
-        }
-      },
-      true
-    );
+      if (
+        mobileMq.matches &&
+        document.body.classList.contains('ds-mobile-nav-open') &&
+        !event.target.closest('#navigation') &&
+        !event.target.closest('#header .ds-mobile-menu')
+      ) {
+        closeMobileMenu();
+      }
+    }, true);
 
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape') {
@@ -181,7 +184,9 @@
 
     if (mobileMq.addEventListener) {
       mobileMq.addEventListener('change', function (event) {
+        hideDuplicateMobileTopbar();
         if (!event.matches) closeMobileMenu();
+        syncCartAnchor();
       });
     }
   }
@@ -193,37 +198,12 @@
 
     actions.querySelectorAll('.ds-approved-action').forEach((node) => node.remove());
 
-    const menuAction = makeAction({
-      className: 'ds-mobile-action ds-mobile-menu',
-      label: 'Menu',
-      icon: icons.menu,
-      target: 'navigation'
-    });
-
-    const contactAction = makeAction({
-      className: 'ds-contact',
-      label: 'Kontakt',
-      icon: icons.contact,
-      href: '/kontakty/'
-    });
-
-    const accountAction = makeAction({
-      className: 'ds-account',
-      label: 'Môj účet',
-      icon: icons.account,
-      target: 'login'
-    });
-
-    const searchAction = makeAction({
-      className: 'ds-mobile-action ds-mobile-search',
-      label: 'Hľadať',
-      icon: icons.search,
-      target: 'search'
-    });
-
-    [menuAction, contactAction, accountAction, searchAction].forEach((item) =>
-      actions.insertBefore(item, cart)
-    );
+    [
+      makeAction({ className: 'ds-mobile-action ds-mobile-menu', label: 'Menu', icon: icons.menu, target: 'navigation' }),
+      makeAction({ className: 'ds-contact', label: 'Kontakt', icon: icons.contact, href: '/kontakty/' }),
+      makeAction({ className: 'ds-account', label: 'Môj účet', icon: icons.account, target: 'login' }),
+      makeAction({ className: 'ds-mobile-action ds-mobile-search', label: 'Hľadať', icon: icons.search, target: 'search' })
+    ].forEach((item) => actions.insertBefore(item, cart));
 
     cart.querySelector('.ds-cart-svg')?.remove();
     cart.insertAdjacentHTML('afterbegin', icons.cart);
@@ -262,7 +242,6 @@
 
       const text = suggestions[suggestion];
       character += deleting ? -1 : 1;
-
       input.placeholder = `Skúste napríklad: ${text.slice(0, character)}`;
 
       let delay = deleting ? 34 : 62;
@@ -284,8 +263,22 @@
 
   function boot() {
     mountHeader();
+    hideDuplicateMobileTopbar();
     bindMobileNavigation();
     startTyping();
+
+    syncCartAnchor();
+    window.addEventListener('resize', syncCartAnchor, { passive: true });
+    window.addEventListener('scroll', syncCartAnchor, { passive: true });
+
+    document.querySelector('#header .navigation-buttons .cart-count')
+      ?.addEventListener('mouseenter', syncCartAnchor);
+
+    document.querySelector('#header .navigation-buttons .cart-count')
+      ?.addEventListener('click', function () {
+        syncCartAnchor();
+        setTimeout(syncCartAnchor, 0);
+      });
   }
 
   if (document.readyState === 'loading') {
