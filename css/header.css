@@ -486,359 +486,260 @@
   box-shadow: 0 0 0 3px rgba(236, 76, 154, .22) !important;
 }
 
+/* =========================================================
+   DOTYK SLOV — FINÁLNY ČISTÝ DESKTOP HEADER
+   Referencia: prvý screenshot
+   Mobile/tablet pravidlá vyššie ostávajú nedotknuté.
+   ========================================================= */
 
-/* Plynulá desktopová šírka */
-/* Fluid desktop header inspired by Kulina. Tablet/mobile stay unchanged. */
 @media (min-width: 992px) {
+
+  /* Tenká čierna linka úplne hore */
+  .top-navigation-bar {
+    display: block !important;
+    height: 5px !important;
+    min-height: 5px !important;
+    overflow: hidden !important;
+    border: 0 !important;
+    background: #1c1820 !important;
+  }
+
+  .top-navigation-bar .container {
+    display: none !important;
+  }
+
+  /* Základ hlavičky */
+  #header {
+    margin: 0 !important;
+    background: #fff !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
   #header > .container {
-    width: calc(100% - clamp(36px, 6vw, 112px)) !important;
+    width: calc(100% - 48px) !important;
     max-width: none !important;
     margin-right: auto !important;
     margin-left: auto !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
   }
 
+  /* Logo | vyhľadávanie | ikony */
   #header .header-top {
-    grid-template-columns:
-      clamp(180px, 13vw, 250px)
-      minmax(360px, 1fr)
-      clamp(150px, 12vw, 190px) !important;
-    gap: clamp(24px, 3vw, 58px) !important;
+    display: grid !important;
+    grid-template-columns: 180px minmax(420px, 1fr) 160px !important;
+    gap: 46px !important;
+    height: 77px !important;
+    min-height: 77px !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #header .header-top > div {
+    min-width: 0 !important;
+  }
+
+  #header .site-name-wrapper {
+    position: static !important;
+  }
+
+  #header .site-name {
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  #header .site-name a {
+    display: flex !important;
+    align-items: center !important;
   }
 
   #header .site-name img {
-    max-width: clamp(180px, 12vw, 230px) !important;
+    display: block !important;
+    width: auto !important;
+    max-width: 175px !important;
+    max-height: 54px !important;
+    margin: 0 !important;
   }
 
-  #navigation .menu-level-1 {
-    justify-content: space-between !important;
-    gap: clamp(14px, 1.55vw, 38px) !important;
+  /* Vyhľadávanie */
+  #header .search {
+    min-width: 0 !important;
   }
 
-  .user-action .popup-widget.cart-widget {
-    right: clamp(18px, 3vw, 56px) !important;
-  }
-}
-
-@media (min-width: 1500px) {
-  #header .header-top {
-    height: 100px !important;
-    min-height: 100px !important;
-  }
-
-  #header .search-form .search-input {
-    height: 58px !important;
-    padding-left: 26px !important;
-    font-size: 16px !important;
-  }
-
-  #header .search-form .btn {
-    right: 7px !important;
-    top: 7px !important;
-    width: 44px !important;
-    height: 44px !important;
-  }
-
-  #navigation,
-  #navigation .navigation-in,
-  #navigation .menu-level-1 > li > a {
-    height: 60px !important;
-    min-height: 60px !important;
-  }
-
-  #navigation .menu-level-1 > li > a {
-    font-size: 14px !important;
-  }
-
-  .user-action .popup-widget.cart-widget {
-    margin-top: 60px !important;
-  }
-}
-
-
-/* Čistá desktopová hlavička a menu */
-/* Clean, more readable desktop header. Native Shoptet menu data stay untouched. */
-@media (min-width: 992px) {
-  #header {
-    background: #fff !important;
-    border-bottom-color: transparent !important;
-  }
-
-  #header > .container {
-    width: calc(100% - clamp(36px, 4.2vw, 80px)) !important;
-  }
-
-  #header .header-top {
-    min-height: 76px !important;
-    height: 76px !important;
-    grid-template-columns:
-      clamp(170px, 11vw, 215px)
-      minmax(380px, 1fr)
-      clamp(145px, 10vw, 180px) !important;
-    gap: clamp(22px, 2.2vw, 42px) !important;
-  }
-
-  #header .site-name img {
-    max-width: clamp(170px, 10.5vw, 205px) !important;
-    max-height: 52px !important;
+  #header .search-form {
+    position: relative !important;
+    width: 100% !important;
+    margin: 0 !important;
   }
 
   #header .search-form .search-input {
-    height: 44px !important;
-    padding-right: 52px !important;
-    padding-left: 22px !important;
+    width: 100% !important;
+    height: 46px !important;
+    padding: 0 54px 0 24px !important;
     border: 0 !important;
     border-radius: 999px !important;
     background: #f4f4f4 !important;
     color: #242729 !important;
     font-size: 14px !important;
+    line-height: 46px !important;
     box-shadow: none !important;
   }
 
   #header .search-form .search-input:focus {
-    background: #f0f0f0 !important;
-    box-shadow: 0 0 0 2px rgba(36, 39, 41, .08) !important;
+    background: #f1f1f1 !important;
+    box-shadow: 0 0 0 2px rgba(36, 39, 41, .07) !important;
   }
 
   #header .search-form .btn {
-    top: 4px !important;
-    right: 4px !important;
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
     width: 36px !important;
     height: 36px !important;
+    padding: 0 !important;
     border: 0 !important;
+    border-radius: 50% !important;
     background: transparent !important;
     color: #646b70 !important;
     box-shadow: none !important;
+    transform: none !important;
   }
 
   #header .search-form .btn:hover,
   #header .search-form .btn:focus-visible {
-    background: #e8e8e8 !important;
+    background: #e9e9e9 !important;
     color: #111 !important;
     transform: none !important;
   }
 
-  #header .navigation-buttons a,
+  /* Pravé ikony */
+  #header .navigation-buttons {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+  }
+
+  #header .navigation-buttons .ds-approved-action,
   #header .navigation-buttons .cart-count {
     width: 42px !important;
     height: 42px !important;
+    background: transparent !important;
+    color: #1c1820 !important;
+    transform: none !important;
   }
 
-  #header .navigation-buttons a:hover,
+  #header .navigation-buttons .ds-approved-action:hover,
   #header .navigation-buttons .cart-count:hover {
     background: #f5f5f5 !important;
     color: #111 !important;
     transform: none !important;
   }
 
+  /* Navigácia */
   #navigation,
   #navigation .navigation-in,
   #navigation .menu-level-1,
   #navigation .menu-level-1 > li,
   #navigation .menu-level-1 > li > a {
-    min-height: 58px !important;
-    height: 58px !important;
+    height: 60px !important;
+    min-height: 60px !important;
   }
 
   #navigation {
+    overflow: visible !important;
     border-top: 0 !important;
     border-bottom: 0 !important;
     background: #fff !important;
   }
 
-  #navigation .menu-level-1 {
-    justify-content: space-between !important;
-    gap: clamp(16px, 1.55vw, 34px) !important;
-  }
-
-  #navigation .menu-level-1 > li > a {
-    color: #242729 !important;
-    font-size: clamp(13px, .78vw, 15px) !important;
-    font-weight: 600 !important;
-    line-height: 1.2 !important;
-    letter-spacing: -.01em !important;
-  }
-
-  #navigation .menu-level-1 > li > a::after {
-    bottom: 7px !important;
-    height: 2px !important;
-    background: #242729 !important;
-  }
-
-  #navigation .menu-level-1 > li:hover > a,
-  #navigation .menu-level-1 > li > a:focus-visible {
-    color: #111 !important;
-  }
-
-  #navigation .menu-level-1 > li.ext > ul {
-    border-radius: 0 0 12px 12px !important;
-    box-shadow: 0 22px 52px -30px rgba(0, 0, 0, .38) !important;
-  }
-  @media (min-width: 992px) {
-
-  /* Celá hlavička skoro cez celú šírku */
-  #header > .container {
-    width: calc(100% - 48px) !important;
-    max-width: none !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  /* Horný riadok: logo | search | ikony */
-  #header .header-top {
-    height: 82px !important;
-    min-height: 82px !important;
-
-    grid-template-columns:
-      180px
-      minmax(420px, 1fr)
-      160px !important;
-
-    gap: 46px !important;
-    padding: 0 !important;
-  }
-
-  /* Logo */
-  #header .site-name img {
-    max-width: 172px !important;
-    max-height: 54px !important;
-  }
-
-  /* Search */
-  #header .search-form .search-input {
-    height: 46px !important;
-    padding-left: 24px !important;
-    padding-right: 54px !important;
-
-    border: 0 !important;
-    border-radius: 999px !important;
-
-    background: #f4f4f4 !important;
-    color: #242729 !important;
-
-    font-size: 14px !important;
-  }
-
-  #header .search-form .btn {
-    top: 5px !important;
-    right: 5px !important;
-
-    width: 36px !important;
-    height: 36px !important;
-  }
-
-
-  /* ==========================
-     NAVIGÁCIA
-     ========================== */
-
-  #navigation,
-  #navigation .navigation-in,
-  #navigation .menu-level-1,
-  #navigation .menu-level-1 > li,
-  #navigation .menu-level-1 > li > a {
-    height: 58px !important;
-    min-height: 58px !important;
-  }
-
-  #navigation {
-    border-top: 0 !important;
-    border-bottom: 0 !important;
+  #navigation .navigation-in {
+    display: flex !important;
+    width: 100% !important;
     background: #fff !important;
   }
 
-  /* KRITICKÁ ZMENA:
-     už NIE space-between */
   #navigation .menu-level-1 {
     display: flex !important;
-    flex: 1 !important;
-
-    justify-content: flex-start !important;
+    flex: 1 1 auto !important;
     align-items: stretch !important;
-
-    gap: clamp(34px, 3vw, 58px) !important;
-
+    justify-content: flex-start !important;
+    gap: 56px !important;
     margin: 0 !important;
     padding: 0 !important;
   }
 
+  #navigation .menu-level-1 > li,
+  #navigation .menu-level-1 > li.splitted {
+    flex: 0 0 auto !important;
+    visibility: visible !important;
+    border: 0 !important;
+  }
+
   #navigation .menu-level-1 > li > a {
+    position: relative !important;
     display: flex !important;
     align-items: center !important;
-
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-
+    padding: 0 !important;
+    border: 0 !important;
     color: #111 !important;
-
     font-size: 14px !important;
     font-weight: 700 !important;
     line-height: 1.2 !important;
-
+    letter-spacing: 0 !important;
+    text-decoration: none !important;
+    text-transform: none !important;
     white-space: nowrap !important;
   }
 
-
-  /* ==========================
-     PORADIE PODĽA TVOJHO
-     REFERENČNÉHO SCREENSHOTU
-     ========================== */
-
-  /* 5. Výpredaj -> 1. */
-  #navigation .menu-level-1 > li:nth-child(5) {
-    order: 1 !important;
+  /* Jemný hover bez rozťahovania layoutu */
+  #navigation .menu-level-1 > li > a::after {
+    right: 0 !important;
+    bottom: 7px !important;
+    left: 0 !important;
+    height: 2px !important;
+    background: #111 !important;
   }
 
-  /* Produkty podľa textu */
-  #navigation .menu-level-1 > li:nth-child(1) {
-    order: 2 !important;
+  #navigation .menu-level-1 > li:hover > a,
+  #navigation .menu-level-1 > li.active > a,
+  #navigation .menu-level-1 > li > a:focus-visible {
+    color: #111 !important;
+    background: transparent !important;
   }
 
-  /* Oblečenie */
-  #navigation .menu-level-1 > li:nth-child(2) {
-    order: 3 !important;
-  }
+  /* Aktuálne poradie kategórií v Shoptete:
+     1 Produkty podľa textu
+     2 Oblečenie
+     3 Doplnky
+     4 Tvoj vlastný text
+     5 Výpredaj
+     6 Limitky
+     7 Mačka vo vreci
+     8 Darčekové poukazy
+     9 Párové tričká
+  */
 
-  /* Doplnky */
-  #navigation .menu-level-1 > li:nth-child(3) {
-    order: 4 !important;
-  }
+  #navigation .menu-level-1 > li:nth-child(5) { order: 1 !important; }
+  #navigation .menu-level-1 > li:nth-child(1) { order: 2 !important; }
+  #navigation .menu-level-1 > li:nth-child(2) { order: 3 !important; }
+  #navigation .menu-level-1 > li:nth-child(3) { order: 4 !important; }
+  #navigation .menu-level-1 > li:nth-child(4) { order: 5 !important; }
+  #navigation .menu-level-1 > li:nth-child(6) { order: 6 !important; }
+  #navigation .menu-level-1 > li:nth-child(8) { order: 7 !important; }
 
-  /* Tvoj vlastný text */
-  #navigation .menu-level-1 > li:nth-child(4) {
-    order: 5 !important;
-  }
-
-  /* Limitky */
-  #navigation .menu-level-1 > li:nth-child(6) {
-    order: 6 !important;
-  }
-
-  /* Darčekové poukazy */
-  #navigation .menu-level-1 > li:nth-child(8) {
-    order: 7 !important;
-  }
-
-
-  /* Mačka vo vreci */
-  #navigation .menu-level-1 > li:nth-child(7) {
-    display: none !important;
-  }
-
-  /* Párové tričká */
+  /* Položky, ktoré na referenčnom headri nie sú */
+  #navigation .menu-level-1 > li:nth-child(7),
   #navigation .menu-level-1 > li:nth-child(9) {
     display: none !important;
   }
 
-
-  /* ==========================
-     VÝPREDAJ ČERVENÝ
-     ========================== */
-
+  /* Výpredaj */
   #navigation .menu-level-1 > li:nth-child(5) > a,
   #navigation .menu-level-1 > li:nth-child(5) > a:hover,
-  #navigation .menu-level-1 > li:nth-child(5) > a:focus {
+  #navigation .menu-level-1 > li:nth-child(5) > a:focus-visible {
     color: #e62518 !important;
   }
 
@@ -846,5 +747,10 @@
     background: #e62518 !important;
   }
 
-}
+  /* Dropdowny zostanú nad obsahom */
+  #navigation .menu-level-1 > li.ext > ul {
+    border-radius: 0 0 12px 12px !important;
+    background: #fff !important;
+    box-shadow: 0 22px 52px -30px rgba(0, 0, 0, .38) !important;
+  }
 }
