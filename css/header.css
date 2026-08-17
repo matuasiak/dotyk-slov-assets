@@ -518,7 +518,7 @@
 
   #header > .container {
     width: calc(100% - 48px) !important;
-    max-width: none !important;
+    max-width: 1920px !important;
     margin-right: auto !important;
     margin-left: auto !important;
     padding-right: 0 !important;
@@ -657,7 +657,10 @@
 
   #navigation .navigation-in {
     display: flex !important;
-    width: 100% !important;
+    width: calc(100% - 48px) !important;
+    max-width: 1920px !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
     background: #fff !important;
   }
 
@@ -692,6 +695,28 @@
     text-decoration: none !important;
     text-transform: none !important;
     white-space: nowrap !important;
+  }
+
+  /* Šípky pri kategóriách so submenu */
+  #navigation .menu-level-1 > li:nth-child(1) > a,
+  #navigation .menu-level-1 > li:nth-child(2) > a,
+  #navigation .menu-level-1 > li:nth-child(3) > a {
+    padding-right: 18px !important;
+  }
+
+  #navigation .menu-level-1 > li:nth-child(1) > a::before,
+  #navigation .menu-level-1 > li:nth-child(2) > a::before,
+  #navigation .menu-level-1 > li:nth-child(3) > a::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    right: 2px !important;
+    width: 7px !important;
+    height: 7px !important;
+    border-right: 1.5px solid currentColor !important;
+    border-bottom: 1.5px solid currentColor !important;
+    transform: translateY(-70%) rotate(45deg) !important;
+    transform-origin: center !important;
   }
 
   /* Jemný hover bez rozťahovania layoutu */
