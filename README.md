@@ -1,36 +1,41 @@
-# Dotyk Slov — Shoptet Blank
+# Dotyk Slov – Shoptet téma
 
-Čistá téma pre testovací e-shop `808782.myshoptet.com`.
+Tento repozitár obsahuje úpravy vzhľadu testovacieho e-shopu `808782.myshoptet.com`.
 
-## Ako je postavená
+## Ktoré súbory sú správne
 
-- základom je aktuálny Shoptet Classic (`templates-assets/11`), pretože Blank vychádza z Classic;
-- oficiálne Shoptet zdroje sa sťahujú do `.vendor/` a nikdy sa neupravujú;
-- všetky naše zmeny sú iba v `src/`;
-- build vytvorí `css/dotyk-slov.css` a `js/dotyk-slov.js`;
-- testovací Shoptet má momentálne vypnuté iba natívne CSS, preto používame natívny Shoptet JavaScript a nepridávame jeho druhú kópiu.
+Aktívne a ďalej upravované sú iba tieto štyri súbory:
 
-## Lokálny build
+| Časť webu | CSS | JavaScript |
+| --- | --- | --- |
+| Hlavička | [`css/header.css`](css/header.css) | [`js/header.js`](js/header.js) |
+| Hlavné bannery | [`css/banners.css`](css/banners.css) | [`js/banners.js`](js/banners.js) |
 
-```bash
-npm install
-npm run setup
-npm run verify
-```
+Pri ďalších úpravách nevytvárame súbory `v2`, `v3` a podobne. Mení sa vždy iba príslušný súbor z tabuľky. Históriu verzií uchováva Git.
 
-## Testovací Shoptet
+## Linky pre Shoptet
 
-V hlavičke:
+Do sekcie **Vzhľad a obsah → Editor → HTML kód → Záhlavie (HEAD)** patria:
 
 ```html
-<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/dotyk-slov.css?v=1.0.0">
+<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/header.css?v=1">
+<link rel="stylesheet" href="https://matuasiak.github.io/dotyk-slov-assets/css/banners.css?v=1">
 ```
 
-Pred koncom `body`:
+Do sekcie **Zápatí (pred koncom BODY)** patria:
 
 ```html
-<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/dotyk-slov.js?v=1.0.0"></script>
+<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/header.js?v=1"></script>
+<script defer src="https://matuasiak.github.io/dotyk-slov-assets/js/banners.js?v=1"></script>
 ```
 
-Produkčný e-shop `dotykslov.sk` sa týmto repozitárom nemení.
+Parameter `?v=1` slúži iba na obnovenie cache. Pri väčšej publikovanej úprave ho môžeme zvýšiť na `?v=2`; názvy súborov zostávajú rovnaké.
 
+## Pravidlo pre ďalšiu prácu
+
+- úprava hlavičky: `css/header.css` a podľa potreby `js/header.js`;
+- úprava bannerov: `css/banners.css` a podľa potreby `js/banners.js`;
+- obrázky: priečinok `images/`;
+- fonty Shoptetu: priečinok `fonts/`.
+
+Staré verziované súbory zostávajú dočasne iba preto, že ich ešte načítava ostrý Shoptet. Po prepnutí HTML odkazov na štyri kanonické súbory ich odstránime.
