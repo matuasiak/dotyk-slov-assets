@@ -1649,3 +1649,71 @@
   }
 }
 
+/* =========================================================
+   DOTYK SLOV — V6 FINAL PATCH
+   - desktop cart visually connected to cart icon
+   - mobile drawer state used by JS fallback
+   ========================================================= */
+
+@media (min-width: 992px) {
+  /* Do not use fixed here: some Shoptet wrappers create a containing block
+     and shift fixed elements. Absolute top is stable in the native header. */
+  .user-action .popup-widget.cart-widget,
+  .admin-logged .user-action .popup-widget.cart-widget,
+  .scrolled .user-action .popup-widget.cart-widget,
+  .scrolled .admin-logged .user-action .popup-widget.cart-widget {
+    position: absolute !important;
+
+    top: 74px !important;
+    right: max(24px, calc((100vw - 2400px) / 2 + 24px)) !important;
+    bottom: auto !important;
+    left: auto !important;
+
+    width: min(500px, calc(100vw - 48px)) !important;
+
+    margin: 0 !important;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+
+    transform: none !important;
+  }
+
+  .user-action .popup-widget.cart-widget::before,
+  .admin-logged .user-action .popup-widget.cart-widget::before,
+  .scrolled .user-action .popup-widget.cart-widget::before,
+  .scrolled .admin-logged .user-action .popup-widget.cart-widget::before {
+    top: -9px !important;
+    right: 13px !important;
+    left: auto !important;
+  }
+}
+
+@media (max-width: 767px) {
+  body.navigation-window-visible {
+    overflow: hidden !important;
+  }
+
+  /* Ensure every possible hamburger target really receives taps */
+  #header [data-target="navigation"],
+  .responsive-tools [data-target="navigation"],
+  #header .ds-mobile-menu {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+  }
+
+  /* JS adds this helper class as well as Shoptet's native class */
+  body.ds-mobile-nav-open #navigation {
+    width: min(88vw, 380px) !important;
+  }
+
+  body.ds-mobile-nav-open::after {
+    content: "" !important;
+    position: fixed !important;
+    z-index: 1190 !important;
+    inset: 0 !important;
+    display: block !important;
+    background: rgba(0,0,0,.28) !important;
+  }
+}
+
