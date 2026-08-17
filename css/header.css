@@ -663,10 +663,14 @@
     left: auto !important;
 
     display: flex !important;
-    width: calc(100% - 48px) !important;
-    max-width: 2400px !important;
-    margin-right: auto !important;
-    margin-left: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+
+    /* 24 px na bežnom desktope; na extrémne širokom/zoom-out sa obsah vycentruje */
+    padding-left: max(24px, calc((100vw - 2400px) / 2 + 24px)) !important;
+    padding-right: max(24px, calc((100vw - 2400px) / 2 + 24px)) !important;
+
     background: #fff !important;
   }
 
@@ -952,3 +956,42 @@
     }
   }
 }
+
+/* =========================================================
+   DOTYK SLOV — V4 FIX: NAV GUTTER + CART ANCHOR
+   ========================================================= */
+
+@media (min-width: 992px) {
+
+  /* Košík je ukotvený na rovnaký pravý gutter ako cart ikona */
+  .user-action .popup-widget.cart-widget {
+    left: auto !important;
+    right: max(24px, calc((100vw - 2400px) / 2 + 24px)) !important;
+
+    width: min(500px, calc(100vw - 48px)) !important;
+
+    /* Shoptet si ďalej riadi vertikálnu pozíciu podľa headeru */
+    margin-left: 0 !important;
+  }
+
+  /* 16px šípka: right 13px = jej stred je 21px od pravého okraja,
+     teda presne stred 42px cart tlačidla */
+  .user-action .popup-widget.cart-widget::before {
+    right: 13px !important;
+  }
+
+  /* admin/scrolled varianty nesmú meniť horizontálnu pozíciu */
+  .admin-logged .user-action .popup-widget.cart-widget,
+  .scrolled .user-action .popup-widget.cart-widget,
+  .scrolled .admin-logged .user-action .popup-widget.cart-widget {
+    left: auto !important;
+    right: max(24px, calc((100vw - 2400px) / 2 + 24px)) !important;
+  }
+
+  .admin-logged .user-action .popup-widget.cart-widget::before,
+  .scrolled .user-action .popup-widget.cart-widget::before,
+  .scrolled .admin-logged .user-action .popup-widget.cart-widget::before {
+    right: 13px !important;
+  }
+}
+
