@@ -1717,3 +1717,401 @@
   }
 }
 
+/* =========================================================
+   DOTYK SLOV — V8 FINAL OVERRIDES
+   Opravuje:
+   - desktop košík: späť na natívnu Shoptet výšku
+   - mobile: iba 1 promo bar, žiadna prázdna medzera
+   - mobile: logo + hamburger + search + cart v JEDNOM riadku
+   - používajú sa naše JS tlačidlá .ds-mobile-menu/.ds-mobile-search
+   - odstránené štvorčeky namiesto šípok submenu
+   ========================================================= */
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+@media (min-width: 992px) {
+
+  /* Vertikálnu polohu nechávame podľa natívneho Shoptetu.
+     103 + margin 18 = cca 121 px bez admin lišty.
+     Pri prihlásenom adminovi Shoptet používa 128 + 18. */
+  .user-action .popup-widget.cart-widget {
+    position: absolute !important;
+    top: 103px !important;
+    right: max(24px, calc((100vw - 2400px) / 2 + 24px)) !important;
+    bottom: auto !important;
+    left: auto !important;
+
+    width: min(500px, calc(100vw - 48px)) !important;
+
+    margin: 18px 0 0 !important;
+    transform: none !important;
+  }
+
+  .admin-logged .user-action .popup-widget.cart-widget {
+    top: 128px !important;
+  }
+
+  .scrolled .template-10.admin-logged .user-action .popup-widget.cart-widget {
+    top: 103px !important;
+  }
+
+  .user-action .popup-widget.cart-widget::before,
+  .admin-logged .user-action .popup-widget.cart-widget::before {
+    top: -9px !important;
+    right: 13px !important;
+    left: auto !important;
+  }
+}
+
+
+/* =========================================================
+   SUBMENU ARROWS — bez Shoptet icon-font štvorčekov
+   ========================================================= */
+#navigation .menu-level-1 > li.ext > a > .submenu-arrow::after {
+  content: "" !important;
+  display: block !important;
+
+  width: 7px !important;
+  height: 7px !important;
+
+  margin: 0 !important;
+
+  border: 0 !important;
+  border-right: 1.4px solid currentColor !important;
+  border-bottom: 1.4px solid currentColor !important;
+
+  transform: rotate(45deg) translate(-1px, -1px) !important;
+  transform-origin: center !important;
+
+  font-family: inherit !important;
+}
+
+#navigation .menu-level-1 > li.ext.exp > a > .submenu-arrow::after {
+  transform: rotate(225deg) translate(-1px, -1px) !important;
+}
+
+
+/* =========================================================
+   MOBILE — JEDNODUCHÝ HEADER
+   ========================================================= */
+@media (max-width: 767px) {
+
+  /*
+   * Na stránke už máš vlastný horný čierny announcement
+   * "Rýchle doručenie 2–3 dni".
+   * Shoptet top-navigation-bar preto na mobile úplne schováme,
+   * aby nevznikal druhý čierny pás "Doprava zdarma..." ani gap.
+   */
+  .top-navigation-bar {
+    display: none !important;
+    position: static !important;
+    top: auto !important;
+
+    width: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden !important;
+  }
+
+  .top-navigation-bar .container,
+  .top-navigation-bar .responsive-tools {
+    display: none !important;
+  }
+
+
+  /* Zrušíme natívny mobile fixed offset (top:50px) */
+  #header {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: #fff !important;
+    border-bottom: 1px solid #ececec !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  #header > .container {
+    position: relative !important;
+
+    width: 100% !important;
+    max-width: none !important;
+
+    margin: 0 !important;
+    padding: 0 12px !important;
+  }
+
+
+  /* JEDEN 68 px riadok */
+  #header .header-top {
+    position: relative !important;
+
+    display: grid !important;
+    grid-template-columns: 48px minmax(0, 1fr) 96px !important;
+    grid-template-rows: 68px !important;
+
+    width: 100% !important;
+    height: 68px !important;
+    min-height: 68px !important;
+
+    align-items: center !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    gap: 0 !important;
+    flex-wrap: nowrap !important;
+  }
+
+  #header .header-top > div {
+    min-width: 0 !important;
+    height: auto !important;
+  }
+
+
+  /* LOGO */
+  #header .site-name-wrapper {
+    position: static !important;
+
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+
+    display: flex !important;
+
+    width: 100% !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 0 !important;
+    padding: 0 8px !important;
+
+    z-index: 1 !important;
+  }
+
+  #header .site-name {
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+  }
+
+  #header .site-name a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #header .site-name img {
+    display: block !important;
+
+    width: auto !important;
+    max-width: 145px !important;
+    max-height: 38px !important;
+
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+
+
+  /* Desktop search input sa v základnom stave nezobrazuje */
+  #header .search {
+    display: none !important;
+  }
+
+
+  /* ACTIONS cez celý riadok, tlačidlá absolútne */
+  #header .navigation-buttons {
+    position: absolute !important;
+    z-index: 5 !important;
+
+    top: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    left: 0 !important;
+
+    display: block !important;
+
+    width: 100% !important;
+    height: 68px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    text-align: left !important;
+    pointer-events: none !important;
+  }
+
+  #header .navigation-buttons .ds-approved-action,
+  #header .navigation-buttons .cart-count {
+    position: absolute !important;
+    top: 12px !important;
+
+    display: grid !important;
+
+    width: 44px !important;
+    height: 44px !important;
+
+    place-items: center !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-radius: 50% !important;
+
+    background: transparent !important;
+    color: #171717 !important;
+
+    box-shadow: none !important;
+    transform: none !important;
+
+    pointer-events: auto !important;
+  }
+
+
+  /* Používame custom JS hamburger */
+  #header .navigation-buttons .ds-mobile-action {
+    display: grid !important;
+  }
+
+  #header .navigation-buttons .ds-mobile-menu {
+    left: 0 !important;
+    right: auto !important;
+  }
+
+  #header .navigation-buttons .ds-mobile-search {
+    right: 44px !important;
+    left: auto !important;
+  }
+
+  #header .navigation-buttons .cart-count {
+    right: 0 !important;
+    left: auto !important;
+  }
+
+  #header .navigation-buttons .ds-contact,
+  #header .navigation-buttons .ds-account {
+    display: none !important;
+  }
+
+
+  /* Žiadne Shoptet pseudo ikonky navyše -> odstráni štvorčeky */
+  #header .navigation-buttons .ds-mobile-menu::before,
+  #header .navigation-buttons .ds-mobile-menu::after,
+  #header .navigation-buttons .ds-mobile-search::before,
+  #header .navigation-buttons .ds-mobile-search::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  #header .navigation-buttons .ds-mobile-menu > svg,
+  #header .navigation-buttons .ds-mobile-search > svg,
+  #header .navigation-buttons .cart-count > .ds-cart-svg {
+    display: block !important;
+
+    width: 21px !important;
+    height: 21px !important;
+
+    margin: 0 !important;
+
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 1.8 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+  }
+
+  #header .navigation-buttons .cart-count i {
+    top: 1px !important;
+    right: 0 !important;
+    left: auto !important;
+  }
+
+  #header .navigation-buttons .ds-tooltip {
+    display: none !important;
+  }
+
+
+  /* =====================================================
+     MOBILE SEARCH PANEL
+     ===================================================== */
+  body.search-window-visible #header .search {
+    position: absolute !important;
+    z-index: 50 !important;
+
+    top: 68px !important;
+    right: 0 !important;
+    left: 0 !important;
+
+    display: block !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+    padding: 12px !important;
+
+    border-top: 1px solid #ededed !important;
+    background: #fff !important;
+
+    box-shadow: 0 10px 24px -18px rgba(0,0,0,.35) !important;
+  }
+
+  body.search-window-visible #header .search-form {
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  body.search-window-visible #header .search-form .search-input {
+    height: 46px !important;
+  }
+
+
+  /* =====================================================
+     MOBILE DRAWER
+     ===================================================== */
+  #navigation {
+    top: 0 !important;
+  }
+
+  body.navigation-window-visible #navigation,
+  body.ds-mobile-nav-open #navigation {
+    width: min(88vw, 380px) !important;
+  }
+
+  #navigation .navigation-in {
+    padding-top: 64px !important;
+  }
+
+
+  /* Mobile submenu arrow tiež čisté CSS */
+  #navigation .menu-level-1 > li.ext > a > .submenu-arrow {
+    display: grid !important;
+
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+
+    place-items: center !important;
+
+    margin-left: auto !important;
+    padding: 0 !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > a > .submenu-arrow::after {
+    width: 8px !important;
+    height: 8px !important;
+  }
+}
+
