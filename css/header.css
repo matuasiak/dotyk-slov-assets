@@ -995,3 +995,657 @@
   }
 }
 
+/* =========================================================
+   DOTYK SLOV — V5
+   1. Desktop cart anchored to viewport/cart icon
+   2. Mobile header rebuilt into one compact row
+   3. Mobile uses native Shoptet menu/search triggers
+   4. Mobile navigation restored as functional off-canvas panel
+   ========================================================= */
+
+
+/* =========================================================
+   DESKTOP — CART POPUP
+   ========================================================= */
+@media (min-width: 992px) {
+
+  /* position:fixed is intentional:
+     previous absolute positioning was calculated against .user-action,
+     not against the viewport/cart icon. */
+  .user-action .popup-widget.cart-widget,
+  .admin-logged .user-action .popup-widget.cart-widget,
+  .scrolled .user-action .popup-widget.cart-widget,
+  .scrolled .admin-logged .user-action .popup-widget.cart-widget {
+    position: fixed !important;
+
+    top: 82px !important;
+    right: max(24px, calc((100vw - 2400px) / 2 + 24px)) !important;
+    bottom: auto !important;
+    left: auto !important;
+
+    width: min(500px, calc(100vw - 48px)) !important;
+
+    margin: 0 !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+
+    transform: none !important;
+    transform-origin: calc(100% - 21px) top !important;
+  }
+
+  .user-action .popup-widget.cart-widget::before,
+  .admin-logged .user-action .popup-widget.cart-widget::before,
+  .scrolled .user-action .popup-widget.cart-widget::before,
+  .scrolled .admin-logged .user-action .popup-widget.cart-widget::before {
+    top: -9px !important;
+    right: 13px !important;
+    left: auto !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE HEADER — <= 767 px
+   ========================================================= */
+@media (max-width: 767px) {
+
+  /* ---------- SHIPPING BAR ---------- */
+  .top-navigation-bar {
+    position: relative !important;
+    z-index: 100 !important;
+
+    display: block !important;
+    width: 100% !important;
+    height: 36px !important;
+    min-height: 36px !important;
+
+    overflow: visible !important;
+
+    border: 0 !important;
+    background: #111 !important;
+  }
+
+  .top-navigation-bar .container {
+    position: relative !important;
+
+    display: flex !important;
+    width: 100% !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 0 56px !important;
+    overflow: visible !important;
+  }
+
+  .top-navigation-bar .container::before {
+    content: "•  Doprava zdarma nad 50 €" !important;
+    display: block !important;
+
+    color: #fff !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    white-space: nowrap !important;
+  }
+
+  /* Existing desktop content in the bar stays hidden.
+     responsive-tools are re-enabled below only as a native Shoptet fallback. */
+  .top-navigation-bar .container > *:not(.responsive-tools) {
+    display: none !important;
+  }
+
+
+  /* ---------- MAIN MOBILE HEADER ---------- */
+  #header {
+    position: relative !important;
+    z-index: 90 !important;
+
+    width: 100% !important;
+    margin: 0 !important;
+
+    border: 0 !important;
+    border-bottom: 1px solid #ececec !important;
+
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  #header > .container {
+    position: relative !important;
+
+    width: 100% !important;
+    max-width: none !important;
+
+    margin: 0 !important;
+    padding: 0 10px !important;
+  }
+
+  #header .header-top {
+    position: relative !important;
+
+    display: flex !important;
+    width: 100% !important;
+    height: 64px !important;
+    min-height: 64px !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 0 !important;
+    padding: 0 104px 0 54px !important;
+  }
+
+  /* Logo is one compact centered logo, not its own row */
+  #header .site-name-wrapper {
+    position: static !important;
+
+    display: flex !important;
+    width: auto !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 0 !important;
+  }
+
+  #header .site-name {
+    margin: 0 !important;
+    text-align: center !important;
+  }
+
+  #header .site-name a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #header .site-name img {
+    display: block !important;
+
+    width: auto !important;
+    max-width: 145px !important;
+    max-height: 38px !important;
+
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+
+  /* Full desktop search field is hidden on mobile */
+  #header .search {
+    display: none !important;
+  }
+
+
+  /* ---------- HEADER ACTIONS ---------- */
+  #header .navigation-buttons {
+    position: absolute !important;
+    z-index: 5 !important;
+
+    inset: 0 10px !important;
+
+    display: block !important;
+    width: auto !important;
+    height: 64px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    pointer-events: none !important;
+  }
+
+  #header .navigation-buttons > a,
+  #header .navigation-buttons .cart-count {
+    position: absolute !important;
+    top: 10px !important;
+
+    display: grid !important;
+    width: 44px !important;
+    height: 44px !important;
+
+    place-items: center !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-radius: 50% !important;
+
+    background: transparent !important;
+    color: #171717 !important;
+
+    box-shadow: none !important;
+    transform: none !important;
+
+    pointer-events: auto !important;
+  }
+
+  /* Hide custom/fake mobile action created in the old custom header.
+     We use native Shoptet data-target controls instead. */
+  #header .navigation-buttons .ds-mobile-action,
+  #header .navigation-buttons .ds-mobile-menu,
+  #header .navigation-buttons .ds-contact,
+  #header .navigation-buttons .ds-account {
+    display: none !important;
+  }
+
+  /* Native Shoptet hamburger, if present in navigation-buttons */
+  #header .navigation-buttons > a[data-target="navigation"] {
+    left: 0 !important;
+    right: auto !important;
+
+    display: grid !important;
+  }
+
+  #header .navigation-buttons > a[data-target="navigation"]::before {
+    content: "\e914" !important;
+    display: block !important;
+
+    width: auto !important;
+    height: auto !important;
+
+    margin: 0 !important;
+
+    color: #171717 !important;
+    background: none !important;
+
+    font-family: shoptet !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+
+  /* Native Shoptet search trigger, if present in navigation-buttons */
+  #header .navigation-buttons > a[data-target="search"] {
+    right: 48px !important;
+    left: auto !important;
+
+    display: grid !important;
+  }
+
+  #header .navigation-buttons > a[data-target="search"]::before {
+    content: "\e920" !important;
+    display: block !important;
+
+    color: #171717 !important;
+    background: none !important;
+
+    font-family: shoptet !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+
+  /* Cart */
+  #header .navigation-buttons .cart-count,
+  #header .navigation-buttons > a[data-target="cart"] {
+    right: 0 !important;
+    left: auto !important;
+  }
+
+  #header .navigation-buttons .cart-count::before {
+    width: 21px !important;
+    height: 21px !important;
+  }
+
+  #header .navigation-buttons .cart-count i,
+  #header .navigation-buttons > a[data-target="cart"] i {
+    top: 2px !important;
+    right: 0 !important;
+    left: auto !important;
+  }
+
+
+  /* =====================================================
+     NATIVE SHOPTET FALLBACK CONTROLS
+     If the template does not render data-target controls inside
+     #header .navigation-buttons, use .responsive-tools instead.
+     ===================================================== */
+
+  .top-navigation-bar .responsive-tools {
+    position: absolute !important;
+    z-index: 150 !important;
+
+    inset: 0 !important;
+
+    display: block !important;
+    width: 100% !important;
+    height: 36px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    pointer-events: none !important;
+  }
+
+  .top-navigation-bar .responsive-tools > a {
+    position: absolute !important;
+    top: 42px !important;
+
+    display: grid !important;
+    width: 44px !important;
+    height: 44px !important;
+
+    place-items: center !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-radius: 50% !important;
+
+    background: transparent !important;
+    color: #171717 !important;
+
+    pointer-events: auto !important;
+  }
+
+  .top-navigation-bar .responsive-tools > a[data-target="navigation"] {
+    left: 10px !important;
+    right: auto !important;
+  }
+
+  .top-navigation-bar .responsive-tools > a[data-target="search"] {
+    right: 58px !important;
+    left: auto !important;
+  }
+
+  .top-navigation-bar .responsive-tools > a[data-target="navigation"]::before {
+    content: "\e914" !important;
+
+    color: #171717 !important;
+    background: none !important;
+
+    font-family: shoptet !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+
+  .top-navigation-bar .responsive-tools > a[data-target="search"]::before {
+    content: "\e920" !important;
+
+    color: #171717 !important;
+    background: none !important;
+
+    font-family: shoptet !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+
+  /* If native header controls exist, suppress fallback duplicates */
+  body:has(#header .navigation-buttons > a[data-target="navigation"])
+  .top-navigation-bar .responsive-tools > a[data-target="navigation"] {
+    display: none !important;
+  }
+
+  body:has(#header .navigation-buttons > a[data-target="search"])
+  .top-navigation-bar .responsive-tools > a[data-target="search"] {
+    display: none !important;
+  }
+
+
+  /* =====================================================
+     FUNCTIONAL MOBILE NAVIGATION
+     ===================================================== */
+
+  #navigation {
+    position: fixed !important;
+    z-index: 1200 !important;
+
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+
+    width: 0 !important;
+    height: 100dvh !important;
+    min-height: 100vh !important;
+
+    overflow: hidden !important;
+
+    border: 0 !important;
+    background: #fff !important;
+
+    box-shadow: -18px 0 50px -30px rgba(0, 0, 0, .35) !important;
+
+    transition: width .25s ease !important;
+  }
+
+  .navigation-window-visible #navigation {
+    width: min(88vw, 380px) !important;
+  }
+
+  #navigation .navigation-in {
+    position: static !important;
+
+    display: block !important;
+    width: 100% !important;
+    height: 100dvh !important;
+
+    margin: 0 !important;
+    padding: 66px 18px 28px !important;
+
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+
+    background: #fff !important;
+  }
+
+  #navigation .navigation-close {
+    position: absolute !important;
+    z-index: 5 !important;
+
+    top: 12px !important;
+    right: 12px !important;
+
+    display: grid !important;
+    width: 42px !important;
+    height: 42px !important;
+
+    place-items: center !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border-radius: 50% !important;
+    background: #f5f5f5 !important;
+    color: #111 !important;
+  }
+
+  #navigation .navigation-close::before {
+    width: auto !important;
+    height: auto !important;
+
+    font-size: 16px !important;
+    line-height: 1 !important;
+  }
+
+  #navigation .menu-level-1 {
+    display: flex !important;
+    width: 100% !important;
+
+    flex-direction: column !important;
+    align-items: stretch !important;
+
+    gap: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #navigation .menu-level-1 > li,
+  #navigation .menu-level-1 > li.splitted {
+    display: block !important;
+    visibility: visible !important;
+
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    border: 0 !important;
+    border-bottom: 1px solid #ededed !important;
+  }
+
+  #navigation .menu-level-1 > li > a {
+    display: flex !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 54px !important;
+
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    padding: 0 4px !important;
+
+    color: #161616 !important;
+    background: transparent !important;
+
+    font-size: 16px !important;
+    font-weight: 650 !important;
+    line-height: 1.25 !important;
+
+    text-decoration: none !important;
+  }
+
+  #navigation .menu-level-1 > li > a::after {
+    display: none !important;
+  }
+
+  #navigation .menu-level-1 > li:nth-child(5) { order: 1 !important; }
+  #navigation .menu-level-1 > li:nth-child(1) { order: 2 !important; }
+  #navigation .menu-level-1 > li:nth-child(2) { order: 3 !important; }
+  #navigation .menu-level-1 > li:nth-child(3) { order: 4 !important; }
+  #navigation .menu-level-1 > li:nth-child(4) { order: 5 !important; }
+  #navigation .menu-level-1 > li:nth-child(6) { order: 6 !important; }
+  #navigation .menu-level-1 > li:nth-child(8) { order: 7 !important; }
+
+  #navigation .menu-level-1 > li:nth-child(7),
+  #navigation .menu-level-1 > li:nth-child(9) {
+    display: none !important;
+  }
+
+  #navigation .menu-level-1 > li:nth-child(5) > a {
+    color: #e62518 !important;
+  }
+
+  /* Native submenu arrow */
+  #navigation .menu-level-1 > li.ext > a > .submenu-arrow {
+    display: grid !important;
+    min-width: 42px !important;
+    height: 42px !important;
+
+    place-items: center !important;
+
+    margin-left: auto !important;
+    padding: 0 !important;
+  }
+
+  /* Mobile submenus: normal stacked accordion, no desktop mega-menu */
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 {
+    position: static !important;
+
+    display: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 4px 0 14px 14px !important;
+
+    overflow: visible !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+
+    background: #fafafa !important;
+    box-shadow: none !important;
+
+    transform: none !important;
+  }
+
+  .navigation-window-visible
+  #navigation .menu-level-1 > li.ext.exp > ul.menu-level-2,
+  .submenu-visible
+  #navigation .menu-level-1 > li.ext.exp > ul.menu-level-2 {
+    display: block !important;
+  }
+
+  #navigation .menu-level-2 > li {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #navigation .menu-level-2 a {
+    display: block !important;
+
+    padding: 10px 8px !important;
+
+    color: #333 !important;
+    background: transparent !important;
+
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+  }
+
+  /* dark overlay behind mobile drawer */
+  body.navigation-window-visible::after {
+    content: "" !important;
+
+    position: fixed !important;
+    z-index: 1190 !important;
+
+    inset: 0 !important;
+
+    display: block !important;
+
+    background: rgba(0, 0, 0, .28) !important;
+  }
+
+
+  /* ---------- MOBILE CART ---------- */
+  .user-action .popup-widget.cart-widget {
+    position: fixed !important;
+    z-index: 1300 !important;
+
+    top: auto !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+
+    width: 100% !important;
+    max-width: none !important;
+    max-height: min(78dvh, 680px) !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-radius: 22px 22px 0 0 !important;
+
+    background: #fff !important;
+  }
+
+  .user-action .popup-widget.cart-widget::before {
+    display: none !important;
+  }
+
+  .cart-widget .cart-widget-inner {
+    max-height: min(68dvh, 580px) !important;
+  }
+
+
+  /* Remove desktop tooltip bubbles on touch/mobile */
+  #header .navigation-buttons .ds-tooltip {
+    display: none !important;
+  }
+}
+
