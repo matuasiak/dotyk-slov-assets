@@ -2849,3 +2849,99 @@
   }
 }
 
+/* =========================================================
+   DOTYK SLOV — V11 FINAL OVERRIDE
+   1) Shoptet delivery/top bar is completely disabled.
+      We keep only the separate GTM bar.
+   2) Mobile drawer is pure white.
+   3) No grey/dark overlay behind or over the mobile menu.
+   ========================================================= */
+
+/* ----- REMOVE SHOPTET DELIVERY / TOP BAR EVERYWHERE ----- */
+.top-navigation-bar,
+body:where(.ums_mobile_header_v1--on) .top-navigation-bar {
+  display: none !important;
+  visibility: hidden !important;
+
+  position: static !important;
+  inset: auto !important;
+
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  border: 0 !important;
+  background: transparent !important;
+
+  transform: none !important;
+}
+
+.top-navigation-bar .container,
+.top-navigation-bar .responsive-tools {
+  display: none !important;
+}
+
+
+/* ----- MOBILE MENU: CLEAN WHITE DRAWER ----- */
+@media (max-width: 767px) {
+
+  /* remove any native offset that expected the Shoptet top bar */
+  body:where(.ums_mobile_header_v1--on) #header,
+  #header {
+    top: auto !important;
+    margin-top: 0 !important;
+  }
+
+  #navigation,
+  body.navigation-window-visible #navigation,
+  body.ds-mobile-nav-open #navigation {
+    opacity: 1 !important;
+    filter: none !important;
+
+    background: #fff !important;
+    color: #111 !important;
+
+    box-shadow: -12px 0 28px -20px rgba(0,0,0,.22) !important;
+  }
+
+  #navigation .navigation-in,
+  #navigation .menu-level-1,
+  #navigation .menu-level-1 > li,
+  #navigation .menu-level-1 > li > a {
+    opacity: 1 !important;
+    filter: none !important;
+    background: #fff !important;
+  }
+
+  #navigation .menu-level-1 > li > a {
+    color: #111 !important;
+  }
+
+  /* Submenu may be slightly separated, but never grey-overlayed */
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 {
+    opacity: 1 !important;
+    filter: none !important;
+    background: #fafafa !important;
+  }
+
+  /* Remove page-darkening overlay completely */
+  body.navigation-window-visible::after,
+  body.ds-mobile-nav-open::after {
+    content: none !important;
+    display: none !important;
+    background: transparent !important;
+  }
+
+  /* Also neutralize any generic overlay/state from the template */
+  body.navigation-window-visible,
+  body.ds-mobile-nav-open {
+    background: inherit !important;
+  }
+}
+
