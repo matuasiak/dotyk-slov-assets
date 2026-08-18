@@ -1,73 +1,44 @@
-(function () {
-  'use strict';
+DOTYK SLOV – BANNERY V3 / EDITORIAL GRID
 
-  function mountEditorialBanners() {
-    if (!document.body.classList.contains('in-index')) return;
+Toto je úplne nová verzia bez slidera.
 
-    var carousel = document.querySelector('#carousel');
-    var track = carousel && carousel.querySelector('.carousel-inner');
-    if (!carousel || !track || carousel.dataset.dsEditorialMounted === 'true') return;
+1. Vymaž celý CSS kód bannerov V2.
+2. Vlož celý obsah súboru dotyk-slov-bannery-v3-editorial.css.
+3. Vymaž celý JavaScript bannerov V2.
+4. Do JavaScriptu vlož celý obsah TXT súboru
+   dotyk-slov-bannery-v3-editorial-JS.txt.
 
-    var items = Array.prototype.filter.call(track.children, function (item) {
-      return item.matches('.item') && item.querySelector('a[href] img');
-    });
+Starý a nový JavaScript nenechávaj vložený naraz.
 
-    /* Jeden banner nechávame natívny – žiadny JS zásah nie je potrebný. */
-    if (items.length < 2) return;
+Výsledok na desktopoch:
+- prvé dva bannery 945 × 672 budú vedľa seba,
+- ďalšie tri široké bannery budú v páse pod nimi,
+- všetky bannery sú priamo klikateľné,
+- žiadne šípky slidera, progress ani dragovanie.
 
-    carousel.dataset.dsEditorialMounted = 'true';
-    carousel.dataset.dsCleanMounted = 'true';
-    carousel.removeAttribute('data-ride');
-    carousel.setAttribute('data-interval', 'false');
-    carousel.classList.remove('ds-banner-clean');
-    carousel.classList.add('ds-editorial-grid');
-    track.classList.remove('ds-banner-clean-track', 'is-dragging');
+Na mobile sa bannery posúvajú prirodzene prstom. Kód nemení header ani search.
 
-    /* Odstránenie prvkov zo starej sliderovej verzie, ak už predtým nabehla. */
-    Array.prototype.forEach.call(
-      document.querySelectorAll('.ds-banner-toolbar, .ds-clean-scroll-hint'),
-      function (element) { element.remove(); }
-    );
+MOBILE-FIRST NASTAVENIE
 
-    if (window.jQuery && window.jQuery.fn && typeof window.jQuery.fn.carousel === 'function') {
-      try {
-        window.jQuery(carousel).carousel('pause');
-      } catch (error) {
-        /* Úprava bannerov nesmie zablokovať ostatný Shoptet kód. */
-      }
-    }
+Mobilná verzia používa natívne potiahnutie prstom. Jeden banner má šírku 88 %
+obrazovky, takže používateľ vidí aj začiatok ďalšieho banneru. Nie sú potrebné
+žiadne JS šípky ani automatické prehrávanie.
 
-    var cardCount = 0;
+Pre každý široký desktopový banner vytvor v Shoptete samostatnú mobilnú verziu:
+- odporúčaný rozmer 800 × 665 px,
+- mobilnú verziu nastav na zobrazenie iba na mobile,
+- pôvodnú širokú verziu nastav na zobrazenie iba na desktope,
+- obe verzie môžu mať rovnakú Cieľovú URL a Text odkazu.
 
-    items.forEach(function (item, index) {
-      var image = item.querySelector('img');
-      var link = item.querySelector('a[href]');
-      var adminCta = item.querySelector('.extended-banner-link');
-      var width = image.naturalWidth || parseFloat(image.getAttribute('width')) || 1;
-      var height = image.naturalHeight || parseFloat(image.getAttribute('height')) || 1;
-      var ratio = width / height;
-      var isWide = ratio >= 2.2;
+Kým široký banner nemá mobilnú verziu, kód ho na mobile radšej skryje, aby sa
+nezobrazoval ako nečitateľný orezaný pás.
 
-      item.classList.remove('next', 'prev', 'left', 'right', 'ds-editorial-card', 'ds-editorial-wide');
-      item.classList.add(isWide ? 'ds-editorial-wide' : 'ds-editorial-card');
-      item.classList.remove('ds-has-admin-copy');
-      item.classList.toggle('ds-has-admin-cta', Boolean(adminCta && adminCta.textContent.trim()));
-      item.setAttribute('data-ds-banner-position', String(index + 1));
-      item.style.setProperty('--ds-source-ratio', String(ratio));
+CTA ZO SHOPTETU
 
-      if (!isWide) cardCount += 1;
+Pri úprave konkrétneho banneru v Shoptet administrácii vyplň:
+- Text odkazu = text CTA tlačidla, napr. „Kúpiť“ alebo „Objaviť“,
+- Cieľová URL = stránka, na ktorú vedie celý banner.
 
-      if (link && !link.getAttribute('aria-label') && image.alt) {
-        link.setAttribute('aria-label', image.alt);
-      }
-    });
-
-    if (cardCount === 1) carousel.classList.add('ds-one-card');
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mountEditorialBanners, { once: true });
-  } else {
-    mountEditorialBanners();
-  }
-})();
+Názov banneru a Text banneru sa v tomto čistom vizuále nezobrazujú. Ak Text
+odkazu necháš prázdny, banner zostane bez tlačidla a ukáže sa na ňom iba malá
+šípka. Text CTA ani odkaz sa nepíšu do JavaScriptu.
