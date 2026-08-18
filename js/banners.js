@@ -42,6 +42,7 @@
     items.forEach(function (item, index) {
       var image = item.querySelector('img');
       var link = item.querySelector('a[href]');
+      var adminTexts = item.querySelector('.extended-banner-texts');
       var width = image.naturalWidth || parseFloat(image.getAttribute('width')) || 1;
       var height = image.naturalHeight || parseFloat(image.getAttribute('height')) || 1;
       var ratio = width / height;
@@ -49,6 +50,10 @@
 
       item.classList.remove('next', 'prev', 'left', 'right', 'ds-editorial-card', 'ds-editorial-wide');
       item.classList.add(isWide ? 'ds-editorial-wide' : 'ds-editorial-card');
+      item.classList.toggle(
+        'ds-has-admin-copy',
+        Boolean(adminTexts && adminTexts.textContent.trim())
+      );
       item.setAttribute('data-ds-banner-position', String(index + 1));
       item.style.setProperty('--ds-source-ratio', String(ratio));
 
