@@ -3113,3 +3113,24 @@ body:where(.ums_mobile_header_v1--on) .top-navigation-bar {
     top: 7px !important;
   }
 }
+
+/* =========================================================
+   DOTYK SLOV — V14 MOBILE GAP FIX
+   Shoptet mobile header reserves 50/69px in .overall-wrapper
+   for its original fixed header. Our header is no longer fixed,
+   so this reserved space must be removed on mobile only.
+   Desktop 30px gap stays untouched.
+   ========================================================= */
+@media (max-width: 767px) {
+  body:where(.ums_mobile_header_v1--on) .overall-wrapper,
+  body:where(.ums_mobile_header_v1--on).type-index .overall-wrapper,
+  body.ums_mobile_header_v1--on .overall-wrapper,
+  body.ums_mobile_header_v1--on.type-index .overall-wrapper {
+    padding-top: 0 !important;
+  }
+
+  #header {
+    margin-top: 0 !important;
+  }
+}
+
