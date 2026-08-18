@@ -1,16 +1,16 @@
-/* DOTYK SLOV – homepage bannery v2
-   Nahraď týmto celý pôvodný CSS blok pre .banners-row / #carousel. */
+/* DOTYK SLOV – bannery v3 / editorial grid
+   Nahraď týmto CELÝ predchádzajúci bannerový CSS blok. */
 
 body.in-index .banners-row {
-  --ds-banner-gutter: clamp(20px, 2.2vw, 42px);
-  --ds-banner-gap: clamp(12px, 1vw, 18px);
+  --ds-grid-gutter: clamp(18px, 2.2vw, 40px);
+  --ds-grid-gap: clamp(10px, 1.15vw, 18px);
   position: relative;
-  width: calc(100vw - (var(--ds-banner-gutter) * 2));
+  width: calc(100vw - (var(--ds-grid-gutter) * 2));
   max-width: none;
-  margin-top: clamp(18px, 1.5vw, 28px);
-  margin-right: calc(50% - 50vw + var(--ds-banner-gutter));
+  margin-top: clamp(18px, 1.6vw, 28px);
+  margin-right: calc(50% - 50vw + var(--ds-grid-gutter));
   margin-bottom: clamp(38px, 4vw, 64px);
-  margin-left: calc(50% - 50vw + var(--ds-banner-gutter));
+  margin-left: calc(50% - 50vw + var(--ds-grid-gutter));
 }
 
 body.in-index .banners-row > .wide-carousel,
@@ -21,367 +21,217 @@ body.in-index #carousel {
 body.in-index #carousel {
   margin: 0;
   border: 0;
-  border-radius: 18px;
   background: transparent;
   box-shadow: none;
-  overflow: hidden;
 }
 
-/* Ak je v Shoptete iba jeden banner, zostane natívny a responzívny. */
-body.in-index #carousel:not(.ds-banner-clean) .item img {
+/* Bez JS alebo pri jedinom banneri zostane bezpečný natívny banner. */
+body.in-index #carousel:not(.ds-editorial-grid) {
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+body.in-index #carousel:not(.ds-editorial-grid) .item img {
   display: block;
   width: 100%;
   height: auto;
 }
 
-body.in-index #carousel.ds-banner-clean {
-  border-radius: 0;
+body.in-index #carousel.ds-editorial-grid {
   overflow: visible;
 }
 
-body.in-index #carousel.ds-banner-clean .carousel-inner {
-  display: flex !important;
+body.in-index #carousel.ds-editorial-grid .carousel-inner {
+  position: relative;
+  display: grid !important;
   width: 100%;
+  height: auto !important;
   min-height: 0 !important;
   margin: 0;
   padding: 0;
-  gap: var(--ds-banner-gap);
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  cursor: grab;
-  -webkit-overflow-scrolling: touch;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--ds-grid-gap);
+  overflow: visible;
+  align-items: start;
 }
 
-body.in-index #carousel.ds-banner-clean .carousel-inner.is-dragging {
-  cursor: grabbing;
-  scroll-behavior: auto;
-  scroll-snap-type: none;
-  user-select: none;
+body.in-index #carousel.ds-editorial-grid .carousel-inner::before,
+body.in-index #carousel.ds-editorial-grid .carousel-inner::after {
+  display: none !important;
+  content: none !important;
 }
 
-body.in-index #carousel.ds-banner-clean .carousel-inner::-webkit-scrollbar {
-  display: none;
-}
-
-body.in-index #carousel.ds-banner-clean .item,
-body.in-index #carousel.ds-banner-clean .item.active {
+body.in-index #carousel.ds-editorial-grid .item,
+body.in-index #carousel.ds-editorial-grid .item.active {
   position: relative !important;
   inset: auto !important;
   display: block !important;
-  width: auto;
-  height: clamp(470px, 32vw, 610px);
-  min-height: 470px;
-  flex: 0 0 clamp(330px, 22vw, 420px);
-  margin: 0;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
   overflow: hidden;
   border: 0;
-  border-radius: clamp(14px, 1.15vw, 20px);
+  border-radius: clamp(13px, 1.15vw, 20px);
   background: #eeece8;
   box-shadow: none;
   opacity: 1 !important;
   transform: none !important;
   transition: none !important;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
-body.in-index #carousel.ds-banner-clean .item:first-child {
-  flex-basis: clamp(720px, 66vw, 1180px);
+/* Dva takmer štvorcové bannery hore. */
+body.in-index #carousel.ds-editorial-grid .item.ds-editorial-card {
+  grid-column: span 6;
+  aspect-ratio: var(--ds-source-ratio, 1.40625);
 }
 
-body.in-index #carousel.ds-banner-clean .item > a,
-body.in-index #carousel.ds-banner-clean .item img {
+/* Tri široké bannery vytvoria čistý pás pod nimi. */
+body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide {
+  grid-column: span 4;
+  aspect-ratio: var(--ds-source-ratio, 4.2667);
+}
+
+body.in-index #carousel.ds-editorial-grid.ds-one-card .item.ds-editorial-card {
+  grid-column: span 12;
+  max-height: 620px;
+}
+
+body.in-index #carousel.ds-editorial-grid .item > a,
+body.in-index #carousel.ds-editorial-grid .item img {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-body.in-index #carousel.ds-banner-clean .item > a {
+body.in-index #carousel.ds-editorial-grid .item > a {
   position: relative;
   overflow: hidden;
-  color: #fff;
+  color: inherit;
   text-decoration: none;
 }
 
-body.in-index #carousel.ds-banner-clean .item > a:focus-visible {
-  outline: 3px solid #242729;
-  outline-offset: -6px;
-}
-
-body.in-index #carousel.ds-banner-clean .item img {
+body.in-index #carousel.ds-editorial-grid .item img {
   min-height: 0;
   object-fit: cover;
+  object-position: center;
   transform: scale(1.001);
-  transition: transform .7s cubic-bezier(.22, 1, .36, 1), filter .3s ease;
+  transition: transform .65s cubic-bezier(.22, 1, .36, 1), filter .3s ease;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  body.in-index #carousel.ds-banner-clean .item > a:hover img {
-    filter: saturate(1.03);
-    transform: scale(1.018);
-  }
-}
-
-body.in-index #carousel.ds-banner-clean .item > a:not(.extended-empty)::after {
-  content: "";
+/* Jemná šípka naznačí klikateľnosť bez reklamného CTA. */
+body.in-index #carousel.ds-editorial-grid .item > a::after {
+  content: "↗";
   position: absolute;
-  z-index: 1;
-  inset: 0;
-  background: linear-gradient(0deg, rgba(18, 20, 21, .72) 0%, rgba(18, 20, 21, .12) 58%, transparent 82%);
+  z-index: 3;
+  right: clamp(12px, 1.2vw, 18px);
+  bottom: clamp(12px, 1.2vw, 18px);
+  display: grid;
+  width: clamp(34px, 2.8vw, 44px);
+  height: clamp(34px, 2.8vw, 44px);
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .58);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .86);
+  color: #222526;
+  font: 700 clamp(15px, 1.2vw, 18px)/1 Arial, sans-serif;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+  backdrop-filter: blur(8px);
   pointer-events: none;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
 }
 
-body.in-index #carousel.ds-banner-clean .item:first-child > a:not(.extended-empty)::after {
-  background: linear-gradient(90deg, rgba(247, 247, 244, .97) 0%, rgba(247, 247, 244, .89) 27%, rgba(247, 247, 244, .26) 52%, transparent 70%);
+/* Pri nízkych širokých banneroch je šípka menšia. */
+body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide > a::after {
+  right: 10px;
+  bottom: 10px;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
 }
 
-body.in-index #carousel.ds-banner-clean .extended-banner-texts {
-  position: absolute;
-  z-index: 2;
-  inset: auto 0 0;
-  display: flex;
-  max-width: none;
-  min-height: 48%;
-  padding: clamp(26px, 2vw, 38px);
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  gap: 10px;
-  pointer-events: none;
+body.in-index #carousel.ds-editorial-grid .item > a:focus-visible {
+  outline: 3px solid #242729;
+  outline-offset: -5px;
 }
 
-body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-texts {
-  inset: 0 auto 0 0;
-  width: min(45%, 540px);
-  min-height: 100%;
-  padding: clamp(44px, 4vw, 76px);
-  justify-content: center;
-}
-
-body.in-index #carousel.ds-banner-clean .extended-banner-title,
-body.in-index #carousel.ds-banner-clean .extended-banner-text,
-body.in-index #carousel.ds-banner-clean .extended-banner-link {
-  position: static;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: #fff;
-  box-shadow: none;
-  text-shadow: none;
-}
-
-body.in-index #carousel.ds-banner-clean .extended-banner-title {
-  font-size: clamp(25px, 1.75vw, 34px);
-  font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: -.035em;
-}
-
-body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-title {
-  max-width: 13ch;
-  color: #2d3032;
-  font-size: clamp(38px, 3vw, 56px);
-  line-height: .98;
-  letter-spacing: -.05em;
-}
-
-body.in-index #carousel.ds-banner-clean .extended-banner-text {
-  max-width: 32ch;
-  color: rgba(255, 255, 255, .88);
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-text {
-  color: #45494b;
-  font-size: 15px;
-}
-
-body.in-index #carousel.ds-banner-clean .extended-banner-link {
-  margin-top: 8px;
-  padding: 13px 20px;
-  border-radius: 999px;
-  background: #fff;
-  color: #282b2d;
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: .015em;
-  pointer-events: auto;
-}
-
-body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-link {
-  background: #2c3032;
-  color: #fff;
-}
-
-body.in-index #carousel.ds-banner-clean .carousel-control,
-body.in-index #carousel.ds-banner-clean .carousel-indicators {
+body.in-index #carousel.ds-editorial-grid .extended-banner-texts {
   display: none !important;
 }
 
-/* Spodná navigácia */
-body.in-index .ds-banner-toolbar {
-  display: grid;
-  grid-template-columns: auto minmax(120px, 1fr) auto;
-  width: 100%;
-  margin-top: 16px;
-  align-items: center;
-  gap: 16px;
-  color: #6f7273;
+body.in-index #carousel.ds-editorial-grid .carousel-control,
+body.in-index #carousel.ds-editorial-grid .carousel-indicators,
+body.in-index .ds-banner-toolbar,
+body.in-index .ds-clean-scroll-hint {
+  display: none !important;
 }
 
-body.in-index .ds-banner-count {
-  min-width: 48px;
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: .12em;
-}
-
-body.in-index .ds-banner-progress {
-  position: relative;
-  height: 2px;
-  overflow: hidden;
-  background: #e3e1dd;
-}
-
-body.in-index .ds-banner-progress > span {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 0;
-  background: #272a2b;
-  transform-origin: left center;
-  transition: width .2s ease;
-}
-
-body.in-index .ds-banner-actions {
-  display: flex;
-  gap: 8px;
-}
-
-body.in-index .ds-banner-arrow {
-  display: grid;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  place-items: center;
-  border: 1px solid #dedcd8;
-  border-radius: 50%;
-  background: #fff;
-  color: #282b2d;
-  font: 700 18px/1 Arial, sans-serif;
-  box-shadow: none;
-  cursor: pointer;
-  transition: background .2s ease, color .2s ease, border-color .2s ease;
-}
-
-body.in-index .ds-banner-arrow:hover {
-  border-color: #282b2d;
-  background: #282b2d;
-  color: #fff;
-}
-
-body.in-index .ds-banner-arrow:disabled {
-  opacity: .3;
-  cursor: default;
-}
-
-body.in-index .ds-banner-swipe-label {
-  display: none;
-}
-
-@media (max-width: 1100px) {
-  body.in-index #carousel.ds-banner-clean .item:first-child {
-    flex-basis: 74vw;
+@media (hover: hover) and (pointer: fine) {
+  body.in-index #carousel.ds-editorial-grid .item > a:hover img {
+    filter: saturate(1.025) contrast(1.01);
+    transform: scale(1.018);
   }
 
-  body.in-index #carousel.ds-banner-clean .item:not(:first-child) {
-    flex-basis: 34vw;
+  body.in-index #carousel.ds-editorial-grid .item > a:hover::after {
+    background: #242729;
+    color: #fff;
+    transform: translate(2px, -2px);
+  }
+}
+
+@media (max-width: 900px) {
+  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-card {
+    grid-column: span 6;
+  }
+
+  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide {
+    grid-column: span 12;
   }
 }
 
 @media (max-width: 767px) {
   body.in-index .banners-row {
-    --ds-banner-gutter: 12px;
-    --ds-banner-gap: 10px;
+    --ds-grid-gutter: 12px;
+    --ds-grid-gap: 10px;
     margin-top: 12px;
     margin-bottom: 34px;
   }
 
-  body.in-index #carousel {
+  body.in-index #carousel:not(.ds-editorial-grid) {
     border-radius: 14px;
   }
 
-  body.in-index #carousel.ds-banner-clean {
-    border-radius: 0;
+  body.in-index #carousel.ds-editorial-grid .carousel-inner {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  body.in-index #carousel.ds-banner-clean .item,
-  body.in-index #carousel.ds-banner-clean .item.active,
-  body.in-index #carousel.ds-banner-clean .item:first-child,
-  body.in-index #carousel.ds-banner-clean .item:not(:first-child) {
-    height: clamp(420px, 126vw, 520px);
-    min-height: 420px;
-    flex-basis: 88vw;
+  body.in-index #carousel.ds-editorial-grid .item,
+  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-card,
+  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide {
+    grid-column: 1;
     border-radius: 14px;
   }
 
-  body.in-index #carousel.ds-banner-clean .extended-banner-texts,
-  body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-texts {
-    inset: auto 0 0;
-    width: 100%;
-    min-height: 52%;
-    padding: 24px 22px 26px;
-    justify-content: flex-end;
+  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-card {
+    aspect-ratio: var(--ds-source-ratio, 1.40625);
   }
 
-  body.in-index #carousel.ds-banner-clean .item:first-child > a:not(.extended-empty)::after {
-    background: linear-gradient(0deg, rgba(247, 247, 244, .98) 0%, rgba(247, 247, 244, .84) 28%, rgba(247, 247, 244, .12) 70%, transparent 82%);
+  /* Desktopové široké bannery dostanú na mobile trochu viac výšky. */
+  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide {
+    aspect-ratio: 2.65 / 1;
   }
 
-  body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-title {
-    max-width: 14ch;
-    font-size: clamp(33px, 10vw, 42px);
-    line-height: 1;
-  }
-
-  body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-text {
-    font-size: 14px;
-  }
-
-  body.in-index .ds-banner-toolbar {
-    grid-template-columns: auto 1fr auto;
-    margin-top: 12px;
-    gap: 12px;
-  }
-
-  body.in-index .ds-banner-actions {
-    display: none;
-  }
-
-  body.in-index .ds-banner-swipe-label {
-    display: block;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .06em;
-    white-space: nowrap;
+  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide > a::after {
+    right: 11px;
+    bottom: 11px;
+    width: 32px;
+    height: 32px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body.in-index #carousel.ds-banner-clean .carousel-inner {
-    scroll-behavior: auto;
-  }
-
-  body.in-index #carousel.ds-banner-clean .item img,
-  body.in-index .ds-banner-progress > span {
+  body.in-index #carousel.ds-editorial-grid .item img,
+  body.in-index #carousel.ds-editorial-grid .item > a::after {
     transition: none;
   }
 }
