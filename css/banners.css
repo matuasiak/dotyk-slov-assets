@@ -1,16 +1,16 @@
-/* DOTYK SLOV – bannery v3 / editorial grid
-   Nahraď týmto CELÝ predchádzajúci bannerový CSS blok. */
+/* DOTYK SLOV – bannery V4 / Vilgain rail
+   Nahraď týmto CELÝ predchádzajúci CSS blok bannerov. */
 
 body.in-index .banners-row {
-  --ds-grid-gutter: clamp(18px, 2.2vw, 40px);
-  --ds-grid-gap: clamp(10px, 1.15vw, 18px);
+  --ds-vg-gutter: clamp(20px, 2.2vw, 40px);
+  --ds-vg-gap: clamp(14px, 1.45vw, 20px);
   position: relative;
-  width: calc(100vw - (var(--ds-grid-gutter) * 2));
+  width: calc(100vw - (var(--ds-vg-gutter) * 2));
   max-width: none;
-  margin-top: clamp(18px, 1.6vw, 28px);
-  margin-right: calc(50% - 50vw + var(--ds-grid-gutter));
-  margin-bottom: clamp(38px, 4vw, 64px);
-  margin-left: calc(50% - 50vw + var(--ds-grid-gutter));
+  margin-top: clamp(18px, 1.5vw, 28px);
+  margin-right: calc(50% - 50vw + var(--ds-vg-gutter));
+  margin-bottom: clamp(38px, 4vw, 62px);
+  margin-left: calc(50% - 50vw + var(--ds-vg-gutter));
 }
 
 body.in-index .banners-row > .wide-carousel,
@@ -25,93 +25,102 @@ body.in-index #carousel {
   box-shadow: none;
 }
 
-/* Bez JS alebo pri jedinom banneri zostane bezpečný natívny banner. */
-body.in-index #carousel:not(.ds-editorial-grid) {
+/* Bez JS alebo pri jedinom banneri ostane bezpečný natívny banner. */
+body.in-index #carousel:not(.ds-vilgain-rail) {
   overflow: hidden;
   border-radius: 18px;
 }
 
-body.in-index #carousel:not(.ds-editorial-grid) .item img {
+body.in-index #carousel:not(.ds-vilgain-rail) .item img {
   display: block;
   width: 100%;
   height: auto;
 }
 
-body.in-index #carousel.ds-editorial-grid {
+body.in-index #carousel.ds-vilgain-rail {
   overflow: visible;
+  border-radius: 0;
 }
 
-body.in-index #carousel.ds-editorial-grid .carousel-inner {
+body.in-index #carousel.ds-vilgain-rail .carousel-inner {
   position: relative;
-  display: grid !important;
+  display: flex !important;
   width: 100%;
   height: auto !important;
   min-height: 0 !important;
   margin: 0;
-  padding: 0;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--ds-grid-gap);
-  overflow: visible;
-  align-items: start;
+  padding: 0 1px 0 0;
+  gap: var(--ds-vg-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-padding-left: 0;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
 }
 
-body.in-index #carousel.ds-editorial-grid .carousel-inner::before,
-body.in-index #carousel.ds-editorial-grid .carousel-inner::after {
+body.in-index #carousel.ds-vilgain-rail .carousel-inner::-webkit-scrollbar {
+  display: none;
+}
+
+body.in-index #carousel.ds-vilgain-rail .carousel-inner::before,
+body.in-index #carousel.ds-vilgain-rail .carousel-inner::after {
   display: none !important;
   content: none !important;
 }
 
-body.in-index #carousel.ds-editorial-grid .item,
-body.in-index #carousel.ds-editorial-grid .item.active {
+body.in-index #carousel.ds-vilgain-rail .carousel-inner.is-dragging {
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  cursor: grabbing;
+  user-select: none;
+}
+
+body.in-index #carousel.ds-vilgain-rail .item,
+body.in-index #carousel.ds-vilgain-rail .item.active {
   position: relative !important;
   inset: auto !important;
   display: block !important;
   width: auto !important;
-  height: auto !important;
-  min-height: 0 !important;
+  height: clamp(410px, 32.85vw, 540px);
+  min-height: 410px;
   margin: 0 !important;
   overflow: hidden;
+  flex: 0 0 clamp(280px, 22vw, 350px);
   border: 0;
-  border-radius: clamp(13px, 1.15vw, 20px);
-  background: #eeece8;
+  border-radius: clamp(14px, 1.15vw, 18px);
+  background: #eceae6;
   box-shadow: none;
   opacity: 1 !important;
   transform: none !important;
   transition: none !important;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
-/* Dva takmer štvorcové bannery hore. */
-body.in-index #carousel.ds-editorial-grid .item.ds-editorial-card {
-  grid-column: span 6;
-  aspect-ratio: var(--ds-source-ratio, 1.40625);
+/* Dominantný prvý banner – rovnaký pomer ako aktuálny Vilgain. */
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero {
+  flex-basis: clamp(680px, 66.7vw, 1180px);
 }
 
-/* Tri široké bannery vytvoria čistý pás pod nimi. */
-body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide {
-  grid-column: span 4;
-  aspect-ratio: var(--ds-source-ratio, 4.2667);
-}
-
-body.in-index #carousel.ds-editorial-grid.ds-one-card .item.ds-editorial-card {
-  grid-column: span 12;
-  max-height: 620px;
-}
-
-body.in-index #carousel.ds-editorial-grid .item > a,
-body.in-index #carousel.ds-editorial-grid .item img {
+body.in-index #carousel.ds-vilgain-rail .item > a,
+body.in-index #carousel.ds-vilgain-rail .item img {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-body.in-index #carousel.ds-editorial-grid .item > a {
+body.in-index #carousel.ds-vilgain-rail .item > a {
   position: relative;
   overflow: hidden;
   color: inherit;
   text-decoration: none;
 }
 
-body.in-index #carousel.ds-editorial-grid .item img {
+body.in-index #carousel.ds-vilgain-rail .item img {
   min-height: 0;
   object-fit: cover;
   object-position: center;
@@ -119,212 +128,204 @@ body.in-index #carousel.ds-editorial-grid .item img {
   transition: transform .65s cubic-bezier(.22, 1, .36, 1), filter .3s ease;
 }
 
-/* Jemná šípka naznačí klikateľnosť bez reklamného CTA. */
-body.in-index #carousel.ds-editorial-grid .item > a::after {
-  content: "↗";
-  position: absolute;
-  z-index: 3;
-  right: clamp(12px, 1.2vw, 18px);
-  bottom: clamp(12px, 1.2vw, 18px);
-  display: grid;
-  width: clamp(34px, 2.8vw, 44px);
-  height: clamp(34px, 2.8vw, 44px);
-  place-items: center;
-  border: 1px solid rgba(255, 255, 255, .58);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, .86);
-  color: #222526;
-  font: 700 clamp(15px, 1.2vw, 18px)/1 Arial, sans-serif;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
-  backdrop-filter: blur(8px);
-  pointer-events: none;
-  transition: background .2s ease, color .2s ease, transform .2s ease;
-}
-
-/* Pri nízkych širokých banneroch je šípka menšia. */
-body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide > a::after {
-  right: 10px;
-  bottom: 10px;
-  width: 30px;
-  height: 30px;
-  font-size: 13px;
-}
-
-body.in-index #carousel.ds-editorial-grid .item > a:focus-visible {
+body.in-index #carousel.ds-vilgain-rail .item > a:focus-visible {
   outline: 3px solid #242729;
   outline-offset: -5px;
 }
 
-/* Z administrácie berieme iba Text odkazu ako malé CTA tlačidlo. */
-body.in-index #carousel.ds-editorial-grid .extended-banner-texts {
+/* Text a CTA sa čítajú priamo z polí banneru v Shoptete. */
+body.in-index #carousel.ds-vilgain-rail .extended-banner-texts {
   position: absolute;
   z-index: 3;
-  inset: auto auto clamp(14px, 1.4vw, 20px) clamp(14px, 1.4vw, 20px);
+  inset: auto 0 0;
   display: none !important;
-  padding: 0;
+  padding: clamp(24px, 2.3vw, 38px);
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 8px;
+  color: #fff;
   pointer-events: none;
 }
 
-body.in-index #carousel.ds-editorial-grid .item.ds-has-admin-cta .extended-banner-texts {
-  display: block !important;
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-has-copy .extended-banner-texts {
+  display: flex !important;
 }
 
-body.in-index #carousel.ds-editorial-grid .item.ds-has-admin-cta > a::after {
-  display: none;
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-has-copy > a::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(15, 16, 17, .62) 0%, rgba(15, 16, 17, .08) 58%, transparent 78%);
+  pointer-events: none;
 }
 
-body.in-index #carousel.ds-editorial-grid .extended-banner-title,
-body.in-index #carousel.ds-editorial-grid .extended-banner-text {
+body.in-index #carousel.ds-vilgain-rail .extended-banner-title,
+body.in-index #carousel.ds-vilgain-rail .extended-banner-text,
+body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
+  position: static !important;
+  max-width: 100%;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+body.in-index #carousel.ds-vilgain-rail .extended-banner-title:empty,
+body.in-index #carousel.ds-vilgain-rail .extended-banner-text:empty,
+body.in-index #carousel.ds-vilgain-rail .extended-banner-link:empty {
   display: none !important;
 }
 
-body.in-index #carousel.ds-editorial-grid .extended-banner-link {
-  position: static !important;
+body.in-index #carousel.ds-vilgain-rail .extended-banner-title {
+  max-width: 18ch;
+  padding: 0;
+  background: transparent;
+  color: #fff;
+  font-size: clamp(24px, 1.9vw, 34px);
+  font-weight: 800;
+  line-height: 1.03;
+  letter-spacing: -.035em;
+}
+
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-title {
+  max-width: 16ch;
+  font-size: clamp(34px, 3vw, 52px);
+}
+
+body.in-index #carousel.ds-vilgain-rail .extended-banner-text {
+  max-width: 32ch;
+  padding: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, .9);
+  font-size: 13px;
+  line-height: 1.42;
+}
+
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-text {
+  font-size: 15px;
+}
+
+body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
   display: inline-flex;
   min-height: 40px;
-  margin: 0;
+  margin-top: 7px;
   padding: 0 18px;
   align-items: center;
   justify-content: center;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .92);
-  color: #242729;
+  border-radius: 8px;
+  background: #242729;
+  color: #fff;
   font-size: 12px;
   font-weight: 800;
   line-height: 1;
-  letter-spacing: .025em;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
-  backdrop-filter: blur(8px);
-  text-shadow: none;
+  letter-spacing: .015em;
   pointer-events: auto;
-  transition: background .2s ease, color .2s ease;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
 }
 
-body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide .extended-banner-texts {
-  inset: auto auto 10px 10px;
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-texts {
+  padding: 26px 22px;
 }
 
-body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide .extended-banner-link {
-  min-height: 30px;
-  padding: 0 13px;
-  font-size: 10px;
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-title {
+  font-size: clamp(21px, 1.65vw, 28px);
 }
 
-body.in-index #carousel.ds-editorial-grid .carousel-control,
-body.in-index #carousel.ds-editorial-grid .carousel-indicators,
+body.in-index #carousel.ds-vilgain-rail .carousel-control,
+body.in-index #carousel.ds-vilgain-rail .carousel-indicators,
 body.in-index .ds-banner-toolbar,
 body.in-index .ds-clean-scroll-hint {
   display: none !important;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  body.in-index #carousel.ds-editorial-grid .item > a:hover img {
+  body.in-index #carousel.ds-vilgain-rail .item > a:hover img {
     filter: saturate(1.025) contrast(1.01);
-    transform: scale(1.018);
+    transform: scale(1.016);
   }
 
-  body.in-index #carousel.ds-editorial-grid .item > a:hover::after {
-    background: #242729;
-    color: #fff;
-    transform: translate(2px, -2px);
-  }
-
-  body.in-index #carousel.ds-editorial-grid .item > a:hover .extended-banner-link {
-    background: #242729;
-    color: #fff;
+  body.in-index #carousel.ds-vilgain-rail .item > a:hover .extended-banner-link {
+    background: #fff;
+    color: #242729;
+    transform: translateY(-1px);
   }
 }
 
-@media (max-width: 900px) {
-  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-card {
-    grid-column: span 6;
-  }
-
-  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide {
-    grid-column: span 12;
-  }
-}
-
-/* Rešpektovanie voľby Mobil / Desktop priamo zo Shoptet administrácie. */
+/* Shoptet voľby „iba mobil“ a „iba desktop“. */
 @media (min-width: 768px) {
-  body.in-index #carousel.ds-editorial-grid .item.visible-xs {
+  body.in-index #carousel.ds-vilgain-rail .item.visible-xs {
     display: none !important;
   }
 }
 
 @media (max-width: 767px) {
   body.in-index .banners-row {
-    --ds-grid-gutter: 12px;
-    --ds-grid-gap: 10px;
+    --ds-vg-gutter: 12px;
+    --ds-vg-gap: 10px;
     margin-top: 12px;
     margin-bottom: 34px;
   }
 
-  body.in-index #carousel:not(.ds-editorial-grid) {
-    border-radius: 14px;
+  body.in-index #carousel:not(.ds-vilgain-rail) {
+    border-radius: 15px;
   }
 
-  body.in-index #carousel.ds-editorial-grid .carousel-inner {
-    display: flex !important;
-    width: 100%;
+  body.in-index #carousel.ds-vilgain-rail .carousel-inner {
     gap: 10px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-padding-left: 0;
-    scroll-snap-type: x mandatory;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+    cursor: auto;
   }
 
-  body.in-index #carousel.ds-editorial-grid .carousel-inner::-webkit-scrollbar {
-    display: none;
-  }
-
-  body.in-index #carousel.ds-editorial-grid .item,
-  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-card,
-  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide {
+  body.in-index #carousel.ds-vilgain-rail .item,
+  body.in-index #carousel.ds-vilgain-rail .item.active,
+  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero,
+  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card {
     width: auto !important;
-    height: auto !important;
-    min-height: 0 !important;
-    flex: 0 0 88vw;
-    grid-column: auto;
-    aspect-ratio: 800 / 665;
-    border-radius: 16px;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    height: auto;
+    min-height: 0;
+    flex: 0 0 86vw;
+    aspect-ratio: 4 / 5;
+    border-radius: 15px;
   }
 
-  /* Desktopové bannery označené v Shoptete ako desktop-only na mobile nezobrazíme. */
-  body.in-index #carousel.ds-editorial-grid .item.hidden-xs {
+  body.in-index #carousel.ds-vilgain-rail .item.hidden-xs {
     display: none !important;
   }
 
-  /* Kým nemajú široké bannery mobilnú verziu, radšej ich neorežeme na nečitateľný výrez. */
-  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide:not(.visible-xs) {
-    display: none !important;
+  body.in-index #carousel.ds-vilgain-rail .extended-banner-texts,
+  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-texts {
+    padding: 24px 21px;
   }
 
-  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide > a::after {
-    right: 11px;
-    bottom: 11px;
-    width: 32px;
-    height: 32px;
+  body.in-index #carousel.ds-vilgain-rail .extended-banner-title,
+  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-title,
+  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-title {
+    max-width: 16ch;
+    font-size: clamp(25px, 8vw, 34px);
   }
 
-  body.in-index #carousel.ds-editorial-grid .extended-banner-texts {
-    inset: auto auto 14px 14px;
+  body.in-index #carousel.ds-vilgain-rail .extended-banner-text,
+  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-text {
+    max-width: 30ch;
+    font-size: 13px;
   }
 
-  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide .extended-banner-texts {
-    inset: auto auto 10px 10px;
+  body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
+    min-height: 38px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-size: 11px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body.in-index #carousel.ds-editorial-grid .item img,
-  body.in-index #carousel.ds-editorial-grid .item > a::after {
+  body.in-index #carousel.ds-vilgain-rail .carousel-inner {
+    scroll-behavior: auto;
+  }
+
+  body.in-index #carousel.ds-vilgain-rail .item img,
+  body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
     transition: none;
   }
 }
