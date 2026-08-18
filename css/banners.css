@@ -1,1 +1,387 @@
-body.in-index .banners-row{--ds-clean-gutter:clamp(24px, 2.1vw, 42px);--ds-clean-gap:clamp(14px, 1.05vw, 20px);position:relative;width:calc(100vw - (var(--ds-clean-gutter) * 2));max-width:none;margin-top:clamp(16px, 1.4vw, 26px);margin-right:calc(50% - 50vw + var(--ds-clean-gutter));margin-bottom:34px;margin-left:calc(50% - 50vw + var(--ds-clean-gutter))}body.in-index .banners-row>.wide-carousel,body.in-index #carousel{width:100%;overflow:visible}body.in-index #carousel{margin:0;border:0;border-radius:0;background:transparent;box-shadow:none}body.in-index #carousel:not(.ds-banner-clean){overflow:hidden;border-radius:14px}body.in-index #carousel:not(.ds-banner-clean) .item img{display:block;width:100%;height:auto}body.in-index #carousel.ds-banner-clean .carousel-inner{display:flex !important;width:100%;min-height:0 !important;margin:0;overflow-x:auto;overflow-y:hidden;gap:var(--ds-clean-gap);scroll-padding-left:0;scroll-snap-type:x mandatory;scrollbar-width:none}body.in-index #carousel.ds-banner-clean .carousel-inner::-webkit-scrollbar{display:none}body.in-index #carousel.ds-banner-clean .item{position:relative !important;inset:auto !important;display:block !important;width:auto;height:clamp(430px, 30vw, 570px);min-height:430px;overflow:hidden;flex:0 0 clamp(300px, 20.2vw, 390px);border:0;border-radius:14px;background:#ececea;opacity:1 !important;transform:none !important;scroll-snap-align:start}body.in-index #carousel.ds-banner-clean .item:first-child{flex-basis:clamp(760px, 66.8vw, 1250px)}body.in-index #carousel.ds-banner-clean .item>a,body.in-index #carousel.ds-banner-clean .item img{display:block;width:100%;height:100%}body.in-index #carousel.ds-banner-clean .item>a{position:relative;color:#fff;text-decoration:none}body.in-index #carousel.ds-banner-clean .item>a:focus-visible{outline:3px solid #242729;outline-offset:-5px}body.in-index #carousel.ds-banner-clean .item img{min-height:0;aspect-ratio:auto;object-fit:cover;transform:scale(1.001);transition:transform .65s cubic-bezier(.22, 1, .36, 1),filter .3s ease}body.in-index #carousel.ds-banner-clean .item>a:hover img{filter:saturate(1.025);transform:scale(1.015)}body.in-index #carousel.ds-banner-clean .item>a:not(.extended-empty)::after{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(0deg, rgba(20,22,23,0.65), rgba(20,22,23,0.03) 62%, transparent);pointer-events:none}body.in-index #carousel.ds-banner-clean .item:first-child>a:not(.extended-empty)::after{background:linear-gradient(90deg, rgba(245,247,248,0.96), rgba(245,247,248,0.86) 28%, rgba(245,247,248,0.2) 52%, transparent 68%)}body.in-index #carousel.ds-banner-clean .extended-banner-texts{position:absolute;z-index:2;inset:auto 0 0;display:flex;max-width:none;min-height:48%;padding:clamp(28px, 2.1vw, 42px) clamp(24px, 1.8vw, 34px);flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:11px;pointer-events:none}body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-texts{inset:0 auto 0 0;width:min(42%, 500px);min-height:100%;padding:clamp(42px, 4vw, 76px);justify-content:center}body.in-index #carousel.ds-banner-clean .extended-banner-title,body.in-index #carousel.ds-banner-clean .extended-banner-text,body.in-index #carousel.ds-banner-clean .extended-banner-link{position:static;max-width:100%;margin:0;padding:0;border:0;background:transparent;color:#fff;box-shadow:none;text-shadow:none}body.in-index #carousel.ds-banner-clean .extended-banner-title{font-size:clamp(25px, 1.75vw, 34px);font-weight:800;line-height:1.06;letter-spacing:-0.035em}body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-title{max-width:13ch;color:#303436;font-size:clamp(38px, 2.65vw, 52px)}body.in-index #carousel.ds-banner-clean .extended-banner-text{max-width:31ch;font-size:14px;line-height:1.5}body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-text{color:#303436;font-size:15px}body.in-index #carousel.ds-banner-clean .extended-banner-link{margin-top:8px;padding:13px 22px;border-radius:8px;background:#fff;color:#2c3032;font-size:13px;font-weight:800;line-height:1}body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-link{background:#2c3032;color:#fff}body.in-index #carousel.ds-banner-clean .carousel-control,body.in-index #carousel.ds-banner-clean .carousel-indicators{display:none !important}body.in-index .ds-clean-scroll-hint{display:flex;width:calc(100vw - (var(--ds-clean-gutter) * 2));margin:-14px 0 52px;align-items:center;gap:14px;color:#777;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}body.in-index .ds-clean-scroll-hint::before{content:"";height:1px;flex:1;background:#ddd}@media (max-width:1100px){body.in-index #carousel.ds-banner-clean .item:first-child{flex-basis:75vw}body.in-index #carousel.ds-banner-clean .item:not(:first-child){flex-basis:34vw}}@media (max-width:767px){body.in-index .banners-row{--ds-clean-gutter:12px;--ds-clean-gap:12px}body.in-index #carousel.ds-banner-clean .item,body.in-index #carousel.ds-banner-clean .item:first-child,body.in-index #carousel.ds-banner-clean .item:not(:first-child){height:460px;min-height:460px;flex-basis:86vw}body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-texts{width:76%;padding:30px;justify-content:flex-end}body.in-index #carousel.ds-banner-clean .item:first-child>a:not(.extended-empty)::after{background:linear-gradient(0deg, rgba(245,247,248,0.96), rgba(245,247,248,0.18) 72%, transparent)}body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-title{font-size:34px}body.in-index .ds-clean-scroll-hint{margin-bottom:34px}}@media (prefers-reduced-motion:reduce){body.in-index #carousel.ds-banner-clean .item img{transition:none}}body.in-index .ds-clean-scroll-hint{width:100%;margin:18px 0 8px}@media (max-width:767px){body.in-index .ds-clean-scroll-hint{margin-bottom:0}}
+/* DOTYK SLOV – homepage bannery v2
+   Nahraď týmto celý pôvodný CSS blok pre .banners-row / #carousel. */
+
+body.in-index .banners-row {
+  --ds-banner-gutter: clamp(20px, 2.2vw, 42px);
+  --ds-banner-gap: clamp(12px, 1vw, 18px);
+  position: relative;
+  width: calc(100vw - (var(--ds-banner-gutter) * 2));
+  max-width: none;
+  margin-top: clamp(18px, 1.5vw, 28px);
+  margin-right: calc(50% - 50vw + var(--ds-banner-gutter));
+  margin-bottom: clamp(38px, 4vw, 64px);
+  margin-left: calc(50% - 50vw + var(--ds-banner-gutter));
+}
+
+body.in-index .banners-row > .wide-carousel,
+body.in-index #carousel {
+  width: 100%;
+}
+
+body.in-index #carousel {
+  margin: 0;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* Ak je v Shoptete iba jeden banner, zostane natívny a responzívny. */
+body.in-index #carousel:not(.ds-banner-clean) .item img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+body.in-index #carousel.ds-banner-clean {
+  border-radius: 0;
+  overflow: visible;
+}
+
+body.in-index #carousel.ds-banner-clean .carousel-inner {
+  display: flex !important;
+  width: 100%;
+  min-height: 0 !important;
+  margin: 0;
+  padding: 0;
+  gap: var(--ds-banner-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.in-index #carousel.ds-banner-clean .carousel-inner.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+body.in-index #carousel.ds-banner-clean .carousel-inner::-webkit-scrollbar {
+  display: none;
+}
+
+body.in-index #carousel.ds-banner-clean .item,
+body.in-index #carousel.ds-banner-clean .item.active {
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  width: auto;
+  height: clamp(470px, 32vw, 610px);
+  min-height: 470px;
+  flex: 0 0 clamp(330px, 22vw, 420px);
+  margin: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: clamp(14px, 1.15vw, 20px);
+  background: #eeece8;
+  box-shadow: none;
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+body.in-index #carousel.ds-banner-clean .item:first-child {
+  flex-basis: clamp(720px, 66vw, 1180px);
+}
+
+body.in-index #carousel.ds-banner-clean .item > a,
+body.in-index #carousel.ds-banner-clean .item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+body.in-index #carousel.ds-banner-clean .item > a {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+}
+
+body.in-index #carousel.ds-banner-clean .item > a:focus-visible {
+  outline: 3px solid #242729;
+  outline-offset: -6px;
+}
+
+body.in-index #carousel.ds-banner-clean .item img {
+  min-height: 0;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform .7s cubic-bezier(.22, 1, .36, 1), filter .3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.in-index #carousel.ds-banner-clean .item > a:hover img {
+    filter: saturate(1.03);
+    transform: scale(1.018);
+  }
+}
+
+body.in-index #carousel.ds-banner-clean .item > a:not(.extended-empty)::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(18, 20, 21, .72) 0%, rgba(18, 20, 21, .12) 58%, transparent 82%);
+  pointer-events: none;
+}
+
+body.in-index #carousel.ds-banner-clean .item:first-child > a:not(.extended-empty)::after {
+  background: linear-gradient(90deg, rgba(247, 247, 244, .97) 0%, rgba(247, 247, 244, .89) 27%, rgba(247, 247, 244, .26) 52%, transparent 70%);
+}
+
+body.in-index #carousel.ds-banner-clean .extended-banner-texts {
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  display: flex;
+  max-width: none;
+  min-height: 48%;
+  padding: clamp(26px, 2vw, 38px);
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-texts {
+  inset: 0 auto 0 0;
+  width: min(45%, 540px);
+  min-height: 100%;
+  padding: clamp(44px, 4vw, 76px);
+  justify-content: center;
+}
+
+body.in-index #carousel.ds-banner-clean .extended-banner-title,
+body.in-index #carousel.ds-banner-clean .extended-banner-text,
+body.in-index #carousel.ds-banner-clean .extended-banner-link {
+  position: static;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+body.in-index #carousel.ds-banner-clean .extended-banner-title {
+  font-size: clamp(25px, 1.75vw, 34px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -.035em;
+}
+
+body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-title {
+  max-width: 13ch;
+  color: #2d3032;
+  font-size: clamp(38px, 3vw, 56px);
+  line-height: .98;
+  letter-spacing: -.05em;
+}
+
+body.in-index #carousel.ds-banner-clean .extended-banner-text {
+  max-width: 32ch;
+  color: rgba(255, 255, 255, .88);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-text {
+  color: #45494b;
+  font-size: 15px;
+}
+
+body.in-index #carousel.ds-banner-clean .extended-banner-link {
+  margin-top: 8px;
+  padding: 13px 20px;
+  border-radius: 999px;
+  background: #fff;
+  color: #282b2d;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .015em;
+  pointer-events: auto;
+}
+
+body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-link {
+  background: #2c3032;
+  color: #fff;
+}
+
+body.in-index #carousel.ds-banner-clean .carousel-control,
+body.in-index #carousel.ds-banner-clean .carousel-indicators {
+  display: none !important;
+}
+
+/* Spodná navigácia */
+body.in-index .ds-banner-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr) auto;
+  width: 100%;
+  margin-top: 16px;
+  align-items: center;
+  gap: 16px;
+  color: #6f7273;
+}
+
+body.in-index .ds-banner-count {
+  min-width: 48px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .12em;
+}
+
+body.in-index .ds-banner-progress {
+  position: relative;
+  height: 2px;
+  overflow: hidden;
+  background: #e3e1dd;
+}
+
+body.in-index .ds-banner-progress > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: #272a2b;
+  transform-origin: left center;
+  transition: width .2s ease;
+}
+
+body.in-index .ds-banner-actions {
+  display: flex;
+  gap: 8px;
+}
+
+body.in-index .ds-banner-arrow {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #dedcd8;
+  border-radius: 50%;
+  background: #fff;
+  color: #282b2d;
+  font: 700 18px/1 Arial, sans-serif;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+body.in-index .ds-banner-arrow:hover {
+  border-color: #282b2d;
+  background: #282b2d;
+  color: #fff;
+}
+
+body.in-index .ds-banner-arrow:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+body.in-index .ds-banner-swipe-label {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  body.in-index #carousel.ds-banner-clean .item:first-child {
+    flex-basis: 74vw;
+  }
+
+  body.in-index #carousel.ds-banner-clean .item:not(:first-child) {
+    flex-basis: 34vw;
+  }
+}
+
+@media (max-width: 767px) {
+  body.in-index .banners-row {
+    --ds-banner-gutter: 12px;
+    --ds-banner-gap: 10px;
+    margin-top: 12px;
+    margin-bottom: 34px;
+  }
+
+  body.in-index #carousel {
+    border-radius: 14px;
+  }
+
+  body.in-index #carousel.ds-banner-clean {
+    border-radius: 0;
+  }
+
+  body.in-index #carousel.ds-banner-clean .item,
+  body.in-index #carousel.ds-banner-clean .item.active,
+  body.in-index #carousel.ds-banner-clean .item:first-child,
+  body.in-index #carousel.ds-banner-clean .item:not(:first-child) {
+    height: clamp(420px, 126vw, 520px);
+    min-height: 420px;
+    flex-basis: 88vw;
+    border-radius: 14px;
+  }
+
+  body.in-index #carousel.ds-banner-clean .extended-banner-texts,
+  body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-texts {
+    inset: auto 0 0;
+    width: 100%;
+    min-height: 52%;
+    padding: 24px 22px 26px;
+    justify-content: flex-end;
+  }
+
+  body.in-index #carousel.ds-banner-clean .item:first-child > a:not(.extended-empty)::after {
+    background: linear-gradient(0deg, rgba(247, 247, 244, .98) 0%, rgba(247, 247, 244, .84) 28%, rgba(247, 247, 244, .12) 70%, transparent 82%);
+  }
+
+  body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-title {
+    max-width: 14ch;
+    font-size: clamp(33px, 10vw, 42px);
+    line-height: 1;
+  }
+
+  body.in-index #carousel.ds-banner-clean .item:first-child .extended-banner-text {
+    font-size: 14px;
+  }
+
+  body.in-index .ds-banner-toolbar {
+    grid-template-columns: auto 1fr auto;
+    margin-top: 12px;
+    gap: 12px;
+  }
+
+  body.in-index .ds-banner-actions {
+    display: none;
+  }
+
+  body.in-index .ds-banner-swipe-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.in-index #carousel.ds-banner-clean .carousel-inner {
+    scroll-behavior: auto;
+  }
+
+  body.in-index #carousel.ds-banner-clean .item img,
+  body.in-index .ds-banner-progress > span {
+    transition: none;
+  }
+}
