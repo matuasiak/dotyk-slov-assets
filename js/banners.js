@@ -43,18 +43,27 @@
       var image = item.querySelector('img');
       var link = item.querySelector('a[href]');
       var adminTexts = item.querySelector('.extended-banner-texts');
+      var adminTitle = item.querySelector('.extended-banner-title');
+      var adminDescription = item.querySelector('.extended-banner-text');
+      var adminCta = item.querySelector('.extended-banner-link');
+      var hasTitle = Boolean(adminTitle && adminTitle.textContent.trim());
+      var hasDescription = Boolean(adminDescription && adminDescription.textContent.trim());
+      var hasCta = Boolean(adminCta && adminCta.textContent.trim());
 
       item.classList.remove(
         'next', 'prev', 'left', 'right',
         'ds-editorial-card', 'ds-editorial-wide',
         'ds-has-admin-copy', 'ds-has-admin-cta',
-        'ds-vg-hero', 'ds-vg-card', 'ds-vg-has-copy'
+        'ds-vg-hero', 'ds-vg-card', 'ds-vg-has-copy',
+        'ds-vg-has-text', 'ds-vg-has-cta'
       );
       item.classList.add(index === 0 ? 'ds-vg-hero' : 'ds-vg-card');
       item.classList.toggle(
         'ds-vg-has-copy',
         Boolean(adminTexts && adminTexts.textContent.trim())
       );
+      item.classList.toggle('ds-vg-has-text', hasTitle || hasDescription);
+      item.classList.toggle('ds-vg-has-cta', hasCta);
       item.setAttribute('data-ds-banner-position', String(index + 1));
       item.style.removeProperty('--ds-source-ratio');
 
