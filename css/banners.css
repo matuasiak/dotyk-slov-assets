@@ -11,6 +11,20 @@ body.in-index .banners-row {
   margin-right: calc(50% - 50vw + var(--ds-vg-gutter));
   margin-bottom: clamp(38px, 4vw, 62px);
   margin-left: calc(50% - 50vw + var(--ds-vg-gutter));
+  isolation: isolate;
+}
+
+/* Čisté biele pozadie celej bannerovej zóny ako na Vilgain. */
+body.in-index .banners-row::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(-1 * clamp(18px, 1.5vw, 28px));
+  right: calc(-1 * var(--ds-vg-gutter));
+  bottom: calc(-1 * clamp(38px, 4vw, 62px));
+  left: calc(-1 * var(--ds-vg-gutter));
+  background: #fff;
+  pointer-events: none;
 }
 
 body.in-index .banners-row > .wide-carousel,
@@ -92,7 +106,7 @@ body.in-index #carousel.ds-vilgain-rail .item.active {
   flex: 0 0 clamp(280px, 22vw, 350px);
   border: 0;
   border-radius: clamp(14px, 1.15vw, 18px);
-  background: #eceae6;
+  background: #f2f1ee;
   box-shadow: none;
   opacity: 1 !important;
   transform: none !important;
@@ -152,7 +166,8 @@ body.in-index #carousel.ds-vilgain-rail .item.ds-vg-has-copy .extended-banner-te
   display: flex !important;
 }
 
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-has-copy > a::after {
+/* Gradient sa pridá iba pri nadpise alebo popise, nie pri samotnom CTA. */
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-has-text > a::after {
   content: "";
   position: absolute;
   z-index: 2;
@@ -225,12 +240,26 @@ body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
   transition: background .2s ease, color .2s ease, transform .2s ease;
 }
 
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-link {
+  min-height: 56px;
+  padding: 0 28px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
 body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-texts {
   padding: 26px 22px;
 }
 
 body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-title {
   font-size: clamp(21px, 1.65vw, 28px);
+}
+
+body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-link {
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-size: 12px;
 }
 
 body.in-index #carousel.ds-vilgain-rail .carousel-control,
@@ -266,6 +295,13 @@ body.in-index .ds-clean-scroll-hint {
     --ds-vg-gap: 10px;
     margin-top: 12px;
     margin-bottom: 34px;
+  }
+
+  body.in-index .banners-row::before {
+    top: -12px;
+    right: -12px;
+    bottom: -34px;
+    left: -12px;
   }
 
   body.in-index #carousel:not(.ds-vilgain-rail) {
@@ -312,10 +348,18 @@ body.in-index .ds-clean-scroll-hint {
   }
 
   body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
-    min-height: 38px;
-    padding: 0 16px;
+    min-height: 44px;
+    padding: 0 19px;
     border-radius: 8px;
-    font-size: 11px;
+    font-size: 12px;
+  }
+
+  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-link,
+  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-link {
+    min-height: 44px;
+    padding: 0 19px;
+    border-radius: 8px;
+    font-size: 12px;
   }
 }
 
