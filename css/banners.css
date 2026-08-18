@@ -246,6 +246,13 @@ body.in-index .ds-clean-scroll-hint {
   }
 }
 
+/* Rešpektovanie voľby Mobil / Desktop priamo zo Shoptet administrácie. */
+@media (min-width: 768px) {
+  body.in-index #carousel.ds-editorial-grid .item.visible-xs {
+    display: none !important;
+  }
+}
+
 @media (max-width: 767px) {
   body.in-index .banners-row {
     --ds-grid-gutter: 12px;
@@ -259,23 +266,44 @@ body.in-index .ds-clean-scroll-hint {
   }
 
   body.in-index #carousel.ds-editorial-grid .carousel-inner {
-    grid-template-columns: minmax(0, 1fr);
+    display: flex !important;
+    width: 100%;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-padding-left: 0;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body.in-index #carousel.ds-editorial-grid .carousel-inner::-webkit-scrollbar {
+    display: none;
   }
 
   body.in-index #carousel.ds-editorial-grid .item,
   body.in-index #carousel.ds-editorial-grid .item.ds-editorial-card,
   body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide {
-    grid-column: 1;
-    border-radius: 14px;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    flex: 0 0 88vw;
+    grid-column: auto;
+    aspect-ratio: 800 / 665;
+    border-radius: 16px;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 
-  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-card {
-    aspect-ratio: var(--ds-source-ratio, 1.40625);
+  /* Desktopové bannery označené v Shoptete ako desktop-only na mobile nezobrazíme. */
+  body.in-index #carousel.ds-editorial-grid .item.hidden-xs {
+    display: none !important;
   }
 
-  /* Desktopové široké bannery dostanú na mobile trochu viac výšky. */
-  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide {
-    aspect-ratio: 2.65 / 1;
+  /* Kým nemajú široké bannery mobilnú verziu, radšej ich neorežeme na nečitateľný výrez. */
+  body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide:not(.visible-xs) {
+    display: none !important;
   }
 
   body.in-index #carousel.ds-editorial-grid .item.ds-editorial-wide > a::after {
