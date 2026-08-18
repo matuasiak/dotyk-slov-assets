@@ -71,13 +71,7 @@
       icons.menu
     );
 
-    const searchButtonMobile = makeMobileButton(
-      'ds-mobile-control--search',
-      'Hľadať',
-      icons.search
-    );
-
-    controls.append(menuButton, searchButtonMobile);
+    controls.append(menuButton);
     headerTop.appendChild(controls);
 
     /* Cart icon */
@@ -135,7 +129,6 @@
   function openMobileMenu() {
     if (!mobileMq.matches) return;
 
-    document.body.classList.remove('search-window-visible');
     document.body.classList.add('navigation-window-visible', 'ds-mobile-nav-open');
 
     document
@@ -159,24 +152,6 @@
       ?.setAttribute('aria-expanded', 'false');
   }
 
-  function toggleMobileSearch() {
-    if (!mobileMq.matches) return;
-
-    const opening = !document.body.classList.contains('search-window-visible');
-
-    closeMobileMenu();
-    document.body.classList.toggle('search-window-visible', opening);
-
-    document
-      .querySelector('#ds-mobile-controls .ds-mobile-control--search')
-      ?.setAttribute('aria-expanded', opening ? 'true' : 'false');
-
-    if (opening) {
-      window.setTimeout(() => {
-        document.querySelector('#header .search-input')?.focus();
-      }, 80);
-    }
-  }
 
   function toggleSubmenu(event, arrow) {
     if (!mobileMq.matches) return;
@@ -224,17 +199,6 @@
           return;
         }
 
-        const searchButton = event.target.closest(
-          '#ds-mobile-controls .ds-mobile-control--search'
-        );
-
-        if (searchButton) {
-          event.preventDefault();
-          event.stopPropagation();
-          toggleMobileSearch();
-          return;
-        }
-
         const closeButton = event.target.closest('#navigation .navigation-close');
 
         if (closeButton) {
@@ -269,8 +233,7 @@
       if (event.key !== 'Escape') return;
 
       closeMobileMenu();
-      document.body.classList.remove('search-window-visible');
-    });
+      });
   }
 
   function positionCartPopup() {
@@ -387,8 +350,7 @@
 
         if (!mobileMq.matches) {
           closeMobileMenu();
-          document.body.classList.remove('search-window-visible');
-        }
+              }
 
         positionCartPopup();
       });
