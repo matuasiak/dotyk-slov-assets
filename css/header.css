@@ -2944,4 +2944,21 @@ body:where(.ums_mobile_header_v1--on) .top-navigation-bar {
     background: inherit !important;
   }
 }
+/* =========================================================
+   DOTYK SLOV — DESKTOP TOP BAR GAP PATCH
+   Pridá jemnú medzeru medzi čierny GTM banner a header.
+   Daj úplne na KONIEC aktuálneho CSS.
+   ========================================================= */
 
+@media (min-width: 992px) {
+  #header {
+    margin-top: 10px !important;
+  }
+
+  /* nech sa horný layout nerozbije ani pri sticky/scrolled stave */
+  .scrolled #header,
+  .admin-logged #header,
+  .admin-logged.scrolled #header {
+    margin-top: 10px !important;
+  }
+}
