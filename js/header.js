@@ -1,15 +1,15 @@
 (function () {
   'use strict';
 
+  const mobileMq = window.matchMedia('(max-width: 767px)');
+
   const icons = {
     contact: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 16 0v5a2 2 0 0 1-2 2h-2v-6h4M4 13h4v6H6a2 2 0 0 1-2-2v-4Z"/><path d="M16 19c0 1.1-1.3 2-3 2h-1"/></svg>',
     account: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg>',
     menu: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
-    search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>',
+    search: '<svg class="ds-search-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>',
     cart: '<svg class="ds-cart-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>'
   };
-
-  const mobileMq = window.matchMedia('(max-width: 767px)');
 
   function makeDesktopAction({ className, label, icon, href = '#', target }) {
     const link = document.createElement('a');
@@ -17,7 +17,9 @@
     link.className = `ds-approved-action ${className}${target ? ' toggle-window' : ''}`;
     link.setAttribute('aria-label', label);
 
-    if (target) link.dataset.target = target;
+    if (target) {
+      link.dataset.target = target;
+    }
 
     link.innerHTML = `${icon}<span class="ds-tooltip">${label}</span>`;
     return link;
@@ -40,11 +42,10 @@
 
     if (!headerTop || !actions || !cart) return;
 
-    /* Remove older custom header controls from previous versions. */
     actions.querySelectorAll('.ds-approved-action').forEach((node) => node.remove());
     document.getElementById('ds-mobile-controls')?.remove();
 
-    /* Desktop actions only. */
+    /* Desktop-only custom actions. CSS hides them on mobile. */
     [
       makeDesktopAction({
         className: 'ds-contact',
@@ -60,8 +61,7 @@
       })
     ].forEach((item) => actions.insertBefore(item, cart));
 
-    /* Our own mobile buttons are <button>, therefore Shoptet's
-       generic .navigation-buttons > a::before cannot corrupt them. */
+    /* One clean mobile hamburger button. */
     const controls = document.createElement('div');
     controls.id = 'ds-mobile-controls';
 
@@ -71,15 +71,16 @@
       icons.menu
     );
 
-    controls.append(menuButton);
+    controls.appendChild(menuButton);
     headerTop.appendChild(controls);
 
-    /* Cart icon */
+    /* Cart SVG. */
     cart.querySelector('.ds-cart-svg')?.remove();
     cart.insertAdjacentHTML('afterbegin', icons.cart);
 
-    /* Search form icon */
+    /* Search form button SVG. */
     const searchButton = document.querySelector('#header .search-form .btn');
+
     if (searchButton) {
       searchButton.textContent = '';
       searchButton.insertAdjacentHTML('afterbegin', icons.search);
@@ -87,56 +88,41 @@
     }
   }
 
-  function detectNativeFastBar() {
-    if (!mobileMq.matches) {
-      document.body.classList.remove('ds-native-fastbar');
+  function ensureCloseButton() {
+    const navigation = document.getElementById('navigation');
+
+    if (!navigation || navigation.querySelector('.navigation-close')) {
       return;
     }
 
-    const wanted = 'rýchle doručenie 2–3 dni';
-
-    const nodes = Array.from(document.body.querySelectorAll('body *'))
-      .filter((node) => {
-        if (node.closest('.top-navigation-bar')) return false;
-        const text = (node.textContent || '').trim().toLowerCase();
-        if (!text || !text.includes(wanted)) return false;
-
-        const rect = node.getBoundingClientRect();
-        return rect.top < 100 && rect.height > 0 && rect.height < 80;
-      });
-
-    document.body.classList.toggle('ds-native-fastbar', nodes.length > 0);
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'navigation-close';
+    close.setAttribute('aria-label', 'Zavrieť menu');
+    navigation.prepend(close);
   }
 
-  function ensureMobileCloseButton() {
-    const navigation = document.getElementById('navigation');
-    if (!navigation || navigation.querySelector('.navigation-close')) return;
-
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'navigation-close';
-    button.setAttribute('aria-label', 'Zavrieť menu');
-    navigation.prepend(button);
-  }
-
-  function isMobileMenuOpen() {
+  function isMenuOpen() {
     return (
       document.body.classList.contains('navigation-window-visible') ||
       document.body.classList.contains('ds-mobile-nav-open')
     );
   }
 
-  function openMobileMenu() {
+  function openMenu() {
     if (!mobileMq.matches) return;
 
-    document.body.classList.add('navigation-window-visible', 'ds-mobile-nav-open');
+    document.body.classList.add(
+      'navigation-window-visible',
+      'ds-mobile-nav-open'
+    );
 
     document
       .querySelector('#ds-mobile-controls .ds-mobile-control--menu')
       ?.setAttribute('aria-expanded', 'true');
   }
 
-  function closeMobileMenu() {
+  function closeMenu() {
     document.body.classList.remove(
       'navigation-window-visible',
       'ds-mobile-nav-open',
@@ -152,17 +138,17 @@
       ?.setAttribute('aria-expanded', 'false');
   }
 
-
   function toggleSubmenu(event, arrow) {
     if (!mobileMq.matches) return;
 
     const item = arrow.closest('li.ext');
+
     if (!item) return;
 
     event.preventDefault();
     event.stopPropagation();
 
-    const willOpen = !item.classList.contains('exp');
+    const opening = !item.classList.contains('exp');
 
     document
       .querySelectorAll('#navigation .menu-level-1 > li.ext.exp')
@@ -170,18 +156,18 @@
         if (other !== item) other.classList.remove('exp');
       });
 
-    item.classList.toggle('exp', willOpen);
+    item.classList.toggle('exp', opening);
 
     document.body.classList.toggle(
       'submenu-visible',
       !!document.querySelector('#navigation .menu-level-1 > li.ext.exp')
     );
 
-    arrow.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    arrow.setAttribute('aria-expanded', opening ? 'true' : 'false');
   }
 
-  function bindMobileNavigation() {
-    ensureMobileCloseButton();
+  function bindMobileMenu() {
+    ensureCloseButton();
 
     document.addEventListener(
       'click',
@@ -194,8 +180,9 @@
           event.preventDefault();
           event.stopPropagation();
 
-          if (isMobileMenuOpen()) closeMobileMenu();
-          else openMobileMenu();
+          if (isMenuOpen()) closeMenu();
+          else openMenu();
+
           return;
         }
 
@@ -204,7 +191,7 @@
         if (closeButton) {
           event.preventDefault();
           event.stopPropagation();
-          closeMobileMenu();
+          closeMenu();
           return;
         }
 
@@ -214,42 +201,38 @@
 
         if (submenuArrow) {
           toggleSubmenu(event, submenuArrow);
-          return;
-        }
-
-        if (
-          mobileMq.matches &&
-          isMobileMenuOpen() &&
-          !event.target.closest('#navigation') &&
-          !event.target.closest('#ds-mobile-controls')
-        ) {
-          closeMobileMenu();
         }
       },
       true
     );
 
     document.addEventListener('keydown', function (event) {
-      if (event.key !== 'Escape') return;
-
-      closeMobileMenu();
-      });
+      if (event.key === 'Escape') closeMenu();
+    });
   }
 
   function positionCartPopup() {
     if (mobileMq.matches) return;
 
-    const cart = document.querySelector('#header .navigation-buttons .cart-count');
-    const popup = document.querySelector('.user-action .popup-widget.cart-widget');
+    const cart = document.querySelector(
+      '#header .navigation-buttons .cart-count'
+    );
+
+    const popup = document.querySelector(
+      '.user-action .popup-widget.cart-widget'
+    );
 
     if (!cart || !popup) return;
 
     const rect = cart.getBoundingClientRect();
 
-    const right = Math.max(12, Math.round(window.innerWidth - rect.right));
-    const top = Math.round(rect.bottom + 10);
+    const right = Math.max(
+      12,
+      Math.round(window.innerWidth - rect.right)
+    );
 
-    /* Inline !important beats all the older CSS rules that were fighting us. */
+    const top = Math.round(rect.bottom + 9);
+
     popup.style.setProperty('position', 'fixed', 'important');
     popup.style.setProperty('top', `${top}px`, 'important');
     popup.style.setProperty('right', `${right}px`, 'important');
@@ -258,39 +241,44 @@
     popup.style.setProperty('margin', '0', 'important');
     popup.style.setProperty('transform', 'none', 'important');
 
-    document.documentElement.style.setProperty('--ds-cart-top', `${top}px`);
-    document.documentElement.style.setProperty('--ds-cart-right', `${right}px`);
+    document.documentElement.style.setProperty(
+      '--ds-cart-top',
+      `${top}px`
+    );
+
+    document.documentElement.style.setProperty(
+      '--ds-cart-right',
+      `${right}px`
+    );
   }
 
-  function watchCartPopup() {
-    const cart = document.querySelector('#header .navigation-buttons .cart-count');
+  function bindCart() {
+    const cart = document.querySelector(
+      '#header .navigation-buttons .cart-count'
+    );
+
     if (!cart) return;
 
     ['mouseenter', 'focusin', 'click'].forEach((eventName) => {
       cart.addEventListener(eventName, function () {
         positionCartPopup();
         requestAnimationFrame(positionCartPopup);
-        setTimeout(positionCartPopup, 20);
+        setTimeout(positionCartPopup, 25);
       });
     });
 
-    const observer = new MutationObserver(function () {
-      positionCartPopup();
+    window.addEventListener('resize', positionCartPopup, {
+      passive: true
     });
 
-    observer.observe(document.body, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ['class', 'style']
+    window.addEventListener('scroll', positionCartPopup, {
+      passive: true
     });
-
-    window.addEventListener('resize', positionCartPopup, { passive: true });
-    window.addEventListener('scroll', positionCartPopup, { passive: true });
   }
 
   function startTyping() {
     const input = document.querySelector('#header .search-input');
+
     if (!input || input.dataset.typingActive) return;
 
     input.dataset.typingActive = 'true';
@@ -315,7 +303,9 @@
 
       const text = suggestions[suggestion];
       character += deleting ? -1 : 1;
-      input.placeholder = `Skúste napríklad: ${text.slice(0, character)}`;
+
+      input.placeholder =
+        'Skúste napríklad: ' + text.slice(0, character);
 
       let delay = deleting ? 34 : 62;
 
@@ -336,29 +326,23 @@
 
   function boot() {
     mountHeader();
-    detectNativeFastBar();
-    bindMobileNavigation();
-    watchCartPopup();
+    bindMobileMenu();
+    bindCart();
     startTyping();
     positionCartPopup();
 
-    window.addEventListener('resize', detectNativeFastBar, { passive: true });
-
     if (mobileMq.addEventListener) {
       mobileMq.addEventListener('change', function () {
-        detectNativeFastBar();
-
-        if (!mobileMq.matches) {
-          closeMobileMenu();
-              }
-
+        if (!mobileMq.matches) closeMenu();
         positionCartPopup();
       });
     }
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot, { once: true });
+    document.addEventListener('DOMContentLoaded', boot, {
+      once: true
+    });
   } else {
     boot();
   }
