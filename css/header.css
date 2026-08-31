@@ -3134,3 +3134,437 @@ body:where(.ums_mobile_header_v1--on) .top-navigation-bar {
   }
 }
 
+/* =========================================================
+   DOTYK SLOV — V15 / IKEA x BROKEN PLANET
+   SAFE SKIN PATCH ON TOP OF STABLE V14
+   - keeps current working structure + JS
+   - IKEA logic: search-first, clean utility nav, clear categories
+   - Broken Planet mood: charcoal / washed neutral / minimal streetwear
+   ========================================================= */
+
+:root {
+  --ds-dark-0: #0d0d0c;
+  --ds-dark-1: #121211;
+  --ds-dark-2: #191917;
+  --ds-dark-3: #242421;
+  --ds-dark-line: #30302c;
+
+  --ds-light-0: #f5f3ef;
+  --ds-light-1: #eae7e1;
+  --ds-light-2: #c8c4bc;
+
+  --ds-accent: #f04d83;
+}
+
+
+/* =========================================================
+   DESKTOP — SEARCH-FIRST DARK HEADER
+   ========================================================= */
+@media (min-width: 992px) {
+
+  /*
+   * Keep the existing 30 px separation from the GTM strip.
+   * Only change the visual language, not the proven layout.
+   */
+  #header,
+  .scrolled #header,
+  .admin-logged #header,
+  .admin-logged.scrolled #header {
+    background: var(--ds-dark-0) !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--ds-dark-line) !important;
+    box-shadow: none !important;
+  }
+
+  /* white version of the current black transparent logo */
+  #header .site-name img {
+    filter: invert(1) grayscale(1) brightness(1.15) !important;
+  }
+
+  /* IKEA-like dominant search */
+  #header .search-form .search-input {
+    height: 48px !important;
+    padding-left: 20px !important;
+    padding-right: 54px !important;
+
+    border: 1px solid transparent !important;
+    border-radius: 999px !important;
+
+    background: var(--ds-light-0) !important;
+    color: #151515 !important;
+
+    font-size: 14px !important;
+
+    box-shadow: none !important;
+  }
+
+  #header .search-form .search-input::placeholder {
+    color: #77736d !important;
+    opacity: 1 !important;
+  }
+
+  #header .search-form .search-input:focus {
+    background: #fff !important;
+    border-color: #fff !important;
+    box-shadow: 0 0 0 3px rgba(255,255,255,.12) !important;
+  }
+
+  #header .search-form .btn {
+    top: 5px !important;
+    right: 5px !important;
+
+    width: 38px !important;
+    height: 38px !important;
+
+    border-radius: 50% !important;
+    background: #151515 !important;
+    color: #fff !important;
+
+    box-shadow: none !important;
+  }
+
+  #header .search-form .btn:hover {
+    background: #292927 !important;
+  }
+
+  #header .search-form .btn > svg {
+    width: 19px !important;
+    height: 19px !important;
+
+    stroke: currentColor !important;
+  }
+
+
+  /* utility icons */
+  #header .navigation-buttons .ds-approved-action,
+  #header .navigation-buttons .cart-count {
+    background: transparent !important;
+    color: var(--ds-light-0) !important;
+    border: 1px solid transparent !important;
+  }
+
+  #header .navigation-buttons .ds-approved-action:hover,
+  #header .navigation-buttons .cart-count:hover {
+    background: var(--ds-dark-2) !important;
+    border-color: var(--ds-dark-line) !important;
+    color: #fff !important;
+  }
+
+  #header .navigation-buttons svg,
+  #header .navigation-buttons .ds-approved-action > svg,
+  #header .navigation-buttons .cart-count > .ds-cart-svg {
+    stroke: currentColor !important;
+  }
+
+
+  /* -------------------------------------------------------
+     NAV: clean IKEA information architecture,
+     dark Broken Planet skin
+     ------------------------------------------------------- */
+  #navigation,
+  #navigation .navigation-in {
+    background: var(--ds-dark-0) !important;
+    border-color: var(--ds-dark-line) !important;
+  }
+
+  #navigation {
+    border-top: 1px solid var(--ds-dark-line) !important;
+    border-bottom: 1px solid var(--ds-dark-line) !important;
+  }
+
+  #navigation .menu-level-1 {
+    gap: clamp(30px, 2.6vw, 54px) !important;
+  }
+
+  #navigation .menu-level-1 > li,
+  #navigation .menu-level-1 > li > a {
+    background: transparent !important;
+  }
+
+  #navigation .menu-level-1 > li > a {
+    color: #dfdcd6 !important;
+
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    letter-spacing: .01em !important;
+
+    transition:
+      color .18s ease,
+      opacity .18s ease !important;
+  }
+
+  #navigation .menu-level-1 > li:hover > a,
+  #navigation .menu-level-1 > li.active > a {
+    color: #fff !important;
+  }
+
+  #navigation .menu-level-1 > li > a::after {
+    bottom: 6px !important;
+    height: 2px !important;
+
+    background: #fff !important;
+  }
+
+  /* sale = one controlled accent */
+  #navigation .menu-level-1 > li:nth-child(5) > a,
+  #navigation .menu-level-1 > li:nth-child(5) > a:hover,
+  #navigation .menu-level-1 > li:nth-child(5).active > a {
+    color: var(--ds-accent) !important;
+  }
+
+  #navigation .menu-level-1 > li:nth-child(5) > a::after {
+    background: var(--ds-accent) !important;
+  }
+
+  #navigation .submenu-arrow::after {
+    border-color: currentColor !important;
+  }
+
+
+  /* -------------------------------------------------------
+     MEGA MENU — dark editorial panel
+     ------------------------------------------------------- */
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 {
+    border: 0 !important;
+    border-top: 1px solid var(--ds-dark-line) !important;
+    border-radius: 0 !important;
+
+    background: var(--ds-dark-1) !important;
+
+    box-shadow:
+      0 28px 65px -34px rgba(0,0,0,.8) !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li,
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div {
+    background: transparent !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > a:not(.menu-image),
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div > a {
+    color: #f1eee8 !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div > ul > li > a {
+    color: #aaa69f !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 a:hover,
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 a:focus-visible {
+    color: #fff !important;
+    background: transparent !important;
+  }
+
+
+  /* -------------------------------------------------------
+     CART — same visual system as header
+     ------------------------------------------------------- */
+  .user-action .popup-widget.cart-widget {
+    border: 1px solid var(--ds-dark-line) !important;
+    border-radius: 18px !important;
+
+    background: var(--ds-dark-1) !important;
+    color: #f4f1eb !important;
+
+    box-shadow:
+      0 28px 75px -32px rgba(0,0,0,.78) !important;
+  }
+
+  .user-action .popup-widget.cart-widget::before {
+    border-bottom-color: var(--ds-dark-1) !important;
+  }
+
+  .cart-widget h4,
+  .cart-widget .cart-widget-product-name,
+  .cart-widget .cart-widget-product-name a,
+  .cart-widget .price {
+    color: #f4f1eb !important;
+  }
+
+  .cart-widget .cart-widget-product,
+  .cart-widget .cart-widget-inner,
+  .cart-widget .cart-widget-button {
+    border-color: var(--ds-dark-line) !important;
+  }
+
+  .cart-widget .cart-widget-product-amount input {
+    background: var(--ds-dark-2) !important;
+    border-color: var(--ds-dark-line) !important;
+    color: #fff !important;
+  }
+
+  .cart-widget-button .btn {
+    background: var(--ds-light-0) !important;
+    border-color: var(--ds-light-0) !important;
+    color: #111 !important;
+  }
+
+  .cart-widget-button .btn:hover {
+    background: #fff !important;
+    border-color: #fff !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE — IKEA FUNCTION, BROKEN PLANET MOOD
+   Keep the stable V14 structure:
+   hamburger | centered logo | cart
+   search always visible below
+   ========================================================= */
+@media (max-width: 767px) {
+
+  #header {
+    background: var(--ds-dark-0) !important;
+    border-bottom: 1px solid var(--ds-dark-line) !important;
+  }
+
+  #header > .container {
+    background: var(--ds-dark-0) !important;
+  }
+
+  #header .header-top {
+    background: var(--ds-dark-0) !important;
+  }
+
+  #header .site-name img {
+    filter: invert(1) grayscale(1) brightness(1.15) !important;
+  }
+
+
+  /* hamburger + cart */
+  #ds-mobile-controls .ds-mobile-control,
+  #header .navigation-buttons .cart-count {
+    color: var(--ds-light-0) !important;
+    background: transparent !important;
+  }
+
+  #ds-mobile-controls .ds-mobile-control:active,
+  #header .navigation-buttons .cart-count:active {
+    background: var(--ds-dark-2) !important;
+  }
+
+  #ds-mobile-controls .ds-mobile-control svg,
+  #header .navigation-buttons .cart-count > .ds-cart-svg {
+    stroke: currentColor !important;
+  }
+
+
+  /* search bar: warm neutral, always obvious */
+  #header .search {
+    background: var(--ds-dark-0) !important;
+  }
+
+  #header .search-form .search-input {
+    height: 44px !important;
+
+    border: 1px solid transparent !important;
+    border-radius: 14px !important;
+
+    background: var(--ds-light-0) !important;
+    color: #171717 !important;
+
+    box-shadow: none !important;
+  }
+
+  #header .search-form .search-input::placeholder {
+    color: #77736d !important;
+    opacity: 1 !important;
+  }
+
+  #header .search-form .btn {
+    background: #151515 !important;
+    color: #fff !important;
+  }
+
+  #header .search-form .btn > svg {
+    stroke: currentColor !important;
+  }
+
+
+  /* -------------------------------------------------------
+     MOBILE DRAWER — full dark menu, no grey overlay
+     ------------------------------------------------------- */
+  #navigation,
+  body.navigation-window-visible #navigation,
+  body.ds-mobile-nav-open #navigation,
+  #navigation .navigation-in {
+    background: var(--ds-dark-0) !important;
+    color: #f4f1eb !important;
+
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  #navigation {
+    border-left: 1px solid var(--ds-dark-line) !important;
+
+    box-shadow:
+      -22px 0 55px -35px rgba(0,0,0,.9) !important;
+  }
+
+  #navigation .navigation-close {
+    background: var(--ds-dark-2) !important;
+    color: #fff !important;
+    border: 1px solid var(--ds-dark-line) !important;
+  }
+
+  #navigation .menu-level-1,
+  #navigation .menu-level-1 > li,
+  #navigation .menu-level-1 > li > a {
+    background: var(--ds-dark-0) !important;
+  }
+
+  #navigation .menu-level-1 > li {
+    border-bottom-color: var(--ds-dark-line) !important;
+  }
+
+  #navigation .menu-level-1 > li > a {
+    color: #f1eee8 !important;
+  }
+
+  #navigation .menu-level-1 > li:nth-child(5) > a {
+    color: var(--ds-accent) !important;
+  }
+
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 {
+    background: var(--ds-dark-2) !important;
+  }
+
+  #navigation .menu-level-2 a {
+    color: #c8c4bc !important;
+    background: transparent !important;
+  }
+
+  #navigation .menu-level-2 a:hover,
+  #navigation .menu-level-2 a:focus-visible {
+    color: #fff !important;
+  }
+
+  body.navigation-window-visible::after,
+  body.ds-mobile-nav-open::after {
+    content: none !important;
+    display: none !important;
+  }
+
+
+  /* mobile cart = dark bottom sheet */
+  .user-action .popup-widget.cart-widget {
+    border: 1px solid var(--ds-dark-line) !important;
+    border-bottom: 0 !important;
+
+    background: var(--ds-dark-1) !important;
+    color: #f4f1eb !important;
+
+    box-shadow:
+      0 -24px 65px -35px rgba(0,0,0,.8) !important;
+  }
+
+  .cart-widget h4,
+  .cart-widget .cart-widget-product-name,
+  .cart-widget .cart-widget-product-name a,
+  .cart-widget .price {
+    color: #f4f1eb !important;
+  }
+}
+
