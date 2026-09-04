@@ -3134,425 +3134,517 @@ body:where(.ums_mobile_header_v1--on) .top-navigation-bar {
   }
 }
 
+
 /* =========================================================
-   DOTYK SLOV — V16
-   IKEA STRUCTURE × BROKEN PLANET WASHED MOOD
-   Safe visual layer on top of stable V14.
-   NO all-black header.
+   DOTYK SLOV — V17 SEED REDESIGN
+   Built on top of stable V14
+   Goal: much closer to Seed system
+   - warm off-white shell
+   - charcoal typography
+   - calmer spacing
+   - cleaner search-first hierarchy
+   - subtle dusty pink accent only
    ========================================================= */
 
 :root {
-  --ds-bp-paper: #f2efe9;
-  --ds-bp-paper-2: #e7e2da;
-  --ds-bp-paper-3: #d8d1c8;
-  --ds-bp-ink: #151514;
-  --ds-bp-ink-soft: #5e5a54;
-  --ds-bp-line: rgba(21,21,20,.13);
-  --ds-bp-dark: #1b1b19;
-  --ds-bp-dark-2: #242421;
-  --ds-bp-pink: #e94b8c;
+  --ds-seed-bg: #F7F5F0;
+  --ds-seed-surface: #F1EEE8;
+  --ds-seed-surface-2: #ECE9E3;
+  --ds-seed-ink: #181817;
+  --ds-seed-muted: #6D6861;
+  --ds-seed-line: rgba(24, 24, 23, .10);
+  --ds-seed-line-strong: rgba(24, 24, 23, .16);
+  --ds-seed-pink: #E7C8CF;
+  --ds-seed-pink-strong: #DFAAB8;
 }
+
 
 /* =========================================================
    DESKTOP
-   IKEA = clear structure/search
-   Broken Planet = washed canvas, editorial contrast
    ========================================================= */
 @media (min-width: 992px) {
 
-  /* Keep the user's existing 30px desktop breathing room. */
+  /* Replace old top gap by an integrated soft strip */
   #header,
   .scrolled #header,
   .admin-logged #header,
   .admin-logged.scrolled #header {
-    background:
-      linear-gradient(
-        105deg,
-        #f5f2ed 0%,
-        #efebe5 48%,
-        #f4f1ec 100%
-      ) !important;
+    margin-top: 0 !important;
+    border-top: 18px solid var(--ds-seed-bg) !important;
 
-    color: var(--ds-bp-ink) !important;
+    background: var(--ds-seed-bg) !important;
+    color: var(--ds-seed-ink) !important;
 
-    border: 0 !important;
-    border-bottom: 1px solid var(--ds-bp-line) !important;
+    border-right: 0 !important;
+    border-left: 0 !important;
+    border-bottom: 1px solid var(--ds-seed-line) !important;
 
     box-shadow: none !important;
   }
 
-  /* Subtle washed layer — mood, not "black UI". */
-  #header::before {
-    content: "" !important;
-    position: absolute !important;
-    inset: 0 !important;
-    pointer-events: none !important;
-
-    background:
-      radial-gradient(
-        circle at 16% 20%,
-        rgba(255,255,255,.5),
-        transparent 34%
-      ),
-      radial-gradient(
-        circle at 83% 65%,
-        rgba(0,0,0,.025),
-        transparent 30%
-      ) !important;
-
-    opacity: 1 !important;
+  #header::before,
+  #header::after {
+    content: none !important;
+    display: none !important;
   }
 
-  #header > .container,
+  #header > .container {
+    width: calc(100% - 56px) !important;
+    max-width: 2400px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
   #header .header-top {
-    position: relative !important;
-    z-index: 1 !important;
+    display: grid !important;
+    grid-template-columns: 180px minmax(420px, 1fr) 160px !important;
+    gap: 52px !important;
+    align-items: center !important;
+
+    height: 88px !important;
+    min-height: 88px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: transparent !important;
   }
 
-  /* Keep original black Dotyk Slov logo.
-     Broken Planet mood comes from the canvas + imagery, not white-on-black. */
+  /* logo */
+  #header .site-name,
+  #header .site-name a {
+    display: flex !important;
+    align-items: center !important;
+  }
+
   #header .site-name img {
     filter: none !important;
+    width: auto !important;
+    max-width: 172px !important;
+    max-height: 48px !important;
   }
 
-  /* Search-first, IKEA-like, but softer/warm. */
+  /* search */
+  #header .search-form {
+    position: relative !important;
+  }
+
   #header .search-form .search-input {
-    height: 48px !important;
+    width: 100% !important;
+    height: 50px !important;
 
-    padding-left: 20px !important;
-    padding-right: 54px !important;
+    padding: 0 58px 0 20px !important;
 
-    border: 1px solid rgba(21,21,20,.08) !important;
+    border: 1px solid transparent !important;
     border-radius: 999px !important;
 
-    background: rgba(255,255,255,.72) !important;
-    color: var(--ds-bp-ink) !important;
+    background: var(--ds-seed-surface) !important;
+    color: var(--ds-seed-ink) !important;
 
     font-size: 14px !important;
+    font-weight: 400 !important;
 
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.7) !important;
-
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
+    box-shadow: none !important;
   }
 
   #header .search-form .search-input::placeholder {
-    color: #77726b !important;
+    color: var(--ds-seed-muted) !important;
     opacity: 1 !important;
   }
 
   #header .search-form .search-input:focus {
     background: #fff !important;
-
-    border-color: rgba(21,21,20,.2) !important;
-
-    box-shadow:
-      0 0 0 3px rgba(21,21,20,.05) !important;
+    border-color: var(--ds-seed-line-strong) !important;
+    box-shadow: 0 0 0 3px rgba(24,24,23,.04) !important;
   }
 
-  /* Search action = small dark dot/button, not a dark header. */
   #header .search-form .btn {
-    top: 5px !important;
-    right: 5px !important;
+    position: absolute !important;
+    top: 6px !important;
+    right: 6px !important;
 
     width: 38px !important;
     height: 38px !important;
 
+    display: grid !important;
+    place-items: center !important;
+
+    border: 0 !important;
     border-radius: 50% !important;
 
-    background: var(--ds-bp-dark) !important;
-    color: #fff !important;
+    background: var(--ds-seed-ink) !important;
+    color: var(--ds-seed-bg) !important;
 
     box-shadow: none !important;
   }
 
   #header .search-form .btn:hover {
-    background: #30302d !important;
+    background: #262625 !important;
   }
 
-  /* Icons stay ink-black. */
+  #header .search-form .btn > svg,
+  #header .search-form .btn > svg *,
+  #header .search-form .btn svg path,
+  #header .search-form .btn svg circle,
+  #header .search-form .btn svg line {
+    stroke: currentColor !important;
+    fill: none !important;
+  }
+
+  /* actions */
+  #header .navigation-buttons {
+    gap: 10px !important;
+  }
+
   #header .navigation-buttons .ds-approved-action,
   #header .navigation-buttons .cart-count {
-    color: var(--ds-bp-ink) !important;
-    background: transparent !important;
+    width: 42px !important;
+    height: 42px !important;
+
     border: 1px solid transparent !important;
+    border-radius: 50% !important;
+
+    background: transparent !important;
+    color: var(--ds-seed-ink) !important;
+
+    box-shadow: none !important;
   }
 
   #header .navigation-buttons .ds-approved-action:hover,
   #header .navigation-buttons .cart-count:hover {
-    background: rgba(255,255,255,.58) !important;
-    border-color: var(--ds-bp-line) !important;
+    background: var(--ds-seed-surface) !important;
+    border-color: var(--ds-seed-line) !important;
   }
 
+  #header .navigation-buttons svg,
+  #header .navigation-buttons svg *,
+  #header .navigation-buttons .ds-cart-svg {
+    stroke: currentColor !important;
+    fill: none !important;
+  }
 
-  /* -------------------------------------------------------
-     NAVIGATION
-     Light washed canvas, not black.
-     ------------------------------------------------------- */
+  /* navigation */
   #navigation,
   #navigation .navigation-in {
-    background: var(--ds-bp-paper) !important;
+    background: var(--ds-seed-bg) !important;
   }
 
   #navigation {
-    border-top: 0 !important;
-    border-bottom: 1px solid var(--ds-bp-line) !important;
+    position: relative !important;
+    z-index: 60 !important;
+
+    height: 62px !important;
+
+    border-top: 1px solid var(--ds-seed-line) !important;
+    border-bottom: 1px solid var(--ds-seed-line) !important;
+  }
+
+  #navigation .navigation-in {
+    height: 62px !important;
+    padding-left: max(28px, calc((100vw - 2400px) / 2 + 28px)) !important;
+    padding-right: max(28px, calc((100vw - 2400px) / 2 + 28px)) !important;
+  }
+
+  #navigation .menu-level-1 {
+    height: 62px !important;
+    gap: clamp(30px, 2.2vw, 50px) !important;
+  }
+
+  #navigation .menu-level-1 > li {
+    height: 62px !important;
   }
 
   #navigation .menu-level-1 > li > a {
-    color: var(--ds-bp-ink) !important;
+    height: 62px !important;
 
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    letter-spacing: .005em !important;
+    color: var(--ds-seed-ink) !important;
+    background: transparent !important;
+
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    letter-spacing: -.01em !important;
   }
 
-  #navigation .menu-level-1 > li:hover > a,
+  #navigation .menu-level-1 > li > a:hover,
   #navigation .menu-level-1 > li.active > a {
     color: #000 !important;
   }
 
   #navigation .menu-level-1 > li > a::after {
-    bottom: 7px !important;
+    bottom: 9px !important;
     height: 2px !important;
-
-    background: var(--ds-bp-ink) !important;
+    border-radius: 999px !important;
+    background: var(--ds-seed-ink) !important;
   }
 
-  /* Sale gets the single brand accent. */
+  /* sale as subtle accent */
   #navigation .menu-level-1 > li:nth-child(5) > a,
   #navigation .menu-level-1 > li:nth-child(5) > a:hover,
   #navigation .menu-level-1 > li:nth-child(5).active > a {
-    color: var(--ds-bp-pink) !important;
+    color: #c86079 !important;
   }
 
   #navigation .menu-level-1 > li:nth-child(5) > a::after {
-    background: var(--ds-bp-pink) !important;
+    background: #c86079 !important;
   }
 
+  #navigation .submenu-arrow::after {
+    border-color: currentColor !important;
+  }
 
-  /* -------------------------------------------------------
-     MEGA MENU
-     This is where we use the stronger dark editorial contrast.
-     Header stays warm/light; opened category feels fashion-led.
-     ------------------------------------------------------- */
+  /* mega menu - much closer to Seed */
   #navigation .menu-level-1 > li.ext > ul.menu-level-2 {
     border: 0 !important;
-    border-top: 1px solid rgba(255,255,255,.1) !important;
+    border-top: 1px solid var(--ds-seed-line) !important;
     border-radius: 0 !important;
 
-    background:
-      linear-gradient(
-        120deg,
-        #1c1c1a 0%,
-        #24231f 58%,
-        #1d1d1b 100%
-      ) !important;
+    background: var(--ds-seed-bg) !important;
+    color: var(--ds-seed-ink) !important;
 
-    color: #f3f0ea !important;
+    box-shadow: 0 26px 55px -40px rgba(24,24,23,.22) !important;
 
-    box-shadow:
-      0 28px 70px -38px rgba(0,0,0,.72) !important;
+    padding-top: 34px !important;
+    padding-bottom: 38px !important;
+    gap: 28px 58px !important;
   }
 
-  #navigation .menu-level-1 > li.ext > ul.menu-level-2::before {
-    content: "" !important;
-    position: absolute !important;
-    inset: 0 !important;
-    pointer-events: none !important;
-
-    background:
-      radial-gradient(
-        circle at 80% 18%,
-        rgba(255,255,255,.055),
-        transparent 30%
-      ),
-      radial-gradient(
-        circle at 15% 75%,
-        rgba(233,75,140,.05),
-        transparent 28%
-      ) !important;
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2::before,
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2::after {
+    content: none !important;
+    display: none !important;
   }
 
-  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li {
-    position: relative !important;
-    z-index: 1 !important;
+  #navigation .menu-level-2 > li,
+  #navigation .menu-level-2 > li > div {
+    background: transparent !important;
   }
 
   #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > a:not(.menu-image),
   #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div > a {
-    color: #f3f0ea !important;
+    color: var(--ds-seed-ink) !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
   }
 
-  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div > ul > li > a {
-    color: #aaa69f !important;
+  #navigation .menu-level-1 > li.ext > ul.menu-level-2 > li > div > ul > li > a,
+  #navigation .menu-level-2 a {
+    color: var(--ds-seed-muted) !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
   }
 
   #navigation .menu-level-1 > li.ext > ul.menu-level-2 a:hover,
   #navigation .menu-level-1 > li.ext > ul.menu-level-2 a:focus-visible {
-    color: #fff !important;
+    color: var(--ds-seed-ink) !important;
     background: transparent !important;
   }
 
-
-  /* -------------------------------------------------------
-     CART
-     Warm paper shell; dark CTA.
-     ------------------------------------------------------- */
+  /* cart popup */
   .user-action .popup-widget.cart-widget {
-    border: 1px solid rgba(21,21,20,.13) !important;
-    border-radius: 18px !important;
+    border: 1px solid var(--ds-seed-line) !important;
+    border-radius: 20px !important;
 
-    background: #f5f1ea !important;
-    color: var(--ds-bp-ink) !important;
+    background: var(--ds-seed-bg) !important;
+    color: var(--ds-seed-ink) !important;
 
-    box-shadow:
-      0 30px 75px -35px rgba(0,0,0,.38) !important;
+    box-shadow: 0 30px 70px -36px rgba(24,24,23,.22) !important;
   }
 
   .user-action .popup-widget.cart-widget::before {
-    border-bottom-color: #f5f1ea !important;
+    border-bottom-color: var(--ds-seed-bg) !important;
+  }
+
+  .cart-widget h4,
+  .cart-widget .cart-widget-product-name,
+  .cart-widget .cart-widget-product-name a,
+  .cart-widget .price {
+    color: var(--ds-seed-ink) !important;
+  }
+
+  .cart-widget .cart-widget-product,
+  .cart-widget .cart-widget-inner,
+  .cart-widget .cart-widget-button {
+    border-color: var(--ds-seed-line) !important;
+  }
+
+  .cart-widget .cart-widget-product-amount input {
+    background: #fff !important;
+    border-color: var(--ds-seed-line-strong) !important;
+    color: var(--ds-seed-ink) !important;
   }
 
   .cart-widget-button .btn {
-    border-color: var(--ds-bp-dark) !important;
-    background: var(--ds-bp-dark) !important;
-    color: #fff !important;
+    height: 50px !important;
+
+    border: 1px solid var(--ds-seed-ink) !important;
+    border-radius: 999px !important;
+
+    background: var(--ds-seed-ink) !important;
+    color: var(--ds-seed-bg) !important;
   }
 
   .cart-widget-button .btn:hover {
-    border-color: #000 !important;
-    background: #000 !important;
+    background: #2a2a28 !important;
+    border-color: #2a2a28 !important;
   }
 }
 
 
 /* =========================================================
    MOBILE
-   Warm washed header + dark editorial drawer.
-   Keeps stable V14 structure/search behaviour.
    ========================================================= */
 @media (max-width: 767px) {
 
-  #header,
-  #header > .container,
-  #header .header-top {
-    background:
-      linear-gradient(
-        115deg,
-        #f5f2ed 0%,
-        #efebe4 100%
-      ) !important;
+  /* remove desktop integrated gap on mobile */
+  #header {
+    margin-top: 0 !important;
+    border-top: 0 !important;
+
+    background: var(--ds-seed-bg) !important;
+    border-bottom: 1px solid var(--ds-seed-line) !important;
+    box-shadow: none !important;
   }
 
-  #header {
-    border-bottom: 1px solid var(--ds-bp-line) !important;
+  #header > .container,
+  #header .header-top {
+    background: var(--ds-seed-bg) !important;
   }
 
   #header .site-name img {
     filter: none !important;
+    max-width: 140px !important;
+    max-height: 34px !important;
   }
 
   #ds-mobile-controls .ds-mobile-control,
   #header .navigation-buttons .cart-count {
-    color: var(--ds-bp-ink) !important;
+    color: var(--ds-seed-ink) !important;
     background: transparent !important;
+    border: 1px solid transparent !important;
+    border-radius: 50% !important;
   }
 
   #ds-mobile-controls .ds-mobile-control:active,
   #header .navigation-buttons .cart-count:active {
-    background: rgba(255,255,255,.55) !important;
+    background: var(--ds-seed-surface) !important;
+    border-color: var(--ds-seed-line) !important;
   }
 
-  /* Always-visible warm search. */
+  #ds-mobile-controls .ds-mobile-control svg,
+  #ds-mobile-controls .ds-mobile-control svg *,
+  #header .navigation-buttons .cart-count > .ds-cart-svg {
+    stroke: currentColor !important;
+    fill: none !important;
+  }
+
+  /* search always visible */
   #header .search {
-    background: transparent !important;
+    background: var(--ds-seed-bg) !important;
+    padding: 0 0 12px !important;
   }
 
   #header .search-form .search-input {
-    border: 1px solid rgba(21,21,20,.08) !important;
-    border-radius: 14px !important;
+    height: 44px !important;
 
-    background: rgba(255,255,255,.8) !important;
-    color: var(--ds-bp-ink) !important;
+    padding: 0 46px 0 16px !important;
+
+    border: 1px solid transparent !important;
+    border-radius: 16px !important;
+
+    background: var(--ds-seed-surface) !important;
+    color: var(--ds-seed-ink) !important;
 
     box-shadow: none !important;
   }
 
   #header .search-form .search-input::placeholder {
-    color: #77726b !important;
+    color: var(--ds-seed-muted) !important;
     opacity: 1 !important;
   }
 
-  #header .search-form .btn {
-    background: var(--ds-bp-dark) !important;
-    color: #fff !important;
+  #header .search-form .search-input:focus {
+    background: #fff !important;
+    border-color: var(--ds-seed-line-strong) !important;
   }
 
+  #header .search-form .btn {
+    top: 4px !important;
+    right: 4px !important;
 
-  /* Drawer = darker editorial moment.
-     Dark is used selectively, not across the whole UI. */
+    width: 36px !important;
+    height: 36px !important;
+
+    border-radius: 50% !important;
+
+    background: var(--ds-seed-ink) !important;
+    color: var(--ds-seed-bg) !important;
+  }
+
+  #header .search-form .btn > svg,
+  #header .search-form .btn > svg *,
+  #header .search-form .btn svg path,
+  #header .search-form .btn svg circle,
+  #header .search-form .btn svg line {
+    stroke: currentColor !important;
+    fill: none !important;
+  }
+
+  /* drawer */
   #navigation,
   body.navigation-window-visible #navigation,
   body.ds-mobile-nav-open #navigation,
   #navigation .navigation-in {
-    background:
-      linear-gradient(
-        145deg,
-        #1b1b19 0%,
-        #24231f 100%
-      ) !important;
-
-    color: #f3f0ea !important;
+    background: var(--ds-seed-bg) !important;
+    color: var(--ds-seed-ink) !important;
 
     opacity: 1 !important;
     filter: none !important;
   }
 
   #navigation {
-    border-left: 1px solid rgba(255,255,255,.08) !important;
-
-    box-shadow:
-      -24px 0 65px -38px rgba(0,0,0,.78) !important;
+    border-left: 1px solid var(--ds-seed-line) !important;
+    box-shadow: -20px 0 50px -35px rgba(24,24,23,.18) !important;
   }
 
   #navigation .navigation-close {
-    border: 1px solid rgba(255,255,255,.1) !important;
-    background: rgba(255,255,255,.06) !important;
-    color: #fff !important;
+    border: 1px solid var(--ds-seed-line) !important;
+    background: var(--ds-seed-ink) !important;
+    color: var(--ds-seed-bg) !important;
   }
 
   #navigation .menu-level-1,
   #navigation .menu-level-1 > li,
   #navigation .menu-level-1 > li > a {
-    background: transparent !important;
+    background: var(--ds-seed-bg) !important;
   }
 
   #navigation .menu-level-1 > li {
-    border-bottom-color: rgba(255,255,255,.11) !important;
+    border-bottom-color: var(--ds-seed-line) !important;
   }
 
   #navigation .menu-level-1 > li > a {
-    color: #f3f0ea !important;
+    color: var(--ds-seed-ink) !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
   }
 
   #navigation .menu-level-1 > li:nth-child(5) > a {
-    color: var(--ds-bp-pink) !important;
+    color: #c86079 !important;
   }
 
   #navigation .menu-level-1 > li.ext > ul.menu-level-2 {
-    background: rgba(255,255,255,.045) !important;
+    background: var(--ds-seed-surface) !important;
   }
 
   #navigation .menu-level-2 a {
-    color: #bbb6ae !important;
+    color: var(--ds-seed-muted) !important;
     background: transparent !important;
   }
 
   #navigation .menu-level-2 a:hover,
   #navigation .menu-level-2 a:focus-visible {
-    color: #fff !important;
+    color: var(--ds-seed-ink) !important;
   }
 
   body.navigation-window-visible::after,
@@ -3561,23 +3653,29 @@ body:where(.ums_mobile_header_v1--on) .top-navigation-bar {
     display: none !important;
   }
 
-
-  /* Cart = warm bottom sheet */
+  /* mobile cart bottom sheet */
   .user-action .popup-widget.cart-widget {
-    border: 1px solid rgba(21,21,20,.13) !important;
+    border: 1px solid var(--ds-seed-line) !important;
     border-bottom: 0 !important;
 
-    background: #f5f1ea !important;
-    color: var(--ds-bp-ink) !important;
+    background: var(--ds-seed-bg) !important;
+    color: var(--ds-seed-ink) !important;
 
-    box-shadow:
-      0 -24px 65px -38px rgba(0,0,0,.45) !important;
+    box-shadow: 0 -18px 40px -24px rgba(24,24,23,.18) !important;
+  }
+
+  .cart-widget h4,
+  .cart-widget .cart-widget-product-name,
+  .cart-widget .cart-widget-product-name a,
+  .cart-widget .price {
+    color: var(--ds-seed-ink) !important;
   }
 
   .cart-widget-button .btn {
-    background: var(--ds-bp-dark) !important;
-    border-color: var(--ds-bp-dark) !important;
-    color: #fff !important;
+    border: 1px solid var(--ds-seed-ink) !important;
+    background: var(--ds-seed-ink) !important;
+    color: var(--ds-seed-bg) !important;
+    border-radius: 999px !important;
   }
 }
 
