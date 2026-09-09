@@ -1,325 +1,202 @@
 (function () {
   'use strict';
 
-  const CONFIG = window.DOTYK_HEADER_CONFIG || {};
-  const SEARCH_CONFIG = window.DOTYK_SEARCH_CONFIG || {};
-  const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-  const normalize = (value) => (value || '')
-    .toString()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim()
-    .toLowerCase();
+  var CONFIG = window.DOTYK_V2 || {};
+  var mobileMq = window.matchMedia('(max-width: 767px)');
 
-  const icons = {
-    search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.4"/><path d="m16 16 4 4"/></svg>',
-    account: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg>',
+  var icons = {
+    search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>',
+    account: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg>',
     heart: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.7a5.1 5.1 0 0 0-7.2 0L12 7.3l-1.6-1.6a5.1 5.1 0 0 0-7.2 7.2L12 21l8.8-8.1a5.1 5.1 0 0 0 0-7.2Z"/></svg>',
-    cart: '<svg class="ds-dark-cart-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>',
-    menu: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
+    cart: '<svg class="ds-fashion-cart-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>',
+    menu: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+    close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>'
   };
 
-  const fallbackTerms = [
+  var searchPhrases = [
     'mám toho dosť',
-    'overthinking',
+    'nevolaj mi',
     'citovo nedostupný',
-    'tričká',
-    'mikiny'
+    'overthinking',
+    'mikiny',
+    'veci, ktoré nepovieš nahlas'
   ];
 
-  function getNativeNavigation() {
-    return $$('#navigation .menu-level-1 > li').map((li) => {
-      const link = $(':scope > a', li);
+  function $(selector, root) {
+    return (root || document).querySelector(selector);
+  }
+
+  function $$(selector, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(selector));
+  }
+
+  function nativeMenuItems() {
+    return $$('#navigation .menu-level-1 > li').map(function (li) {
+      var link = li.querySelector(':scope > a');
       if (!link) return null;
 
-      const children = $$(':scope > .menu-level-2 a, :scope > ul a', li)
-        .map((child) => ({
-          text: child.textContent.trim(),
-          href: child.href
-        }))
-        .filter((child) => child.text && child.href);
+      var submenu = li.querySelector(':scope > .menu-level-2, :scope > ul');
+      var children = submenu
+        ? Array.prototype.slice.call(submenu.querySelectorAll('a[href]')).map(function (child) {
+            return {
+              text: (child.textContent || '').trim(),
+              href: child.href
+            };
+          }).filter(function (child) { return child.text; })
+        : [];
 
       return {
-        text: link.textContent.trim(),
+        text: (link.textContent || '').trim(),
         href: link.href,
-        children
+        children: children
       };
     }).filter(Boolean);
   }
 
-  function findItem(items, terms) {
-    return items.find((item) => terms.some((term) => normalize(item.text).includes(term)));
-  }
-
-  function createAction(className, label, icon, options = {}) {
-    const element = options.href ? document.createElement('a') : document.createElement('button');
-    if (options.href) element.href = options.href;
-    else element.type = 'button';
-    element.className = `ds-dark-action ${className}`;
-    element.setAttribute('aria-label', label);
-    if (options.target) {
-      element.classList.add('toggle-window');
-      element.dataset.target = options.target;
-    }
-    element.innerHTML = icon;
-    return element;
-  }
-
   function mountAnnouncement(items) {
-    const bar = $('.top-navigation-bar');
-    const container = bar && $('.container', bar);
+    var bar = $('.top-navigation-bar');
+    var container = bar && $('.container', bar);
     if (!bar || !container) return;
 
-    bar.classList.add('ds-dark-announcement');
-    container.querySelector('.ds-dark-announcement__link')?.remove();
+    bar.classList.add('ds-fashion-announcement');
+    if ($('.ds-fashion-announcement__link', container)) return;
 
-    const newest = findItem(items, ['novink', 'new']);
-    const link = document.createElement('a');
-    link.className = 'ds-dark-announcement__link';
+    var newest = items.find(function (item) {
+      return /novink|new/i.test(item.text);
+    });
+
+    var link = document.createElement('a');
+    link.className = 'ds-fashion-announcement__link';
     link.textContent = 'NOVÝ DROP JE VONKU →';
-    link.href = CONFIG.announcementUrl || newest?.href || CONFIG.shopUrl || '#';
+    link.href = CONFIG.announcementUrl || (newest && newest.href) || '#';
     if (link.getAttribute('href') === '#') {
-      link.addEventListener('click', (event) => event.preventDefault());
+      link.addEventListener('click', function (event) { event.preventDefault(); });
     }
     container.appendChild(link);
   }
 
+  function mountDesktopNavigation(items) {
+    var headerTop = $('#header .header-top');
+    var navigation = $('#navigation');
+    var logo = headerTop && $('.site-name-wrapper', headerTop);
+    if (!headerTop || !navigation || !logo) return;
+
+    navigation.classList.add('ds-fashion-source-nav');
+    $('.ds-fashion-nav', headerTop)?.remove();
+
+    var nav = document.createElement('ul');
+    nav.className = 'ds-fashion-nav';
+    nav.setAttribute('aria-label', 'Hlavná navigácia');
+
+    items.forEach(function (item) {
+      if (!item.text) return;
+
+      var li = document.createElement('li');
+      li.className = 'ds-fashion-nav__item';
+
+      if (item.children.length) {
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'ds-fashion-nav__button';
+        button.textContent = item.text;
+        button.setAttribute('aria-expanded', 'false');
+
+        var dropdown = document.createElement('div');
+        dropdown.className = 'ds-fashion-nav__dropdown';
+        dropdown.innerHTML = '<ul>' + item.children.map(function (child) {
+          return '<li><a href="' + child.href + '">' + child.text + '</a></li>';
+        }).join('') + '</ul>';
+
+        button.addEventListener('click', function () {
+          var open = !li.classList.contains('is-open');
+          $$('.ds-fashion-nav__item.is-open', nav).forEach(function (other) {
+            if (other !== li) {
+              other.classList.remove('is-open');
+              var otherButton = $('.ds-fashion-nav__button', other);
+              if (otherButton) otherButton.setAttribute('aria-expanded', 'false');
+            }
+          });
+          li.classList.toggle('is-open', open);
+          button.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+
+        li.appendChild(button);
+        li.appendChild(dropdown);
+      } else {
+        var link = document.createElement('a');
+        link.className = 'ds-fashion-nav__link';
+        link.href = item.href;
+        link.textContent = item.text;
+        li.appendChild(link);
+      }
+
+      nav.appendChild(li);
+    });
+
+    logo.insertAdjacentElement('afterend', nav);
+  }
+
+  function makeAction(className, label, icon, href) {
+    var element = document.createElement(href ? 'a' : 'button');
+    if (href) element.href = href;
+    else element.type = 'button';
+    element.className = 'ds-fashion-action ' + className;
+    element.setAttribute('aria-label', label);
+    element.innerHTML = icon;
+    return element;
+  }
+
   function wishlistCount() {
     try {
-      const value = JSON.parse(localStorage.getItem('dotykWishlist') || '[]');
-      return Array.isArray(value) ? value.length : 0;
+      var data = JSON.parse(localStorage.getItem('dotykWishlist') || '[]');
+      return Array.isArray(data) ? data.length : 0;
     } catch (_) {
       return 0;
     }
   }
 
   function syncWishlistCount() {
-    const badge = $('.ds-dark-wishlist .ds-dark-count');
+    var badge = $('.ds-fashion-wishlist .ds-fashion-count');
     if (!badge) return;
-    const count = wishlistCount();
+    var count = wishlistCount();
     badge.dataset.count = String(count);
     badge.textContent = String(count);
   }
 
   function mountActions() {
-    const actions = $('#header .navigation-buttons');
-    const cart = actions && $('.cart-count', actions);
+    var actions = $('#header .navigation-buttons');
+    var cart = actions && $('.cart-count', actions);
     if (!actions || !cart) return;
 
-    $$('.ds-approved-action, .ds-v2-action, .ds-dark-action', actions).forEach((node) => node.remove());
-    $('#ds-mobile-controls')?.remove();
+    $$('.ds-approved-action,.ds-v2-action,.ds-fashion-action', actions).forEach(function (node) {
+      node.remove();
+    });
 
-    const wishlist = createAction('ds-dark-wishlist', 'Obľúbené', icons.heart);
-    wishlist.innerHTML += '<span class="ds-dark-count" data-count="0">0</span>';
-    wishlist.addEventListener('click', () => {
+    var search = makeAction('ds-fashion-search-trigger', 'Hľadať', icons.search);
+    search.insertAdjacentHTML('beforeend', '<span>Hľadať</span>');
+
+    var wishlist = makeAction('ds-fashion-wishlist', 'Obľúbené', icons.heart);
+    wishlist.insertAdjacentHTML('beforeend', '<span class="ds-fashion-count" data-count="0">0</span>');
+    wishlist.addEventListener('click', function () {
       document.dispatchEvent(new CustomEvent('DotykWishlistOpen'));
     });
 
-    const account = createAction('ds-dark-account', 'Môj účet', icons.account, { target: 'login' });
+    var account = makeAction('ds-fashion-account toggle-window', 'Môj účet', icons.account, '#');
+    account.dataset.target = 'login';
 
+    actions.insertBefore(search, cart);
     actions.insertBefore(wishlist, cart);
     actions.insertBefore(account, cart);
 
-    cart.querySelector('.ds-cart-svg')?.remove();
-    cart.querySelector('.ds-v2-cart-icon')?.remove();
-    cart.querySelector('.ds-dark-cart-icon')?.remove();
+    $$('svg', cart).forEach(function (svg) { svg.remove(); });
     cart.insertAdjacentHTML('afterbegin', icons.cart);
     syncWishlistCount();
+
+    search.addEventListener('click', openSearch);
   }
 
-  function uniqueLinks(links) {
-    const seen = new Set();
-    return links.filter((item) => {
-      const key = `${item.text}|${item.href}`;
-      if (!item.text || !item.href || seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-  }
-
-  function flattenShopLinks(items, reserved) {
-    const utilityTerms = ['kontakt', 'blog', 'faq', 'doprava', 'reklamac', 'podmienk'];
-    const links = [];
-
-    items.forEach((item) => {
-      if (reserved.includes(item)) return;
-      if (utilityTerms.some((term) => normalize(item.text).includes(term))) return;
-      links.push({ text: item.text, href: item.href });
-      item.children.forEach((child) => links.push(child));
-    });
-
-    return uniqueLinks(links);
-  }
-
-  function linksMarkup(items) {
-    if (!items.length) return '<li><span>Čoskoro.</span></li>';
-    return items.map((item) => `<li><a href="${item.href}">${item.text}</a></li>`).join('');
-  }
-
-  function mountNavigation(items) {
-    const navigation = $('#navigation');
-    const navigationIn = navigation && $('.navigation-in', navigation);
-    if (!navigation || !navigationIn) return;
-
-    navigation.classList.remove('ds-v2-navigation');
-    navigation.classList.add('ds-dark-navigation');
-    navigationIn.querySelector('.ds-v2-primary-nav')?.remove();
-    navigationIn.querySelector('.ds-dark-primary-nav')?.remove();
-
-    const collections = findItem(items, ['kolek']);
-    const about = findItem(items, ['o nas', 'o znack', 'pribeh']);
-    const club = findItem(items, ['klub', 'club', 'komunit']);
-    const newest = findItem(items, ['novink', 'new']);
-    const reserved = [collections, about, club].filter(Boolean);
-    const allShop = flattenShopLinks(items, reserved);
-
-    const productTerms = ['novink', 'trick', 'mikin', 'crop', 'oblecen', 'dopln', 'silt', 'task', 'mikina', 'tricko'];
-    let primary = allShop.filter((item) => productTerms.some((term) => normalize(item.text).includes(term)));
-    if (!primary.length) primary = allShop.slice(0, 7);
-    primary = primary.slice(0, 7);
-    const secondary = allShop.filter((item) => !primary.includes(item)).slice(0, 7);
-
-    const nav = document.createElement('ul');
-    nav.className = 'ds-dark-primary-nav';
-
-    const shop = document.createElement('li');
-    shop.className = 'ds-dark-primary-nav__item ds-dark-primary-nav__item--shop';
-    shop.innerHTML = `
-      <button class="ds-dark-primary-nav__button" type="button" aria-expanded="false">SHOP</button>
-      <div class="ds-dark-mega">
-        <div class="ds-dark-mega__inner">
-          <div>
-            <span class="ds-dark-mega__label">SHOP</span>
-            <ul class="ds-dark-mega__links">${linksMarkup(primary)}</ul>
-          </div>
-          <div>
-            <span class="ds-dark-mega__label">OBJAVIŤ</span>
-            <ul class="ds-dark-mega__links">${linksMarkup(secondary)}</ul>
-          </div>
-          <a class="ds-dark-mega__statement" href="${CONFIG.dropUrl || newest?.href || CONFIG.shopUrl || '#'}">
-            <small>NEW DROP</small>
-            <strong>veci, ktoré sa niekedy ťažko hovoria.</strong>
-            <em>preto ich nosíme. →</em>
-          </a>
-        </div>
-      </div>`;
-    nav.appendChild(shop);
-
-    [
-      ['KOLEKCIE', collections],
-      ['O NÁS', about],
-      ['KLUB', club]
-    ].forEach(([label, item]) => {
-      if (!item) return;
-      const li = document.createElement('li');
-      li.className = 'ds-dark-primary-nav__item';
-      li.innerHTML = `<a class="ds-dark-primary-nav__link" href="${item.href}">${label}</a>`;
-      nav.appendChild(li);
-    });
-
-    navigationIn.appendChild(nav);
-
-    const shopButton = $('.ds-dark-primary-nav__button', shop);
-    shopButton.addEventListener('click', () => {
-      const open = !shop.classList.contains('is-open');
-      shop.classList.toggle('is-open', open);
-      shopButton.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-
-    document.addEventListener('click', (event) => {
-      if (!shop.contains(event.target)) {
-        shop.classList.remove('is-open');
-        shopButton.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
-
-  function popularLinks(items) {
-    const collections = findItem(items, ['kolek']);
-    const about = findItem(items, ['o nas', 'o znack', 'pribeh']);
-    const club = findItem(items, ['klub', 'club', 'komunit']);
-    const reserved = [collections, about, club].filter(Boolean);
-    return flattenShopLinks(items, reserved).slice(0, 6);
-  }
-
-  function renderSearchDefault(content, items) {
-    const popular = popularLinks(items);
-    content.innerHTML = `
-      <div class="ds-dark-search-default">
-        <div>
-          <p class="ds-dark-search-panel__label" style="margin-bottom:16px">SKÚS NAPRÍKLAD</p>
-          <div class="ds-dark-search-chips">
-            ${fallbackTerms.map((term) => `<button class="ds-dark-search-chip" type="button" data-query="${term}">${term}</button>`).join('')}
-          </div>
-        </div>
-        <div>
-          <p class="ds-dark-search-panel__label" style="margin-bottom:16px">TERAZ SA NOSÍ</p>
-          <ul class="ds-dark-search-popular">
-            ${popular.map((item) => `<li><a href="${item.href}">${item.text}</a></li>`).join('') || '<li>Čoskoro.</li>'}
-          </ul>
-        </div>
-      </div>`;
-  }
-
-  function field(hit, ...keys) {
-    for (const key of keys) {
-      if (hit?.[key] != null) return hit[key];
-      if (hit?.attributes?.[key] != null) return hit.attributes[key];
-    }
-    return '';
-  }
-
-  function extractLuigiHits(data) {
-    if (!data) return [];
-    if (Array.isArray(data.results)) return data.results.flatMap((group) => group.hits || group.items || []);
-    if (Array.isArray(data.hits)) return data.hits;
-    if (Array.isArray(data.items)) return data.items;
-    return [];
-  }
-
-  function renderLuigiResults(content, data) {
-    const hits = extractLuigiHits(data).slice(0, 9);
-    if (!hits.length) {
-      content.innerHTML = '<p class="ds-dark-search-empty">Nič sme nenašli. Asi to zatiaľ ostalo len v hlave.</p>';
-      return;
-    }
-
-    content.innerHTML = `<div class="ds-dark-search-results">${hits.map((hit) => {
-      const url = field(hit, 'url') || '#';
-      const title = field(hit, 'title', 'name');
-      const image = field(hit, 'image_link', 'image');
-      const price = field(hit, 'price', 'price_amount');
-      return `<a class="ds-dark-search-card" href="${url}">
-        ${image ? `<img src="${image}" alt="" loading="lazy">` : '<span></span>'}
-        <span class="ds-dark-search-card__title">${title}</span>
-        <span class="ds-dark-search-card__price">${price || ''}</span>
-      </a>`;
-    }).join('')}</div>`;
-  }
-
-  async function luigiRequest(query) {
-    if (!SEARCH_CONFIG.luigiTrackerId) return null;
-
-    const params = new URLSearchParams({
-      tracker_id: SEARCH_CONFIG.luigiTrackerId,
-      type: 'item:9,category:3,query:3',
-      hit_fields: 'title,url,price,price_amount,image_link'
-    });
-
-    let endpoint = 'https://live.luigisbox.com/v1/top_items';
-    if (query) {
-      endpoint = 'https://live.luigisbox.com/autocomplete/v2';
-      params.set('q', query);
-    }
-
-    const response = await fetch(`${endpoint}?${params.toString()}`, { credentials: 'omit' });
-    if (!response.ok) throw new Error(`Search provider returned ${response.status}`);
-    return response.json();
-  }
-
-  function findNativeSearchResults(panel) {
-    const selectors = [
+  function findNativeSearchResults() {
+    var selectors = [
       '.search-results',
       '.search-whisperer',
       '.search-results-groups',
@@ -327,220 +204,168 @@
       '.search-results-wrapper'
     ];
 
-    return selectors
-      .flatMap((selector) => $$(selector))
-      .find((node) => !node.closest('.ds-dark-search-panel') && node.textContent.trim().length > 0) || null;
+    for (var i = 0; i < selectors.length; i += 1) {
+      var nodes = $$(selectors[i]);
+      for (var j = 0; j < nodes.length; j += 1) {
+        if (!nodes[j].closest('.ds-fashion-search-results')) return nodes[j];
+      }
+    }
+    return null;
   }
 
-  function mountSearch(items) {
-    const header = $('#header');
-    const search = header && $('.search', header);
-    const input = search && $('.search-input', search);
-    const submit = search && $('.search-form .btn', search);
-    if (!header || !search || !input) return;
+  function mirrorNativeSearchResults() {
+    var target = $('.ds-fashion-search-results');
+    var source = findNativeSearchResults();
+    if (!target || !source) return;
 
-    $('.ds-v2-search-backdrop')?.remove();
-    $('.ds-dark-search-backdrop')?.remove();
-    $('.ds-dark-search-panel')?.remove();
+    target.innerHTML = '';
+    var clone = source.cloneNode(true);
+    clone.removeAttribute('id');
+    target.appendChild(clone);
+  }
 
-    input.placeholder = CONFIG.searchPlaceholder || 'Hľadať medzi myšlienkami…';
+  function setSearchTop() {
+    var header = $('#header.ds-fashion-header');
+    if (!header) return;
+    var bottom = Math.max(0, Math.round(header.getBoundingClientRect().bottom));
+    document.documentElement.style.setProperty('--ds-search-top', bottom + 'px');
+  }
 
-    if (submit) {
-      submit.textContent = '';
-      submit.insertAdjacentHTML('afterbegin', icons.search);
-      submit.setAttribute('aria-label', 'Hľadať');
+  function openSearch() {
+    document.body.classList.remove('navigation-window-visible');
+    document.body.classList.add('ds-fashion-search-open');
+    setSearchTop();
+    window.setTimeout(function () {
+      var input = $('.ds-fashion-search-overlay .search-input');
+      if (input) input.focus();
+    }, 50);
+  }
+
+  function closeSearch() {
+    document.body.classList.remove('ds-fashion-search-open');
+  }
+
+  function mountSearchOverlay() {
+    var search = $('#header .search');
+    var input = search && $('.search-input', search);
+    var button = search && $('.search-form .btn', search);
+    if (!search || !input || $('.ds-fashion-search-overlay')) return;
+
+    var overlay = document.createElement('div');
+    overlay.className = 'ds-fashion-search-overlay';
+    overlay.innerHTML =
+      '<div class="ds-fashion-search-overlay__inner">' +
+        '<div class="ds-fashion-search-overlay__top">' +
+          '<span class="ds-fashion-search-overlay__label">Hľadať v Dotyku</span>' +
+          '<button class="ds-fashion-search-close" type="button" aria-label="Zavrieť">×</button>' +
+        '</div>' +
+        '<div class="ds-fashion-search-slot"></div>' +
+        '<div class="ds-fashion-search-suggestions"></div>' +
+        '<div class="ds-fashion-search-results"></div>' +
+      '</div>';
+
+    var backdrop = document.createElement('div');
+    backdrop.className = 'ds-fashion-search-backdrop';
+
+    document.body.appendChild(backdrop);
+    document.body.appendChild(overlay);
+    $('.ds-fashion-search-slot', overlay).appendChild(search);
+
+    if (button) {
+      button.textContent = '';
+      button.insertAdjacentHTML('afterbegin', icons.search);
+      button.setAttribute('aria-label', 'Hľadať');
     }
 
-    const backdrop = document.createElement('div');
-    backdrop.className = 'ds-dark-search-backdrop';
+    var suggestions = $('.ds-fashion-search-suggestions', overlay);
+    suggestions.innerHTML = searchPhrases.slice(0, 5).map(function (phrase) {
+      return '<button class="ds-fashion-search-suggestion" type="button" data-search="' + phrase + '">' + phrase + '</button>';
+    }).join('');
 
-    const panel = document.createElement('div');
-    panel.className = 'ds-dark-search-panel';
-    panel.innerHTML = `
-      <div class="ds-dark-search-panel__inner">
-        <div class="ds-dark-search-panel__head">
-          <p class="ds-dark-search-panel__label">VÝSLEDKY / ODPORÚČANIA</p>
-          <button class="ds-dark-search-close" type="button" aria-label="Zavrieť">×</button>
-        </div>
-        <div class="ds-dark-search-panel__content"></div>
-      </div>`;
-
-    document.body.append(backdrop, panel);
-
-    const content = $('.ds-dark-search-panel__content', panel);
-    const closeButton = $('.ds-dark-search-close', panel);
-    let luigiRequestId = 0;
-    let nativeSnapshot = '';
-    let syncQueued = false;
-
-    function positionPanel() {
-      const rect = header.getBoundingClientRect();
-      document.documentElement.style.setProperty('--ds-search-panel-top', `${Math.max(0, Math.round(rect.bottom))}px`);
-    }
-
-    async function openSearch() {
-      positionPanel();
-      document.body.classList.add('ds-dark-search-open');
-
-      if (input.value.trim()) return;
-
-      if (!SEARCH_CONFIG.luigiTrackerId) {
-        renderSearchDefault(content, items);
-        return;
-      }
-
-      const requestId = ++luigiRequestId;
-      content.innerHTML = '<p class="ds-dark-search-empty">Hľadám, čo by ti mohlo sadnúť…</p>';
-      try {
-        const data = await luigiRequest('');
-        if (requestId === luigiRequestId) renderLuigiResults(content, data);
-      } catch (_) {
-        renderSearchDefault(content, items);
-      }
-    }
-
-    function closeSearch() {
-      document.body.classList.remove('ds-dark-search-open');
-      if (window.innerWidth <= 767) document.body.classList.remove('search-window-visible');
-    }
-
-    function syncNativeResults() {
-      if (SEARCH_CONFIG.luigiTrackerId || !document.body.classList.contains('ds-dark-search-open')) return;
-      const source = findNativeSearchResults(panel);
-      if (!source) return;
-
-      const snapshot = source.innerHTML;
-      if (!snapshot || snapshot === nativeSnapshot) return;
-      nativeSnapshot = snapshot;
-
-      const clone = source.cloneNode(true);
-      clone.removeAttribute('id');
-      clone.classList.add('ds-dark-native-results');
-      content.innerHTML = '';
-      content.appendChild(clone);
-    }
-
-    function queueNativeSync() {
-      if (syncQueued) return;
-      syncQueued = true;
-      requestAnimationFrame(() => {
-        syncQueued = false;
-        syncNativeResults();
-      });
-    }
-
-    input.addEventListener('focus', openSearch);
-    input.addEventListener('input', async () => {
-      positionPanel();
-      document.body.classList.add('ds-dark-search-open');
-      const query = input.value.trim();
-
-      if (!query) {
-        nativeSnapshot = '';
-        openSearch();
-        return;
-      }
-
-      if (!SEARCH_CONFIG.luigiTrackerId) {
-        setTimeout(syncNativeResults, 120);
-        setTimeout(syncNativeResults, 320);
-        setTimeout(syncNativeResults, 650);
-        return;
-      }
-
-      if (query.length < 2) return;
-      const requestId = ++luigiRequestId;
-      try {
-        const data = await luigiRequest(query);
-        if (requestId === luigiRequestId) renderLuigiResults(content, data);
-      } catch (_) {
-        content.innerHTML = '<p class="ds-dark-search-empty">Vyhľadávanie sa práve nechce rozprávať.</p>';
-      }
-    });
-
-    panel.addEventListener('click', (event) => {
-      const chip = event.target.closest('[data-query]');
-      if (!chip) return;
-      input.value = chip.dataset.query;
-      input.focus();
+    suggestions.addEventListener('click', function (event) {
+      var trigger = event.target.closest('[data-search]');
+      if (!trigger) return;
+      input.value = trigger.dataset.search;
       input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: 'a' }));
+      input.focus();
     });
 
+    $('.ds-fashion-search-close', overlay).addEventListener('click', closeSearch);
     backdrop.addEventListener('click', closeSearch);
-    closeButton.addEventListener('click', closeSearch);
 
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        closeSearch();
-        document.body.classList.remove('navigation-window-visible');
-      }
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeSearch();
     });
 
-    document.addEventListener('ShoptetDOMSearchResultsLoaded', syncNativeResults);
+    var phraseIndex = 0;
+    input.placeholder = 'Hľadať: ' + searchPhrases[phraseIndex];
+    window.setInterval(function () {
+      if (input.value) return;
+      phraseIndex = (phraseIndex + 1) % searchPhrases.length;
+      input.placeholder = 'Hľadať: ' + searchPhrases[phraseIndex];
+    }, 1900);
 
-    const observer = new MutationObserver(queueNativeSync);
-    observer.observe(document.body, { childList: true, subtree: true });
+    document.addEventListener('ShoptetDOMSearchResultsLoaded', function () {
+      window.requestAnimationFrame(mirrorNativeSearchResults);
+    });
 
-    window.addEventListener('resize', positionPanel, { passive: true });
-    window.addEventListener('scroll', () => {
-      if (document.body.classList.contains('ds-dark-search-open')) positionPanel();
-    }, { passive: true });
+    var searchObserver = new MutationObserver(function () {
+      if (!document.body.classList.contains('ds-fashion-search-open')) return;
+      mirrorNativeSearchResults();
+    });
+    searchObserver.observe(document.body, { childList: true, subtree: true });
   }
 
-  function mountMobileControls() {
-    const headerTop = $('#header .header-top');
-    const actions = $('#header .navigation-buttons');
-    if (!headerTop || !actions) return;
+  function mountMobileMenuButton() {
+    var headerTop = $('#header .header-top');
+    if (!headerTop || $('.ds-fashion-mobile-menu', headerTop)) return;
 
-    headerTop.querySelector('.ds-dark-mobile-menu')?.remove();
-    actions.querySelector('.ds-dark-mobile-search')?.remove();
-
-    const menu = createAction('ds-dark-mobile-menu', 'Menu', icons.menu);
-    const search = createAction('ds-dark-mobile-search', 'Hľadať', icons.search);
-
-    headerTop.prepend(menu);
-    actions.prepend(search);
-
-    menu.addEventListener('click', () => {
-      document.body.classList.remove('search-window-visible', 'ds-dark-search-open');
+    var button = makeAction('ds-fashion-mobile-menu', 'Menu', icons.menu);
+    headerTop.prepend(button);
+    button.addEventListener('click', function () {
+      closeSearch();
       document.body.classList.toggle('navigation-window-visible');
     });
-
-    search.addEventListener('click', () => {
-      document.body.classList.remove('navigation-window-visible');
-      document.body.classList.add('search-window-visible', 'ds-dark-search-open');
-      setTimeout(() => $('#header .search-input')?.focus(), 60);
-    });
   }
 
-  function mountStickyState() {
-    const header = $('#header');
+  function updateStickyHeader() {
+    var header = $('#header.ds-fashion-header');
     if (!header) return;
 
-    const update = () => header.classList.toggle('is-compact', window.scrollY > 72);
-    window.addEventListener('scroll', update, { passive: true });
-    update();
+    var shouldStick = !document.body.classList.contains('in-index') || window.scrollY > 36;
+    header.classList.toggle('is-stuck', shouldStick);
+    setSearchTop();
+  }
+
+  function closeOpenDesktopDropdowns(event) {
+    if (event.target.closest('.ds-fashion-nav')) return;
+    $$('.ds-fashion-nav__item.is-open').forEach(function (item) {
+      item.classList.remove('is-open');
+      var button = $('.ds-fashion-nav__button', item);
+      if (button) button.setAttribute('aria-expanded', 'false');
+    });
   }
 
   function boot() {
-    const header = $('#header');
-    if (!header) return;
+    var header = $('#header');
+    if (!header || header.dataset.dsFashionMounted === 'true') return;
 
-    header.classList.remove('ds-v2-header');
-    header.classList.add('ds-dark-header');
-    document.body.classList.add('ds-dark-ready');
+    header.dataset.dsFashionMounted = 'true';
+    header.classList.add('ds-fashion-header');
 
-    const items = getNativeNavigation();
+    var items = nativeMenuItems();
     mountAnnouncement(items);
+    mountDesktopNavigation(items);
     mountActions();
-    mountNavigation(items);
-    mountSearch(items);
-    mountMobileControls();
-    mountStickyState();
+    mountSearchOverlay();
+    mountMobileMenuButton();
+    updateStickyHeader();
 
+    window.addEventListener('scroll', updateStickyHeader, { passive: true });
+    window.addEventListener('resize', setSearchTop, { passive: true });
     window.addEventListener('storage', syncWishlistCount);
     document.addEventListener('DotykWishlistUpdated', syncWishlistCount);
+    document.addEventListener('click', closeOpenDesktopDropdowns);
   }
 
   if (document.readyState === 'loading') {
