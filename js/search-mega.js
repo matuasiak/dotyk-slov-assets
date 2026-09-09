@@ -50,16 +50,22 @@
     var title=link&&txt(link.textContent);
     if(!title){var t=$('.p-name,.name,.p-in-in',card);title=t&&txt(t.textContent)}
     if(!link||!title||!image)return null;
-    return {title:title,price:price&&txt(price.textContent)||'',image:image.currentSrc||image.src||image.getAttribute('data-src')||'',href:link.href};
+    return {
+      title:title,
+      price:price&&txt(price.textContent)||'',
+      image:image.currentSrc||image.src||image.getAttribute('data-src')||image.getAttribute('data-srcset')||'',
+      href:link.href
+    };
   }
 
-  function pageProducts(){
-    var cards=$$('.products-block .product,.products .product,.product-slider .product');
+  function productsFromDocument(doc){
+    var cards=$$('.products-block .product,.products .product,.product-slider .product,.product',doc);
     var items=cards.map(productFromCard).filter(Boolean);
     var seen={};
-    items=items.filter(function(x){if(!x.href||seen[x.href])return false;seen[x.href]=1;return true});
-    return items.slice(0,8);
+    return items.filter(function(x){if(!x.href||seen[x.href])return false;seen[x.href]=1;return true}).slice(0,10);
   }
+
+  function pageProducts(){return productsFromDocument(document).slice(0,8)}
 
   function productHtml(p,cls){
     return '<a class="ds-search-mega__product '+(cls||'')+'" href="'+esc(p.href||'#')+'">'+
@@ -90,30 +96,56 @@
       if(root)break;
     }
     if(!root)return[];
-    var rows=$$('a[href]',root);
     var out=[];
-    rows.forEach(function(a){
+    $$('a[href]',root).forEach(function(a){
       var wrap=a.closest('li,.search-result,.search-whisperer__item,.search-results-item')||a.parentElement;
       var img=$('img',wrap||a);
       var title=txt(a.textContent)||txt(wrap&&wrap.textContent);
       var price=wrap&&$('.price,.search-whisperer__price,.price-final',wrap);
       if(!title||!a.href)return;
-      if(img||/€|eur/i.test(txt(wrap&&wrap.textContent))) out.push({title:title,href:a.href,image:img&&(img.currentSrc||img.src||img.getAttribute('data-src'))||'',price:price&&txt(price.textContent)||''});
+      if(img||/€|eur/i.test(txt(wrap&&wrap.textContent))){
+        out.push({title:title,href:a.href,image:img&&(img.currentSrc||img.src||img.getAttribute('data-src'))||'',price:price&&txt(price.textContent)||''});
+      }
     });
     var seen={};
     return out.filter(function(x){if(seen[x.href])return false;seen[x.href]=1;return true}).slice(0,8);
   }
 
-  function renderLive(mega,input){
+  var requestSeq=0;
+  async function fetchSearchProducts(query){
+    var id=++requestSeq;
+    var url='/vyhladavanie/?string='+encodeURIComponent(query);
+    var response=await fetch(url,{credentials:'same-origin',headers:{'X-Requested-With':'XMLHttpRequest'}});
+    if(!response.ok)throw new Error('search '+response.status);
+    var html=await response.text();
+    if(id!==requestSeq)return null;
+    var doc=new DOMParser().parseFromString(html,'text/html');
+    return productsFromDocument(doc);
+  }
+
+  async function renderLive(mega,input){
     var q=txt(input.value);
     var live=$('.ds-search-mega__live-products',mega);
     var all=$('.ds-search-mega__all',mega);
     if(q.length<2){mega.classList.remove('is-live');return}
     mega.classList.add('is-live');
     if(all) all.href='/vyhladavanie/?string='+encodeURIComponent(q);
-    var items=parseNativeResults();
-    if(!items.length){live.innerHTML='<p class="ds-search-mega__empty">Hľadám veci, ktoré by ti mohli sadnúť…</p>';return}
-    live.innerHTML=items.map(function(p){return productHtml(p)}).join('');
+    live.innerHTML='<p class="ds-search-mega__empty">Hľadám veci, ktoré by ti mohli sadnúť…</p>';
+
+    try{
+      var items=await fetchSearchProducts(q);
+      if(items&&items.length){
+        live.innerHTML=items.slice(0,8).map(function(p){return productHtml(p)}).join('');
+        return;
+      }
+    }catch(_){ }
+
+    var nativeItems=parseNativeResults();
+    if(nativeItems.length){
+      live.innerHTML=nativeItems.map(function(p){return productHtml(p)}).join('');
+      return;
+    }
+    live.innerHTML='<p class="ds-search-mega__empty">Nič sme nenašli. Možno to zatiaľ ostalo len v hlave.</p>';
   }
 
   function mount(){
@@ -135,14 +167,22 @@
     oldInner.replaceWith(mega);
     overlay.dataset.dsMega='1';
 
-    var close=$('.ds-site-search-close',mega);
-    close.addEventListener('click',function(){document.body.classList.remove('ds-site-search-open')});
+    $('.ds-site-search-close',mega).addEventListener('click',function(){document.body.classList.remove('ds-site-search-open')});
 
     var timer;
-    input.addEventListener('input',function(){clearTimeout(timer);timer=setTimeout(function(){renderLive(mega,input)},180)});
+    input.addEventListener('input',function(){
+      clearTimeout(timer);
+      timer=setTimeout(function(){renderLive(mega,input)},220);
+    });
     input.addEventListener('focus',function(){renderLive(mega,input)});
 
-    var observer=new MutationObserver(function(){if(txt(input.value).length>=2)renderLive(mega,input)});
+    /* Native whisperer can still arrive first on desktop; refresh if it does. */
+    var observer=new MutationObserver(function(){
+      if(txt(input.value).length>=2){
+        clearTimeout(timer);
+        timer=setTimeout(function(){renderLive(mega,input)},120);
+      }
+    });
     observer.observe(document.body,{childList:true,subtree:true});
     return true;
   }
