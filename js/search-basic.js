@@ -3,12 +3,18 @@
 
   var SUGGESTIONS=['mám toho dosť','nevolaj mi','citovo nedostupný','overthinking','mikiny'];
   var BOOST_ORDER=['oblečenie','produkty podľa textu','doplnky'];
+  var cache=new Map();
+  var activeController=null;
 
   function $(s,r){return (r||document).querySelector(s)}
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
   function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function norm(v){return clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
-  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]})}
+  function absUrl(v){
+    if(!v)return'';
+    try{return new URL(v,location.origin).href}catch(_){return v}
+  }
 
   function getTop(){
     var header=$('#ds-site-header');
@@ -74,6 +80,78 @@
       '</div>';
   }
 
+  function liveMarkup(){
+    return ''+
+      '<div class="ds-basic-search__live" aria-live="polite">'+
+        '<div class="ds-basic-search__live-head">'+
+          '<span class="ds-basic-search__group-label">Výsledky</span>'+
+          '<a class="ds-basic-search__all" href="/vyhladavanie/">Zobraziť všetko →</a>'+
+        '</div>'+
+        '<div class="ds-basic-search__results"></div>'+
+      '</div>';
+  }
+
+  function imageSource(img){
+    if(!img)return'';
+    var src=img.getAttribute('src')||img.getAttribute('data-src')||'';
+    if(!src){
+      var srcset=img.getAttribute('srcset')||img.getAttribute('data-srcset')||'';
+      src=srcset.split(',')[0].trim().split(/\s+/)[0]||'';
+    }
+    return absUrl(src);
+  }
+
+  function productFromCard(card){
+    var link=$('.p-name a,.name a,.p-in-in a,.product-name a,a.p-name,a.name,.image a',card)||$('a[href]',card);
+    var titleNode=$('.p-name,.name,.p-in-in,.product-name',card);
+    var img=$('.image img,.product-image img,img',card);
+    var price=$('.price-final,.price,.p-bottom .price,.price-standard,.product-price',card);
+    var title=clean((titleNode&&titleNode.textContent)||(link&&link.textContent));
+    var href=link&&link.getAttribute('href');
+    var image=imageSource(img);
+    if(!title||!href)return null;
+    return {title:title,href:absUrl(href),image:image,price:clean(price&&price.textContent)};
+  }
+
+  function parseProducts(html){
+    var doc=new DOMParser().parseFromString(html,'text/html');
+    var cards=$$('.products-block .product,.products .product,.product-slider .product,.product-item,[data-micro-product-id]',doc);
+    var seen={};
+    return cards.map(productFromCard).filter(Boolean).filter(function(p){
+      if(seen[p.href])return false;
+      seen[p.href]=1;
+      return true;
+    }).slice(0,8);
+  }
+
+  function productHtml(p){
+    return '<a class="ds-basic-search__result" href="'+esc(p.href)+'">'+
+      '<span class="ds-basic-search__result-media">'+(p.image?'<img src="'+esc(p.image)+'" alt="" loading="lazy">':'<i></i>')+'</span>'+
+      '<span class="ds-basic-search__result-copy">'+
+        '<span class="ds-basic-search__result-title">'+esc(p.title)+'</span>'+
+        (p.price?'<span class="ds-basic-search__result-price">'+esc(p.price)+'</span>':'')+
+      '</span>'+
+    '</a>';
+  }
+
+  async function fetchProducts(q){
+    var key=norm(q);
+    if(cache.has(key))return cache.get(key);
+
+    if(activeController)activeController.abort();
+    activeController=new AbortController();
+
+    var response=await fetch('/vyhladavanie/?string='+encodeURIComponent(q),{
+      credentials:'same-origin',
+      signal:activeController.signal
+    });
+    if(!response.ok)throw new Error('search '+response.status);
+    var html=await response.text();
+    var products=parseProducts(html);
+    cache.set(key,products);
+    return products;
+  }
+
   function build(){
     var oldOverlay=$('#ds-site-search');
     var oldBackdrop=$('#ds-site-search-backdrop');
@@ -83,7 +161,6 @@
     var oldTrigger=$('.ds-site-search-open');
     if(!oldTrigger)return false;
 
-    /* Clone strips every previous search listener from header.js/search-mega. */
     var trigger=oldTrigger.cloneNode(true);
     oldTrigger.replaceWith(trigger);
 
@@ -100,14 +177,58 @@
         '<button class="ds-basic-search__submit" type="submit" aria-label="Hľadať">'+
           '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>'+
         '</button>'+
-      '</form>'+extrasMarkup();
+      '</form>'+extrasMarkup()+liveMarkup();
     document.body.appendChild(panel);
 
     var input=$('.ds-basic-search__input',panel);
     var close=$('.ds-basic-search__close',panel);
+    var extras=$('.ds-basic-search__extras',panel);
+    var live=$('.ds-basic-search__live',panel);
+    var results=$('.ds-basic-search__results',panel);
+    var all=$('.ds-basic-search__all',panel);
+    var timer=null;
+    var renderToken=0;
 
     function syncTop(){
       document.documentElement.style.setProperty('--ds-basic-search-top',getTop()+'px');
+    }
+
+    function showExtras(){
+      extras.hidden=false;
+      live.classList.remove('is-visible');
+      results.innerHTML='';
+      if(activeController){activeController.abort();activeController=null}
+    }
+
+    async function showResults(){
+      var q=clean(input.value);
+      var token=++renderToken;
+
+      if(q.length<2){showExtras();return}
+
+      extras.hidden=true;
+      live.classList.add('is-visible');
+      all.href='/vyhladavanie/?string='+encodeURIComponent(q);
+      results.innerHTML='<p class="ds-basic-search__state">Hľadám…</p>';
+
+      try{
+        var products=await fetchProducts(q);
+        if(token!==renderToken)return;
+        if(products.length){
+          results.innerHTML=products.map(productHtml).join('');
+        }else{
+          results.innerHTML='<p class="ds-basic-search__state">Nič sme nenašli. Možno to zatiaľ ostalo len v hlave.</p>';
+        }
+      }catch(err){
+        if(err&&err.name==='AbortError')return;
+        if(token!==renderToken)return;
+        results.innerHTML='<p class="ds-basic-search__state">Vyhľadávanie sa teraz nepodarilo načítať.</p>';
+      }
+    }
+
+    function queueResults(){
+      clearTimeout(timer);
+      timer=setTimeout(showResults,220);
     }
 
     function open(){
@@ -138,7 +259,10 @@
       if(!chip)return;
       input.value=chip.getAttribute('data-search-q')||'';
       input.focus({preventScroll:true});
+      input.dispatchEvent(new Event('input',{bubbles:true}));
     });
+
+    input.addEventListener('input',queueResults);
 
     document.addEventListener('keydown',function(e){
       if(e.key==='Escape')shut();
