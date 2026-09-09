@@ -27,17 +27,41 @@
     }
   }
 
+  function addCategory(out,a){
+    if(!a||!a.href)return;
+    var label=txt(a.textContent);
+    if(!label)return;
+    out.push({text:label,href:a.href});
+  }
+
   function categories(){
     var out=[];
+
+    /* Preferred source: our mounted header. */
     $$('#ds-site-header .ds-site-nav-item').forEach(function(item){
-      var main=$('.ds-site-nav-link',item);
-      if(main) out.push({text:txt(main.textContent),href:main.href});
-      $$('.ds-site-submenu-grid a',item).forEach(function(a){out.push({text:txt(a.textContent),href:a.href})});
+      addCategory(out,$('.ds-site-nav-link',item));
+      $$('.ds-site-submenu-grid a',item).forEach(function(a){addCategory(out,a)});
     });
+
+    /* Mobile-safe fallback: original Shoptet navigation still exists in DOM. */
+    if(out.length<5){
+      $$('#navigation .menu-level-1 > li > a,#navigation .menu-level-2 a').forEach(function(a){addCategory(out,a)});
+    }
+
     var seen={};
-    out=out.filter(function(x){var k=norm(x.text);if(!k||seen[k])return false;seen[k]=1;return true});
+    out=out.filter(function(x){
+      var k=norm(x.text);
+      if(!k||seen[k])return false;
+      seen[k]=1;
+      return true;
+    });
+
     out.sort(function(a,b){
-      function score(x){var n=norm(x.text);var i=BOOST.findIndex(function(t){return n.indexOf(t)>=0});return i<0?99:i}
+      function score(x){
+        var n=norm(x.text);
+        var i=BOOST.findIndex(function(t){return n.indexOf(t)>=0});
+        return i<0?99:i;
+      }
       return score(a)-score(b);
     });
     return out.slice(0,7);
@@ -62,7 +86,11 @@
     var cards=$$('.products-block .product,.products .product,.product-slider .product,.product',doc);
     var items=cards.map(productFromCard).filter(Boolean);
     var seen={};
-    return items.filter(function(x){if(!x.href||seen[x.href])return false;seen[x.href]=1;return true}).slice(0,10);
+    return items.filter(function(x){
+      if(!x.href||seen[x.href])return false;
+      seen[x.href]=1;
+      return true;
+    }).slice(0,10);
   }
 
   function pageProducts(){return productsFromDocument(document).slice(0,8)}
@@ -80,42 +108,21 @@
     if(products.length<4) products=products.concat(FALLBACK_PRODUCTS).slice(0,6);
     var feature=products[0]||FALLBACK_PRODUCTS[0];
     var rest=products.slice(1,7);
+
     return '<div class="ds-search-mega__default"><div class="ds-search-mega__body">'+
-      '<section class="ds-search-mega__column"><p class="ds-search-mega__label"><i></i>Objaviť</p><div class="ds-search-mega__categories">'+cats.map(function(c,i){return '<a class="ds-search-mega__category" href="'+esc(c.href)+'"><span>'+esc(c.text)+(i<2?'<small class="ds-search-mega__boost">BOOST</small>':'')+'</span><span>→</span></a>'}).join('')+'</div></section>'+
+      '<section class="ds-search-mega__column"><p class="ds-search-mega__label"><i></i>Objaviť</p><div class="ds-search-mega__categories">'+
+        cats.map(function(c,i){return '<a class="ds-search-mega__category" href="'+esc(c.href)+'"><span>'+esc(c.text)+(i<2?'<small class="ds-search-mega__boost">BOOST</small>':'')+'</span><span>→</span></a>'}).join('')+
+      '</div></section>'+
       '<section class="ds-search-mega__column"><p class="ds-search-mega__label"><i></i>Vybrali sme</p><a class="ds-search-mega__feature" href="'+esc(feature.href||'#')+'"><span class="ds-search-mega__feature-media">'+(feature.image?'<img src="'+esc(feature.image)+'" alt="" loading="lazy">':'')+'<b class="ds-search-mega__feature-tag">MOOD</b></span><span class="ds-search-mega__feature-title">'+esc(feature.title)+'</span><span class="ds-search-mega__feature-price">'+esc(feature.price||'')+'</span></a></section>'+
       '<section class="ds-search-mega__column"><p class="ds-search-mega__label"><i></i>Možno hľadáš</p><div class="ds-search-mega__products">'+rest.map(function(p){return productHtml(p)}).join('')+'</div></section>'+
     '</div></div><div class="ds-search-mega__live"><div class="ds-search-mega__live-head"><span>Výsledky</span><a href="#" class="ds-search-mega__all">Zobraziť všetko →</a></div><div class="ds-search-mega__live-products"></div></div>';
-  }
-
-  function parseNativeResults(){
-    var selectors=['.search-whisperer','.search-results','.search-results-groups','#search-results','.search-results-wrapper'];
-    var root=null;
-    for(var i=0;i<selectors.length;i++){
-      var nodes=$$(selectors[i]);
-      root=nodes.find(function(n){return !n.closest('#ds-site-search')&&!n.closest('.ds-search-mega')});
-      if(root)break;
-    }
-    if(!root)return[];
-    var out=[];
-    $$('a[href]',root).forEach(function(a){
-      var wrap=a.closest('li,.search-result,.search-whisperer__item,.search-results-item')||a.parentElement;
-      var img=$('img',wrap||a);
-      var title=txt(a.textContent)||txt(wrap&&wrap.textContent);
-      var price=wrap&&$('.price,.search-whisperer__price,.price-final',wrap);
-      if(!title||!a.href)return;
-      if(img||/€|eur/i.test(txt(wrap&&wrap.textContent))){
-        out.push({title:title,href:a.href,image:img&&(img.currentSrc||img.src||img.getAttribute('data-src'))||'',price:price&&txt(price.textContent)||''});
-      }
-    });
-    var seen={};
-    return out.filter(function(x){if(seen[x.href])return false;seen[x.href]=1;return true}).slice(0,8);
   }
 
   var requestSeq=0;
   async function fetchSearchProducts(query){
     var id=++requestSeq;
     var url='/vyhladavanie/?string='+encodeURIComponent(query);
-    var response=await fetch(url,{credentials:'same-origin',headers:{'X-Requested-With':'XMLHttpRequest'}});
+    var response=await fetch(url,{credentials:'same-origin'});
     if(!response.ok)throw new Error('search '+response.status);
     var html=await response.text();
     if(id!==requestSeq)return null;
@@ -127,7 +134,12 @@
     var q=txt(input.value);
     var live=$('.ds-search-mega__live-products',mega);
     var all=$('.ds-search-mega__all',mega);
-    if(q.length<2){mega.classList.remove('is-live');return}
+
+    if(q.length<2){
+      mega.classList.remove('is-live');
+      return;
+    }
+
     mega.classList.add('is-live');
     if(all) all.href='/vyhladavanie/?string='+encodeURIComponent(q);
     live.innerHTML='<p class="ds-search-mega__empty">Hľadám veci, ktoré by ti mohli sadnúť…</p>';
@@ -140,12 +152,17 @@
       }
     }catch(_){ }
 
-    var nativeItems=parseNativeResults();
-    if(nativeItems.length){
-      live.innerHTML=nativeItems.map(function(p){return productHtml(p)}).join('');
-      return;
-    }
     live.innerHTML='<p class="ds-search-mega__empty">Nič sme nenašli. Možno to zatiaľ ostalo len v hlave.</p>';
+  }
+
+  function suppressNativeWhisperers(){
+    var selectors=['.search-whisperer','.search-results','.search-results-groups','#search-results','.search-results-wrapper'];
+    selectors.forEach(function(selector){
+      $$(selector).forEach(function(node){
+        if(node.closest('.ds-search-mega__live'))return;
+        node.setAttribute('aria-hidden','true');
+      });
+    });
   }
 
   function mount(){
@@ -160,6 +177,14 @@
     var input=$('.search-input',native);
     if(!input)return false;
 
+    input.setAttribute('autocomplete','off');
+    input.setAttribute('autocorrect','off');
+    input.setAttribute('autocapitalize','none');
+    input.setAttribute('spellcheck','false');
+    input.setAttribute('inputmode','search');
+    input.setAttribute('enterkeyhint','search');
+    input.setAttribute('role','searchbox');
+
     var mega=document.createElement('div');
     mega.className='ds-search-mega';
     mega.innerHTML='<div class="ds-search-mega__top"><div class="ds-search-mega__eyebrow"><span>HĽADAŤ V DOTYKU</span><button type="button" class="ds-site-search-close" aria-label="Zavrieť">×</button></div><div class="ds-site-search-slot"></div></div>'+defaultMarkup();
@@ -171,19 +196,22 @@
 
     var timer;
     input.addEventListener('input',function(){
+      suppressNativeWhisperers();
       clearTimeout(timer);
-      timer=setTimeout(function(){renderLive(mega,input)},220);
+      timer=setTimeout(function(){renderLive(mega,input)},180);
     });
-    input.addEventListener('focus',function(){renderLive(mega,input)});
+    input.addEventListener('focus',function(){
+      suppressNativeWhisperers();
+      renderLive(mega,input);
+    });
 
-    /* Native whisperer can still arrive first on desktop; refresh if it does. */
+    /* Shoptet may inject its native whisperer after our input event. Hide it immediately. */
     var observer=new MutationObserver(function(){
-      if(txt(input.value).length>=2){
-        clearTimeout(timer);
-        timer=setTimeout(function(){renderLive(mega,input)},120);
-      }
+      suppressNativeWhisperers();
     });
     observer.observe(document.body,{childList:true,subtree:true});
+
+    suppressNativeWhisperers();
     return true;
   }
 
