@@ -3,6 +3,7 @@
 
   var SUGGESTIONS=['mám toho dosť','nevolaj mi','citovo nedostupný','overthinking','mikiny'];
   var BOOST_ORDER=['oblečenie','produkty podľa textu','doplnky'];
+  var FEATURED_QUERY='mám toho dosť';
   var cache=new Map();
   var activeController=null;
 
@@ -10,7 +11,7 @@
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
   function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function norm(v){return clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
-  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]})}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function absUrl(v){
     if(!v)return'';
     try{return new URL(v,location.origin).href}catch(_){return v}
@@ -77,6 +78,7 @@
             cats.map(function(c,i){return '<a href="'+esc(c.href)+'" class="ds-basic-search__category"><span>'+esc(c.text)+(i<2?'<small>BOOST</small>':'')+'</span><b>→</b></a>'}).join('')+
           '</div>'+
         '</div>'+
+        '<div class="ds-basic-search__featured" hidden></div>'+
       '</div>';
   }
 
@@ -134,6 +136,19 @@
     '</a>';
   }
 
+  function featuredHtml(p){
+    return ''+
+      '<span class="ds-basic-search__group-label">Vybrali sme</span>'+
+      '<a class="ds-basic-search__featured-card" href="'+esc(p.href)+'">'+
+        '<span class="ds-basic-search__featured-media">'+(p.image?'<img src="'+esc(p.image)+'" alt="" loading="lazy">':'')+'</span>'+
+        '<span class="ds-basic-search__featured-copy">'+
+          '<span class="ds-basic-search__featured-tag">MOOD</span>'+
+          '<span class="ds-basic-search__featured-title">'+esc(p.title)+'</span>'+
+          (p.price?'<span class="ds-basic-search__featured-price">'+esc(p.price)+'</span>':'')+
+        '</span>'+
+      '</a>';
+  }
+
   async function fetchProducts(q){
     var key=norm(q);
     if(cache.has(key))return cache.get(key);
@@ -150,6 +165,19 @@
     var products=parseProducts(html);
     cache.set(key,products);
     return products;
+  }
+
+  async function fetchFeatured(){
+    var key='featured:'+norm(FEATURED_QUERY);
+    if(cache.has(key))return cache.get(key);
+
+    var response=await fetch('/vyhladavanie/?string='+encodeURIComponent(FEATURED_QUERY),{credentials:'same-origin'});
+    if(!response.ok)throw new Error('featured '+response.status);
+    var html=await response.text();
+    var products=parseProducts(html);
+    var featured=products[0]||null;
+    cache.set(key,featured);
+    return featured;
   }
 
   function build(){
@@ -183,14 +211,28 @@
     var input=$('.ds-basic-search__input',panel);
     var close=$('.ds-basic-search__close',panel);
     var extras=$('.ds-basic-search__extras',panel);
+    var featured=$('.ds-basic-search__featured',panel);
     var live=$('.ds-basic-search__live',panel);
     var results=$('.ds-basic-search__results',panel);
     var all=$('.ds-basic-search__all',panel);
     var timer=null;
     var renderToken=0;
+    var featuredLoaded=false;
 
     function syncTop(){
       document.documentElement.style.setProperty('--ds-basic-search-top',getTop()+'px');
+    }
+
+    function loadFeatured(){
+      if(featuredLoaded)return;
+      featuredLoaded=true;
+      fetchFeatured().then(function(product){
+        if(!product)return;
+        featured.innerHTML=featuredHtml(product);
+        featured.hidden=false;
+      }).catch(function(){
+        featured.hidden=true;
+      });
     }
 
     function showExtras(){
@@ -236,6 +278,7 @@
       panel.classList.add('is-open');
       panel.setAttribute('aria-hidden','false');
       trigger.setAttribute('aria-expanded','true');
+      loadFeatured();
       setTimeout(function(){input.focus({preventScroll:true})},30);
     }
 
