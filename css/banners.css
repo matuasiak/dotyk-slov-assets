@@ -14,31 +14,37 @@ body.in-index.ds-fashion-hero-mounted .banners-row{display:none!important}
 #ds-fashion-hero .swiper{overflow:hidden}
 #ds-fashion-hero .swiper-slide{position:relative;overflow:hidden;background:var(--slide-bg,#191919)}
 
-/* huge headline behind the campaign image */
+/* Base position is done without transform so Swiper Parallax can own transform safely. */
 .ds-fs-bgword{
   position:absolute;
-  z-index:1;
-  top:50%;
-  left:50%;
-  width:max-content;
-  color:rgba(245,243,238,.94);
-  font:800 clamp(110px,15.5vw,280px)/.76 Impact,"Arial Black",sans-serif;
+  top:25%;
+  left:4.2%;
+  width:91%;
+  max-width:none;
+  font:800 clamp(112px,15vw,278px)/.78 Impact,"Arial Black",sans-serif;
   letter-spacing:-.065em;
   text-transform:uppercase;
-  transform:translate(-50%,-53%);
+  white-space:nowrap;
   pointer-events:none;
   will-change:transform,opacity;
 }
+.ds-fs-bgword-back{z-index:1;color:rgba(245,243,238,.93)}
+.ds-fs-bgword-front{
+  z-index:4;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(245,243,238,.28);
+  text-stroke:1px rgba(245,243,238,.28);
+}
 
-/* foreground image. Dark assets blend into slide instead of reading like a card. */
+/* Product/editorial image sits to the right, leaving the word readable on the left. */
 .ds-fs-image-wrap{
   position:absolute;
   z-index:2;
-  top:7%;
+  top:14%;
+  right:4.5%;
   bottom:-2%;
-  left:50%;
-  width:min(50vw,820px);
-  transform:translateX(-50%);
+  left:auto;
+  width:min(48vw,850px);
   overflow:hidden;
   pointer-events:none;
   -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 88%,transparent 100%);
@@ -46,7 +52,7 @@ body.in-index.ds-fashion-hero-mounted .banners-row{display:none!important}
   will-change:transform;
 }
 .ds-fs-image-wrap::before,
-.ds-fs-image-wrap::after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:14%;pointer-events:none}
+.ds-fs-image-wrap::after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:20%;pointer-events:none}
 .ds-fs-image-wrap::before{left:0;background:linear-gradient(90deg,var(--slide-bg),transparent)}
 .ds-fs-image-wrap::after{right:0;background:linear-gradient(-90deg,var(--slide-bg),transparent)}
 .ds-fs-image-wrap img{
@@ -55,33 +61,40 @@ body.in-index.ds-fashion-hero-mounted .banners-row{display:none!important}
   height:100%;
   object-fit:cover;
   object-position:center;
-  filter:saturate(.72) contrast(1.09) brightness(.80);
-  transform:scale(1.08);
-  transition:transform 1.2s cubic-bezier(.2,.7,.2,1),filter .6s ease;
+  filter:saturate(.75) contrast(1.08) brightness(.82);
+  transform:scale(1.055);
+  transition:transform 1.1s cubic-bezier(.2,.7,.2,1),filter .6s ease;
 }
 .swiper-slide-active .ds-fs-image-wrap img{transform:scale(1)}
 
-.ds-fs-overlay{position:absolute;z-index:3;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.40),transparent 24%),linear-gradient(0deg,rgba(0,0,0,.30),transparent 34%);pointer-events:none}
+.ds-fs-overlay{
+  position:absolute;
+  z-index:3;
+  inset:0;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.38),transparent 23%),
+    linear-gradient(90deg,rgba(0,0,0,.14),transparent 44%),
+    linear-gradient(0deg,rgba(0,0,0,.27),transparent 31%);
+  pointer-events:none;
+}
 
-/* Editorial copy stays secondary; image + big word do the work. */
 .ds-fs-copy{
   position:absolute;
-  z-index:5;
-  left:clamp(24px,4vw,72px);
-  bottom:clamp(42px,6vh,76px);
-  width:min(390px,30vw);
+  z-index:6;
+  left:4.4%;
+  bottom:7.5%;
+  width:min(410px,31vw);
 }
 .ds-fs-kicker{display:block;margin-bottom:12px;color:rgba(245,243,238,.64);font:500 10px/1 Inter,Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase}
-.ds-fs-copy h2{max-width:10ch;margin:0;color:#f5f3ee;font:300 clamp(34px,3.5vw,60px)/.94 Inter,Arial,sans-serif;letter-spacing:-.045em}
+.ds-fs-copy h2{max-width:10ch;margin:0;color:#f5f3ee;font:300 clamp(36px,3.6vw,62px)/.94 Inter,Arial,sans-serif;letter-spacing:-.045em}
 .ds-fs-copy p{max-width:31ch;margin:15px 0 0;color:rgba(245,243,238,.68);font:400 13px/1.5 Inter,Arial,sans-serif}
 .ds-fs-cta{display:inline-flex;min-height:45px;margin-top:22px;padding:0 18px;align-items:center;border:1px solid rgba(245,243,238,.58);border-radius:0;color:#fff!important;font:500 10px/1 Inter,Arial,sans-serif;letter-spacing:.095em;text-decoration:none!important;text-transform:uppercase;transition:background .18s ease,color .18s ease}
 .ds-fs-cta:hover{background:#f5f3ee;color:#0b0b0a!important}
 
-.ds-fs-side{position:absolute;z-index:5;right:clamp(24px,4vw,68px);top:50%;max-width:165px;color:rgba(245,243,238,.56);font:500 9px/1.55 Inter,Arial,sans-serif;letter-spacing:.14em;text-align:right;text-transform:uppercase;transform:translateY(-50%)}
+.ds-fs-side{position:absolute;z-index:6;right:3.2%;top:48%;max-width:150px;color:rgba(245,243,238,.58);font:500 9px/1.55 Inter,Arial,sans-serif;letter-spacing:.14em;text-align:right;text-transform:uppercase}
 .ds-fs-side::after{content:"";display:block;width:42px;height:1px;margin:14px 0 0 auto;background:rgba(245,243,238,.82);transform:rotate(-7deg)}
 
-/* Fancy, square navigation */
-.ds-fs-nav{position:absolute;z-index:8;right:clamp(22px,3.6vw,60px);bottom:clamp(28px,4.5vh,52px);display:flex;align-items:center;gap:0;border:1px solid rgba(245,243,238,.22)}
+.ds-fs-nav{position:absolute;z-index:8;right:3.2%;bottom:4.5%;display:flex;align-items:center;gap:0;border:1px solid rgba(245,243,238,.22)}
 .ds-fs-button{display:grid;width:48px;height:48px;padding:0;place-items:center;border:0;border-radius:0;background:transparent;color:#fff;cursor:pointer;transition:background .18s ease}
 .ds-fs-button:hover{background:rgba(255,255,255,.10)}
 .ds-fs-button+ .ds-fs-fraction,.ds-fs-fraction+ .ds-fs-button{border-left:1px solid rgba(245,243,238,.22)}
@@ -89,14 +102,19 @@ body.in-index.ds-fashion-hero-mounted .banners-row{display:none!important}
 .ds-fs-fraction{display:flex;height:48px;min-width:82px;align-items:center;justify-content:center;color:rgba(245,243,238,.58);font:500 10px/1 Inter,Arial,sans-serif;letter-spacing:.12em}
 .ds-fs-fraction strong{color:#fff;font-weight:500}
 
-/* small slide number on the opposite side reinforces the fashion-template feel */
-.ds-fs-index{position:absolute;z-index:5;top:50%;left:clamp(22px,3vw,48px);color:rgba(245,243,238,.45);font:500 10px/1 Inter,Arial,sans-serif;letter-spacing:.15em;transform:translateY(-50%) rotate(-90deg);transform-origin:left center}
+.ds-fs-index{position:absolute;z-index:6;top:51%;left:2.5%;color:rgba(245,243,238,.45);font:500 10px/1 Inter,Arial,sans-serif;letter-spacing:.15em;transform:rotate(-90deg);transform-origin:left center}
+
+@media(max-width:1100px){
+  .ds-fs-bgword{top:29%;left:3%;font-size:clamp(96px,15vw,180px)}
+  .ds-fs-image-wrap{right:2%;width:53vw}
+  .ds-fs-copy{left:3.5%;width:34vw}
+}
 
 @media(max-width:767px){
-  #ds-fashion-hero{height:calc(100svh - 0px);min-height:650px;max-height:850px;margin-bottom:64px}
-  .ds-fs-bgword{top:44%;max-width:120vw;font-size:clamp(78px,25vw,145px);white-space:normal;text-align:center}
-  .ds-fs-image-wrap{top:12%;bottom:8%;width:78vw}
-  .ds-fs-image-wrap::before,.ds-fs-image-wrap::after{width:10%}
+  #ds-fashion-hero{height:100svh;min-height:650px;max-height:850px;margin-bottom:64px}
+  .ds-fs-bgword{top:27%;left:6%;width:88%;font-size:clamp(72px,24vw,138px);white-space:normal;line-height:.82}
+  .ds-fs-image-wrap{top:18%;right:-8%;bottom:12%;width:88vw}
+  .ds-fs-image-wrap::before,.ds-fs-image-wrap::after{width:14%}
   .ds-fs-copy{right:18px;bottom:82px;left:18px;width:auto}
   .ds-fs-copy h2{max-width:10ch;font-size:clamp(36px,11vw,54px)}
   .ds-fs-copy p{display:none}
