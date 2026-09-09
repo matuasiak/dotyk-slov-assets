@@ -5,7 +5,17 @@
     if($('#ds-header-patch-styles')) return;
     var s=document.createElement('style');
     s.id='ds-header-patch-styles';
-    s.textContent='html,body{max-width:100%!important;overflow-x:clip!important}#ds-site-search-backdrop{position:fixed!important;inset:0!important;width:auto!important;height:auto!important}#ds-site-search{position:fixed!important;left:0!important;right:0!important;width:auto!important;max-width:none!important;box-sizing:border-box!important}body.ds-site-search-open{overflow:hidden!important}body.ds-site-search-open .overall-wrapper{width:100%!important;max-width:100%!important;overflow:hidden!important}body.ds-site-search-open #footer{clear:both!important;float:none!important;position:relative!important;left:auto!important;right:auto!important;width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important}';
+    s.textContent=[
+      'html,body{max-width:100%!important;overflow-x:clip!important}',
+      '#ds-site-search-backdrop{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;background:#0b0b0a!important;opacity:1!important}',
+      '#ds-site-search{position:fixed!important;left:0!important;right:0!important;width:100vw!important;max-width:100vw!important;box-sizing:border-box!important}',
+      'body.ds-site-search-open{overflow:hidden!important}',
+      'body.ds-site-search-open .overall-wrapper{width:auto!important;max-width:none!important;overflow:visible!important}',
+      'body.ds-site-search-open #footer{position:static!important;float:none!important;width:auto!important;max-width:none!important;margin:0!important}',
+      'body.ds-site-search-open #ds-fashion-hero,body.ds-site-search-open #footer,body.ds-site-search-open main,body.ds-site-search-open .content-wrapper{visibility:hidden!important}',
+      'body.ds-site-search-open #ds-site-header{visibility:visible!important}',
+      'body.ds-site-search-open #ds-site-search,body.ds-site-search-open #ds-site-search *{visibility:visible!important}'
+    ].join('');
     document.head.appendChild(s);
   }
 
