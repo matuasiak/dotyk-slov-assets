@@ -14,43 +14,18 @@
     });
   }
 
-  function moveOutsideShoptetWrapper(){
-    var wrapper=$('.overall-wrapper');
-    if(!wrapper||!wrapper.parentNode)return false;
-
-    var header=$('#ds-site-header');
-    if(header&&header.parentNode===wrapper){
-      wrapper.parentNode.insertBefore(header,wrapper);
-    }
-
-    var hero=$('#ds-fashion-hero');
-    if(hero&&hero.parentNode!==wrapper.parentNode){
-      wrapper.parentNode.insertBefore(hero,wrapper);
-    }
-
-    return !!header;
-  }
-
   function patch(){
     var legacy=$('#ds-header-patch-styles');
     if(legacy)legacy.remove();
-
-    if(!moveOutsideShoptetWrapper())return false;
-
+    if(!$('#ds-site-header'))return false;
     replaceButton('.ds-site-cart','/kosik/');
     replaceButton('.ds-site-account','/klient/');
     return true;
   }
 
   if(!patch()){
-    var o=new MutationObserver(function(){
-      if(patch()&&$('#ds-fashion-hero'))o.disconnect();
-    });
+    var o=new MutationObserver(function(){if(patch())o.disconnect()});
     o.observe(document.documentElement,{childList:true,subtree:true});
-    setTimeout(function(){o.disconnect()},10000);
+    setTimeout(function(){o.disconnect()},8000);
   }
-
-  document.addEventListener('DotykFashionHeroReady',function(){
-    moveOutsideShoptetWrapper();
-  });
 })();
