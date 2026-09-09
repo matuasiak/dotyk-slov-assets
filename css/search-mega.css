@@ -4,12 +4,30 @@
 /* Desktop: page stays visible. Search is a floating mega panel, not fullscreen. */
 @media(min-width:768px){
   body.ds-site-search-open{overflow:auto!important}
+
+  /* Keep all legacy Shoptet / Heureka widgets safely under the search experience. */
   body.ds-site-search-open #ds-site-search-backdrop{
+    position:fixed!important;
+    z-index:2147483000!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100dvh!important;
     visibility:visible!important;
     opacity:1!important;
     pointer-events:auto!important;
-    background:rgba(0,0,0,.22)!important;
+    background:rgba(0,0,0,.34)!important;
+    backdrop-filter:blur(1.5px);
+    -webkit-backdrop-filter:blur(1.5px);
   }
+
+  body.ds-site-search-open #ds-site-search{
+    z-index:2147483001!important;
+  }
+
+  body.ds-site-search-open #ds-site-header{
+    z-index:2147483002!important;
+  }
+
   body.ds-site-search-open .overall-wrapper>*:not(#ds-site-header),
   body.ds-site-search-open #content-wrapper,
   body.ds-site-search-open #footer,
@@ -87,7 +105,9 @@
 
 @media(max-width:767px){
   #ds-site-search{inset:86px 0 auto!important;width:100%!important;max-width:none!important;max-height:calc(100dvh - 86px)!important;padding:0!important;overflow:auto!important;background:#0b0b0a!important}
-  #ds-site-search-backdrop{background:rgba(0,0,0,.62)!important}
+  #ds-site-search-backdrop{z-index:2147483000!important;background:rgba(0,0,0,.62)!important}
+  #ds-site-search{z-index:2147483001!important}
+  body.ds-site-search-open #ds-site-header{z-index:2147483002!important}
   .ds-search-mega__top{padding:18px 16px 14px}
   .ds-search-mega__body{display:block}
   .ds-search-mega__column{padding:20px 16px;border-right:0;border-bottom:1px solid rgba(255,255,255,.10)}
