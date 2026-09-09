@@ -1,5 +1,6 @@
-/* DOTYK SLOV — clean search v2
-   Stable base + suggestions + boosted categories. No layout mutations, no backdrop, no live results. */
+/* DOTYK SLOV — clean search v3
+   Stable base + suggestions + boosted categories + live product results.
+   Search panel is isolated: no backdrop, no body/footer/wrapper mutations. */
 
 #ds-basic-search {
   position: fixed;
@@ -7,8 +8,10 @@
   top: var(--ds-basic-search-top, 108px);
   left: 50%;
   width: min(1180px, calc(100vw - 48px));
+  max-height: calc(100dvh - var(--ds-basic-search-top,108px) - 16px);
   margin: 0;
   padding: 22px 24px 24px;
+  overflow: auto;
   box-sizing: border-box;
   border: 1px solid rgba(245,243,238,.16);
   background: #0b0b0a;
@@ -129,6 +132,10 @@
   border-top: 1px solid rgba(245,243,238,.10);
 }
 
+.ds-basic-search__extras[hidden] {
+  display: none !important;
+}
+
 .ds-basic-search__group {
   min-width: 0;
   padding: 20px 24px 0 0;
@@ -187,9 +194,7 @@
   text-decoration: none !important;
 }
 
-.ds-basic-search__category > span {
-  min-width: 0;
-}
+.ds-basic-search__category > span { min-width: 0; }
 
 .ds-basic-search__category small {
   display: inline-flex;
@@ -210,8 +215,110 @@
   font-weight: 400;
 }
 
-.ds-basic-search__category:hover {
-  opacity: .58;
+.ds-basic-search__category:hover { opacity: .58; }
+
+/* Live results */
+.ds-basic-search__live {
+  display: none;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(245,243,238,.10);
+}
+
+.ds-basic-search__live.is-visible { display: block; }
+
+.ds-basic-search__live-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.ds-basic-search__live-head .ds-basic-search__group-label { margin: 0; }
+
+.ds-basic-search__all {
+  color: rgba(245,243,238,.72) !important;
+  font-size: 11px;
+  font-weight: 400;
+  text-decoration: none !important;
+}
+
+.ds-basic-search__all:hover { color: #f5f3ee !important; }
+
+.ds-basic-search__results {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 14px;
+}
+
+.ds-basic-search__result {
+  display: grid;
+  grid-template-columns: 84px minmax(0,1fr);
+  gap: 12px;
+  min-width: 0;
+  color: #f5f3ee !important;
+  text-decoration: none !important;
+}
+
+.ds-basic-search__result-media {
+  display: block;
+  width: 84px;
+  height: 104px;
+  overflow: hidden;
+  background: #171716;
+}
+
+.ds-basic-search__result-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ds-basic-search__result-media i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,.035);
+}
+
+.ds-basic-search__result-copy {
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.ds-basic-search__result-title {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #f5f3ee;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.ds-basic-search__result-price {
+  display: block;
+  margin-top: 8px;
+  color: rgba(245,243,238,.60);
+  font-size: 11px;
+}
+
+.ds-basic-search__result:hover { opacity: .62; }
+
+.ds-basic-search__state {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 16px 0 8px;
+  color: rgba(245,243,238,.52);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1000px) and (min-width: 768px) {
+  .ds-basic-search__results { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 
 @media (max-width: 767px) {
@@ -226,9 +333,7 @@
     transform: translateY(-6px);
   }
 
-  #ds-basic-search.is-open {
-    transform: translateY(0);
-  }
+  #ds-basic-search.is-open { transform: translateY(0); }
 
   .ds-basic-search__input {
     height: 56px;
@@ -258,9 +363,7 @@
     border-top: 1px solid rgba(245,243,238,.10);
   }
 
-  .ds-basic-search__chips {
-    gap: 7px;
-  }
+  .ds-basic-search__chips { gap: 7px; }
 
   .ds-basic-search__chip {
     min-height: 32px;
@@ -271,5 +374,32 @@
   .ds-basic-search__category {
     min-height: 36px;
     font-size: 12px;
+  }
+
+  .ds-basic-search__live {
+    margin-top: 16px;
+    padding-top: 14px;
+  }
+
+  .ds-basic-search__live-head { margin-bottom: 12px; }
+
+  .ds-basic-search__results {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .ds-basic-search__result {
+    grid-template-columns: 76px minmax(0,1fr);
+    gap: 12px;
+  }
+
+  .ds-basic-search__result-media {
+    width: 76px;
+    height: 92px;
+  }
+
+  .ds-basic-search__result-title {
+    font-size: 12px;
+    -webkit-line-clamp: 2;
   }
 }
