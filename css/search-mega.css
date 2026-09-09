@@ -1,37 +1,49 @@
 /* DOTYK SLOV — search mega panel */
 :root{--ds-search-width:min(1500px,calc(100vw - 48px))}
 
+/* Anything legacy that sits outside the normal stacking context disappears while search is open. */
+body.ds-site-search-open #footer,
+body.ds-site-search-open [id*="heureka" i],
+body.ds-site-search-open [class*="heureka" i],
+body.ds-site-search-open [id*="verified" i],
+body.ds-site-search-open [class*="verified" i],
+body.ds-site-search-open iframe[src*="heureka" i],
+body.ds-site-search-open iframe[src*="overene" i],
+body.ds-site-search-open iframe[src*="verified" i],
+body.ds-site-search-open [class*="rating-widget" i],
+body.ds-site-search-open [id*="rating-widget" i]{
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+
 /* Desktop: page stays visible. Search is a floating mega panel, not fullscreen. */
 @media(min-width:768px){
   body.ds-site-search-open{overflow:auto!important}
 
-  /* Keep all legacy Shoptet / Heureka widgets safely under the search experience. */
   body.ds-site-search-open #ds-site-search-backdrop{
     position:fixed!important;
     z-index:2147483000!important;
-    inset:0!important;
-    width:100vw!important;
-    height:100dvh!important;
+    top:0!important;
+    right:0!important;
+    bottom:0!important;
+    left:0!important;
+    width:auto!important;
+    height:auto!important;
     visibility:visible!important;
     opacity:1!important;
     pointer-events:auto!important;
-    background:rgba(0,0,0,.34)!important;
-    backdrop-filter:blur(1.5px);
-    -webkit-backdrop-filter:blur(1.5px);
+    background:rgba(0,0,0,.30)!important;
+    backdrop-filter:blur(1px);
+    -webkit-backdrop-filter:blur(1px);
   }
 
-  body.ds-site-search-open #ds-site-search{
-    z-index:2147483001!important;
-  }
-
-  body.ds-site-search-open #ds-site-header{
-    z-index:2147483002!important;
-  }
+  body.ds-site-search-open #ds-site-search{z-index:2147483001!important}
+  body.ds-site-search-open #ds-site-header{z-index:2147483002!important}
 
   body.ds-site-search-open .overall-wrapper>*:not(#ds-site-header),
   body.ds-site-search-open #content-wrapper,
-  body.ds-site-search-open #footer,
-  body.ds-site-search-open #ds-fashion-hero{visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  body.ds-site-search-open #ds-fashion-hero{visibility:visible!important;opacity:1!important}
 
   #ds-site-search{
     top:calc(var(--ds-site-search-top,104px) + 8px)!important;
@@ -103,19 +115,48 @@
   .ds-search-mega__product:nth-child(n+5){display:none}
 }
 
+/* Mobile uses the exact same data/engine, only the composition changes. */
 @media(max-width:767px){
-  #ds-site-search{inset:86px 0 auto!important;width:100%!important;max-width:none!important;max-height:calc(100dvh - 86px)!important;padding:0!important;overflow:auto!important;background:#0b0b0a!important}
-  #ds-site-search-backdrop{z-index:2147483000!important;background:rgba(0,0,0,.62)!important}
-  #ds-site-search{z-index:2147483001!important}
+  body.ds-site-search-open{overflow:hidden!important}
+  #ds-site-search-backdrop{
+    z-index:2147483000!important;
+    background:rgba(0,0,0,.36)!important;
+    backdrop-filter:blur(1px);
+    -webkit-backdrop-filter:blur(1px);
+  }
+  #ds-site-search{
+    z-index:2147483001!important;
+    top:calc(var(--ds-site-search-top,88px) + 4px)!important;
+    right:8px!important;
+    left:8px!important;
+    width:auto!important;
+    max-width:none!important;
+    max-height:calc(100dvh - var(--ds-site-search-top,88px) - 16px)!important;
+    padding:0!important;
+    overflow:auto!important;
+    border:1px solid rgba(255,255,255,.12)!important;
+    background:#0b0b0a!important;
+  }
   body.ds-site-search-open #ds-site-header{z-index:2147483002!important}
-  .ds-search-mega__top{padding:18px 16px 14px}
-  .ds-search-mega__body{display:block}
-  .ds-search-mega__column{padding:20px 16px;border-right:0;border-bottom:1px solid rgba(255,255,255,.10)}
-  .ds-search-mega__products{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ds-search-mega__product{grid-template-columns:62px minmax(0,1fr)}
-  .ds-search-mega__product-media{width:62px;height:76px}
-  .ds-search-mega__live{padding:18px 16px 24px!important}
-  .ds-search-mega__live-products{grid-template-columns:1fr}
-  .ds-search-mega__live-products .ds-search-mega__product{grid-template-columns:82px minmax(0,1fr)}
-  .ds-search-mega__live-products .ds-search-mega__product-media{width:82px;height:98px}
+
+  .ds-search-mega__top{position:sticky;top:0;z-index:3;padding:16px 14px 12px;background:#0b0b0a;border-bottom:1px solid rgba(255,255,255,.10)}
+  .ds-search-mega__eyebrow{margin-bottom:8px}
+  .ds-search-mega .search-input{height:52px!important;font-size:25px!important}
+
+  .ds-search-mega__body{display:block;min-height:0}
+  .ds-search-mega__column{padding:18px 14px;border-right:0;border-bottom:1px solid rgba(255,255,255,.10)}
+  .ds-search-mega__column:nth-child(1){padding-bottom:14px}
+  .ds-search-mega__categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px}
+  .ds-search-mega__category{padding:9px 0;font-size:13px}
+  .ds-search-mega__feature-media{aspect-ratio:16/9}
+  .ds-search-mega__feature-title{font-size:17px}
+  .ds-search-mega__products{grid-template-columns:1fr;gap:12px}
+  .ds-search-mega__product{grid-template-columns:78px minmax(0,1fr);gap:12px}
+  .ds-search-mega__product-media{width:78px;height:92px}
+
+  .ds-search-mega.is-live .ds-search-mega__live{padding:16px 14px 22px}
+  .ds-search-mega__live-head{position:sticky;top:81px;z-index:2;margin:0 -14px 12px;padding:10px 14px;background:#0b0b0a;border-bottom:1px solid rgba(255,255,255,.08)}
+  .ds-search-mega__live-products{grid-template-columns:1fr;gap:12px}
+  .ds-search-mega__live-products .ds-search-mega__product{grid-template-columns:86px minmax(0,1fr)}
+  .ds-search-mega__live-products .ds-search-mega__product-media{width:86px;height:104px}
 }
