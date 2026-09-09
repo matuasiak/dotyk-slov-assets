@@ -17,25 +17,36 @@ body.ds-site-search-open [id*="rating-widget" i]{
   pointer-events:none!important;
 }
 
-/* Desktop: page stays visible. Search is a floating mega panel, not fullscreen. */
+/* Native Shoptet whisperer must never be visible inside our custom search. */
+body.ds-site-search-open .search-whisperer,
+body.ds-site-search-open .search-results,
+body.ds-site-search-open .search-results-groups,
+body.ds-site-search-open #search-results,
+body.ds-site-search-open .search-results-wrapper,
+body.ds-site-search-open [class*="search-whisper" i],
+body.ds-site-search-open [class*="search-result" i]:not(.ds-search-mega__product):not(.ds-search-mega__live-products){
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+
+/* Desktop: floating panel, page behind remains fully visible and unfiltered. */
 @media(min-width:768px){
   body.ds-site-search-open{overflow:auto!important}
 
   body.ds-site-search-open #ds-site-search-backdrop{
     position:fixed!important;
     z-index:2147483000!important;
-    top:0!important;
-    right:0!important;
-    bottom:0!important;
-    left:0!important;
-    width:auto!important;
-    height:auto!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100dvh!important;
     visibility:visible!important;
     opacity:1!important;
     pointer-events:auto!important;
-    background:rgba(0,0,0,.30)!important;
-    backdrop-filter:blur(1px);
-    -webkit-backdrop-filter:blur(1px);
+    background:transparent!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
   }
 
   body.ds-site-search-open #ds-site-search{z-index:2147483001!important}
@@ -115,14 +126,19 @@ body.ds-site-search-open [id*="rating-widget" i]{
   .ds-search-mega__product:nth-child(n+5){display:none}
 }
 
-/* Mobile uses the exact same data/engine, only the composition changes. */
+/* Mobile uses the exact same search engine/data, only composition changes. */
 @media(max-width:767px){
   body.ds-site-search-open{overflow:hidden!important}
-  #ds-site-search-backdrop{
+  body.ds-site-search-open #ds-site-search-backdrop{
+    position:fixed!important;
     z-index:2147483000!important;
-    background:rgba(0,0,0,.36)!important;
-    backdrop-filter:blur(1px);
-    -webkit-backdrop-filter:blur(1px);
+    inset:0!important;
+    visibility:visible!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+    background:transparent!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
   }
   #ds-site-search{
     z-index:2147483001!important;
@@ -131,32 +147,35 @@ body.ds-site-search-open [id*="rating-widget" i]{
     left:8px!important;
     width:auto!important;
     max-width:none!important;
-    max-height:calc(100dvh - var(--ds-site-search-top,88px) - 16px)!important;
+    max-height:calc(100dvh - var(--ds-site-search-top,88px) - 12px)!important;
     padding:0!important;
     overflow:auto!important;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
     border:1px solid rgba(255,255,255,.12)!important;
     background:#0b0b0a!important;
   }
   body.ds-site-search-open #ds-site-header{z-index:2147483002!important}
 
-  .ds-search-mega__top{position:sticky;top:0;z-index:3;padding:16px 14px 12px;background:#0b0b0a;border-bottom:1px solid rgba(255,255,255,.10)}
-  .ds-search-mega__eyebrow{margin-bottom:8px}
-  .ds-search-mega .search-input{height:52px!important;font-size:25px!important}
+  .ds-search-mega__top{position:sticky;top:0;z-index:3;padding:14px 14px 10px;background:#0b0b0a;border-bottom:1px solid rgba(255,255,255,.10)}
+  .ds-search-mega__eyebrow{margin-bottom:6px}
+  .ds-search-mega .search-input{height:50px!important;padding-right:54px!important;font-size:24px!important}
+  .ds-search-mega .search-form .btn{top:3px!important;width:44px!important;height:44px!important}
 
   .ds-search-mega__body{display:block;min-height:0}
-  .ds-search-mega__column{padding:18px 14px;border-right:0;border-bottom:1px solid rgba(255,255,255,.10)}
-  .ds-search-mega__column:nth-child(1){padding-bottom:14px}
-  .ds-search-mega__categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px}
-  .ds-search-mega__category{padding:9px 0;font-size:13px}
+  .ds-search-mega__column{padding:16px 14px;border-right:0;border-bottom:1px solid rgba(255,255,255,.10)}
+  .ds-search-mega__column:nth-child(1){padding-bottom:12px}
+  .ds-search-mega__categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 12px}
+  .ds-search-mega__category{padding:8px 0;font-size:12px}
   .ds-search-mega__feature-media{aspect-ratio:16/9}
-  .ds-search-mega__feature-title{font-size:17px}
-  .ds-search-mega__products{grid-template-columns:1fr;gap:12px}
-  .ds-search-mega__product{grid-template-columns:78px minmax(0,1fr);gap:12px}
-  .ds-search-mega__product-media{width:78px;height:92px}
+  .ds-search-mega__feature-title{font-size:16px}
+  .ds-search-mega__products{grid-template-columns:1fr;gap:10px}
+  .ds-search-mega__product{grid-template-columns:72px minmax(0,1fr);gap:10px}
+  .ds-search-mega__product-media{width:72px;height:84px}
 
-  .ds-search-mega.is-live .ds-search-mega__live{padding:16px 14px 22px}
-  .ds-search-mega__live-head{position:sticky;top:81px;z-index:2;margin:0 -14px 12px;padding:10px 14px;background:#0b0b0a;border-bottom:1px solid rgba(255,255,255,.08)}
-  .ds-search-mega__live-products{grid-template-columns:1fr;gap:12px}
-  .ds-search-mega__live-products .ds-search-mega__product{grid-template-columns:86px minmax(0,1fr)}
-  .ds-search-mega__live-products .ds-search-mega__product-media{width:86px;height:104px}
+  .ds-search-mega.is-live .ds-search-mega__live{padding:14px 14px 20px}
+  .ds-search-mega__live-head{position:sticky;top:75px;z-index:2;margin:0 -14px 10px;padding:9px 14px;background:#0b0b0a;border-bottom:1px solid rgba(255,255,255,.08)}
+  .ds-search-mega__live-products{grid-template-columns:1fr;gap:10px}
+  .ds-search-mega__live-products .ds-search-mega__product{grid-template-columns:80px minmax(0,1fr)}
+  .ds-search-mega__live-products .ds-search-mega__product-media{width:80px;height:96px}
 }
