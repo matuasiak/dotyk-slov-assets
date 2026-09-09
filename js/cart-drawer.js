@@ -2,7 +2,6 @@
   'use strict';
 
   var CHECKOUT_URL='/objednavka/krok-1/';
-  var FREE_SHIPPING_THRESHOLD=60;
   var DELIVERY_MIN_BUSINESS_DAYS=2;
   var DELIVERY_MAX_BUSINESS_DAYS=4;
 
@@ -11,6 +10,19 @@
   function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function absUrl(v){if(!v)return'';try{return new URL(v,location.origin).href}catch(_){return v}}
+
+  function getShoptetValue(key){
+    try{
+      if(typeof window.getShoptetDataLayer==='function')return window.getShoptetDataLayer(key);
+    }catch(_){}
+    try{
+      var layers=window.dataLayer||[];
+      for(var i=0;i<layers.length;i++){
+        if(layers[i]&&layers[i].shoptet&&Object.prototype.hasOwnProperty.call(layers[i].shoptet,key))return layers[i].shoptet[key];
+      }
+    }catch(_){}
+    return null;
+  }
 
   function validImage(v){
     if(!v)return'';
@@ -95,11 +107,6 @@
     if(!match)return null;
     var value=parseFloat(match[0]);
     return isFinite(value)?value:null;
-  }
-
-  function formatMoney(value){
-    try{return new Intl.NumberFormat('sk-SK',{style:'currency',currency:'EUR',minimumFractionDigits:2}).format(value)}
-    catch(_){return value.toFixed(2).replace('.',',')+' €'}
   }
 
   function addBusinessDays(date,days){
@@ -187,6 +194,7 @@
         '<div class="ds-cart-shipping" hidden>'+ 
           '<div class="ds-cart-shipping__row"><span></span><strong></strong></div>'+ 
           '<div class="ds-cart-shipping__track"><i></i></div>'+ 
+          '<small class="ds-cart-shipping__note" hidden>Doprava zdarma sa môže líšiť podľa krajiny doručenia.</small>'+ 
         '</div>'+ 
         '<div class="ds-cart-delivery">'+
           '<span class="ds-cart-delivery__label">Predpokladané doručenie</span>'+ 
@@ -211,6 +219,7 @@
     var shippingText=$('.ds-cart-shipping__row span',drawer);
     var shippingStrong=$('.ds-cart-shipping__row strong',drawer);
     var shippingBar=$('.ds-cart-shipping__track i',drawer);
+    var shippingNote=$('.ds-cart-shipping__note',drawer);
     var deliveryDate=$('.ds-cart-delivery__date',drawer);
 
     function closeOtherUi(){
@@ -236,18 +245,36 @@
     }
 
     function renderShipping(totalValue){
-      if(totalValue===null||!isFinite(totalValue)||FREE_SHIPPING_THRESHOLD<=0){shipping.hidden=true;return}
+      var info=getShoptetValue('cartInfo');
+      var left=info&&info.leftToFreeShipping;
+      var priceLeft=left&&typeof left.priceLeft==='number'?left.priceLeft:null;
+      var formatted=clean(left&&left.formattedPrice);
+      var isFree=!!(info&&info.freeShipping)||(priceLeft!==null&&priceLeft<=0);
+
+      if(!info||(!left&&!info.freeShipping)){
+        shipping.hidden=true;
+        return;
+      }
+
       shipping.hidden=false;
-      var progress=Math.max(0,Math.min(100,(totalValue/FREE_SHIPPING_THRESHOLD)*100));
-      shippingBar.style.width=progress+'%';
-      var remaining=Math.max(0,FREE_SHIPPING_THRESHOLD-totalValue);
-      if(remaining>0.005){
-        shippingText.textContent='Do dopravy zdarma ti chýba';
-        shippingStrong.textContent=formatMoney(remaining);
-      }else{
+      shippingNote.hidden=!(left&&left.dependOnRegion);
+
+      if(isFree){
         shippingText.textContent='Dopravu máš';
         shippingStrong.textContent='ZDARMA';
+        shippingBar.style.width='100%';
+        return;
       }
+
+      shippingText.textContent='Do dopravy zdarma ti chýba';
+      shippingStrong.textContent=formatted||String(priceLeft).replace('.',',')+' €';
+
+      var progress=0;
+      if(totalValue!==null&&isFinite(totalValue)&&priceLeft!==null&&priceLeft>=0){
+        var inferredThreshold=totalValue+priceLeft;
+        if(inferredThreshold>0)progress=Math.max(0,Math.min(100,(totalValue/inferredThreshold)*100));
+      }
+      shippingBar.style.width=progress+'%';
     }
 
     function render(cart){
