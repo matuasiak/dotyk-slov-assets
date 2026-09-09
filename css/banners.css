@@ -1,375 +1,286 @@
-/* DOTYK SLOV – bannery V4 / Vilgain rail
-   Nahraď týmto CELÝ predchádzajúci CSS blok bannerov. */
-
-body.in-index .banners-row {
-  --ds-vg-gutter: clamp(20px, 2.2vw, 40px);
-  --ds-vg-gap: clamp(14px, 1.45vw, 20px);
-  position: relative;
-  width: calc(100vw - (var(--ds-vg-gutter) * 2));
-  max-width: none;
-  margin-top: clamp(18px, 1.5vw, 28px);
-  margin-right: calc(50% - 50vw + var(--ds-vg-gutter));
-  margin-bottom: clamp(38px, 4vw, 62px);
-  margin-left: calc(50% - 50vw + var(--ds-vg-gutter));
-  isolation: isolate;
+/* DOTYK SLOV — FULL BLEED FASHION HERO / production */
+body.in-index{
+  --ds-hero-black:#0b0b0a;
+  --ds-hero-white:#f4f2ed;
+  --ds-hero-muted:rgba(244,242,237,.72);
+  --ds-hero-line:rgba(244,242,237,.24);
+  --ds-hero-pink:#e7c8cf;
 }
 
-/* Čisté biele pozadie celej bannerovej zóny ako na Vilgain. */
-body.in-index .banners-row::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: calc(-1 * clamp(18px, 1.5vw, 28px));
-  right: calc(-1 * var(--ds-vg-gutter));
-  bottom: calc(-1 * clamp(38px, 4vw, 62px));
-  left: calc(-1 * var(--ds-vg-gutter));
-  background: #fff;
-  pointer-events: none;
+/* remove e-shop spacing: hero is the first visual surface */
+body.in-index .banners-row{
+  position:relative;
+  width:100vw!important;
+  max-width:none!important;
+  margin:0 calc(50% - 50vw) clamp(72px,8vw,120px)!important;
+  padding:0!important;
+  overflow:hidden;
+  background:var(--ds-hero-black);
+}
+body.in-index .banners-row>.wide-carousel,
+body.in-index #carousel{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
 }
 
-body.in-index .banners-row > .wide-carousel,
-body.in-index #carousel {
-  width: 100%;
+body.in-index #carousel.ds-fashion-slider{
+  position:relative;
+  height:min(900px,calc(100svh - 28px));
+  min-height:620px;
+  overflow:hidden;
+  border:0!important;
+  border-radius:0!important;
+  background:var(--ds-hero-black);
+  box-shadow:none!important;
+}
+body.in-index #carousel.ds-fashion-slider .carousel-inner,
+body.in-index #carousel.ds-fashion-slider .swiper-wrapper{
+  position:relative;
+  width:100%;
+  height:100%!important;
+  margin:0!important;
+  padding:0!important;
+}
+body.in-index #carousel.ds-fashion-slider .carousel-inner::before,
+body.in-index #carousel.ds-fashion-slider .carousel-inner::after{display:none!important;content:none!important}
+
+body.in-index #carousel.ds-fashion-slider .item,
+body.in-index #carousel.ds-fashion-slider .item.active,
+body.in-index #carousel.ds-fashion-slider .swiper-slide{
+  position:relative!important;
+  inset:auto!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  overflow:hidden;
+  border:0!important;
+  border-radius:0!important;
+  background:#161615;
+  opacity:1!important;
+  transform:none!important;
+}
+body.in-index #carousel.ds-fashion-slider .item>a,
+body.in-index #carousel.ds-fashion-slider .swiper-slide>a{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  color:inherit;
+  text-decoration:none!important;
+}
+body.in-index #carousel.ds-fashion-slider .item img,
+body.in-index #carousel.ds-fashion-slider .swiper-slide img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  object-fit:cover;
+  object-position:center;
+  filter:saturate(.82) contrast(1.07) brightness(.82);
+  transform:scale(1.055);
+  transition:transform 1.35s cubic-bezier(.2,.72,.25,1),filter .5s ease;
+}
+body.in-index #carousel.ds-fashion-slider .swiper-slide-active img,
+body.in-index #carousel.ds-fashion-slider .item.active img{transform:scale(1)}
+
+/* two restrained overlays: readability for navigation and campaign copy */
+body.in-index #carousel.ds-fashion-slider .item>a::before,
+body.in-index #carousel.ds-fashion-slider .swiper-slide>a::before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:0;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.12) 24%,transparent 42%),
+    linear-gradient(90deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.18) 42%,transparent 70%);
+  pointer-events:none;
+}
+body.in-index #carousel.ds-fashion-slider .item.ds-fashion-has-copy>a::after,
+body.in-index #carousel.ds-fashion-slider .swiper-slide.ds-fashion-has-copy>a::after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:38% 0 0;
+  background:linear-gradient(0deg,rgba(0,0,0,.62),transparent 82%);
+  pointer-events:none;
 }
 
-body.in-index #carousel {
-  margin: 0;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
+/* Shoptet banner text becomes campaign copy */
+body.in-index #carousel.ds-fashion-slider .extended-banner-texts{
+  position:absolute!important;
+  z-index:3!important;
+  right:auto!important;
+  bottom:clamp(62px,8vh,104px)!important;
+  left:clamp(22px,5vw,82px)!important;
+  top:auto!important;
+  display:none!important;
+  width:min(650px,52vw)!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  color:var(--ds-hero-white)!important;
+  text-align:left!important;
+  pointer-events:none;
+  transform:translateY(22px);
+  opacity:0;
+  transition:transform .75s .22s cubic-bezier(.2,.72,.25,1),opacity .55s .22s ease;
+}
+body.in-index #carousel.ds-fashion-slider .ds-fashion-has-copy .extended-banner-texts{display:block!important}
+body.in-index #carousel.ds-fashion-slider .swiper-slide-active .extended-banner-texts,
+body.in-index #carousel.ds-fashion-slider .item.active .extended-banner-texts{
+  transform:translateY(0);
+  opacity:1;
+}
+body.in-index #carousel.ds-fashion-slider .extended-banner-title,
+body.in-index #carousel.ds-fashion-slider .extended-banner-text,
+body.in-index #carousel.ds-fashion-slider .extended-banner-link{
+  position:static!important;
+  display:block;
+  width:auto!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--ds-hero-white)!important;
+  text-shadow:none!important;
+}
+body.in-index #carousel.ds-fashion-slider .extended-banner-title{
+  max-width:13ch!important;
+  font:400 clamp(44px,6vw,92px)/.92 Inter,"Helvetica Neue",Arial,sans-serif!important;
+  letter-spacing:-.055em!important;
+  text-transform:none!important;
+}
+body.in-index #carousel.ds-fashion-slider .extended-banner-text{
+  max-width:38ch!important;
+  margin-top:20px!important;
+  color:var(--ds-hero-muted)!important;
+  font:400 clamp(13px,1.15vw,17px)/1.48 Inter,"Helvetica Neue",Arial,sans-serif!important;
+}
+body.in-index #carousel.ds-fashion-slider .extended-banner-link{
+  display:inline-flex!important;
+  min-height:48px!important;
+  margin-top:28px!important;
+  padding:0 22px!important;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(244,242,237,.72)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:var(--ds-hero-white)!important;
+  font:500 11px/1 Inter,"Helvetica Neue",Arial,sans-serif!important;
+  letter-spacing:.075em!important;
+  text-transform:uppercase!important;
+  pointer-events:auto;
+  transition:background .18s ease,color .18s ease;
+}
+body.in-index #carousel.ds-fashion-slider .extended-banner-link:hover{
+  background:var(--ds-hero-white)!important;
+  color:var(--ds-hero-black)!important;
+}
+body.in-index #carousel.ds-fashion-slider .extended-banner-title:empty,
+body.in-index #carousel.ds-fashion-slider .extended-banner-text:empty,
+body.in-index #carousel.ds-fashion-slider .extended-banner-link:empty{display:none!important}
+
+/* slider utility */
+.ds-fashion-slider-ui{
+  position:absolute;
+  z-index:8;
+  right:clamp(22px,4.4vw,72px);
+  bottom:clamp(34px,5vh,64px);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--ds-hero-white);
+}
+.ds-fashion-slider-button{
+  display:grid;
+  width:44px;
+  height:44px;
+  padding:0;
+  place-items:center;
+  border:1px solid var(--ds-hero-line);
+  border-radius:0;
+  background:rgba(0,0,0,.16);
+  color:var(--ds-hero-white);
+  cursor:pointer;
+  transition:background .18s ease,border-color .18s ease;
+}
+.ds-fashion-slider-button:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.5)}
+.ds-fashion-slider-button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
+.ds-fashion-slider-fraction{
+  min-width:68px;
+  padding:0 8px;
+  color:rgba(244,242,237,.78);
+  font:500 10px/1 Inter,"Helvetica Neue",Arial,sans-serif;
+  letter-spacing:.11em;
+  text-align:center;
+}
+.ds-fashion-slider-fraction strong{color:var(--ds-hero-white);font-weight:500}
+
+/* small editorial marker */
+.ds-fashion-slider-mark{
+  position:absolute;
+  z-index:7;
+  right:clamp(22px,4.4vw,72px);
+  top:clamp(108px,14vh,150px);
+  max-width:18ch;
+  color:rgba(244,242,237,.64);
+  font:400 10px/1.45 Inter,"Helvetica Neue",Arial,sans-serif;
+  letter-spacing:.12em;
+  text-align:right;
+  text-transform:uppercase;
+}
+.ds-fashion-slider-mark::after{
+  content:"";
+  display:block;
+  width:38px;
+  height:1px;
+  margin:12px 0 0 auto;
+  background:var(--ds-hero-white);
+  transform:rotate(-7deg);
 }
 
-/* Bez JS alebo pri jedinom banneri ostane bezpečný natívny banner. */
-body.in-index #carousel:not(.ds-vilgain-rail) {
-  overflow: hidden;
-  border-radius: 18px;
-}
+/* disable native Bootstrap carousel controls */
+body.in-index #carousel.ds-fashion-slider>.carousel-control,
+body.in-index #carousel.ds-fashion-slider>.carousel-indicators{display:none!important}
 
-body.in-index #carousel:not(.ds-vilgain-rail) .item img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-body.in-index #carousel.ds-vilgain-rail {
-  overflow: visible;
-  border-radius: 0;
-}
-
-body.in-index #carousel.ds-vilgain-rail .carousel-inner {
-  position: relative;
-  display: flex !important;
-  width: 100%;
-  height: auto !important;
-  min-height: 0 !important;
-  margin: 0;
-  padding: 0 1px 0 0;
-  gap: var(--ds-vg-gap);
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scroll-behavior: smooth;
-  scroll-padding-left: 0;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  cursor: grab;
-  -webkit-overflow-scrolling: touch;
-}
-
-body.in-index #carousel.ds-vilgain-rail .carousel-inner::-webkit-scrollbar {
-  display: none;
-}
-
-body.in-index #carousel.ds-vilgain-rail .carousel-inner::before,
-body.in-index #carousel.ds-vilgain-rail .carousel-inner::after {
-  display: none !important;
-  content: none !important;
-}
-
-body.in-index #carousel.ds-vilgain-rail .carousel-inner.is-dragging {
-  scroll-behavior: auto;
-  scroll-snap-type: none;
-  cursor: grabbing;
-  user-select: none;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item,
-body.in-index #carousel.ds-vilgain-rail .item.active {
-  position: relative !important;
-  inset: auto !important;
-  display: block !important;
-  width: auto !important;
-  height: clamp(410px, 32.85vw, 540px);
-  min-height: 410px;
-  margin: 0 !important;
-  overflow: hidden;
-  flex: 0 0 clamp(280px, 22vw, 350px);
-  border: 0;
-  border-radius: clamp(14px, 1.15vw, 18px);
-  background: #f2f1ee;
-  box-shadow: none;
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-/* Dominantný prvý banner – rovnaký pomer ako aktuálny Vilgain. */
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero {
-  flex-basis: clamp(680px, 66.7vw, 1180px);
-}
-
-body.in-index #carousel.ds-vilgain-rail .item > a,
-body.in-index #carousel.ds-vilgain-rail .item img {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item > a {
-  position: relative;
-  overflow: hidden;
-  color: inherit;
-  text-decoration: none;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item img {
-  min-height: 0;
-  object-fit: cover;
-  object-position: center;
-  transform: scale(1.001);
-  transition: transform .65s cubic-bezier(.22, 1, .36, 1), filter .3s ease;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item > a:focus-visible {
-  outline: 3px solid #242729;
-  outline-offset: -5px;
-}
-
-/* Text a CTA sa čítajú priamo z polí banneru v Shoptete. */
-body.in-index #carousel.ds-vilgain-rail .extended-banner-texts {
-  position: absolute;
-  z-index: 3;
-  inset: auto 0 0;
-  display: none !important;
-  padding: clamp(24px, 2.3vw, 38px);
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  gap: 8px;
-  color: #fff;
-  pointer-events: none;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-has-copy .extended-banner-texts {
-  display: flex !important;
-}
-
-/* Gradient sa pridá iba pri nadpise alebo popise, nie pri samotnom CTA. */
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-has-text > a::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  background: linear-gradient(0deg, rgba(15, 16, 17, .62) 0%, rgba(15, 16, 17, .08) 58%, transparent 78%);
-  pointer-events: none;
-}
-
-body.in-index #carousel.ds-vilgain-rail .extended-banner-title,
-body.in-index #carousel.ds-vilgain-rail .extended-banner-text,
-body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
-  position: static !important;
-  max-width: 100%;
-  margin: 0;
-  border: 0;
-  box-shadow: none;
-  text-shadow: none;
-}
-
-body.in-index #carousel.ds-vilgain-rail .extended-banner-title:empty,
-body.in-index #carousel.ds-vilgain-rail .extended-banner-text:empty,
-body.in-index #carousel.ds-vilgain-rail .extended-banner-link:empty {
-  display: none !important;
-}
-
-body.in-index #carousel.ds-vilgain-rail .extended-banner-title {
-  max-width: 18ch;
-  padding: 0;
-  background: transparent;
-  color: #fff;
-  font-size: clamp(24px, 1.9vw, 34px);
-  font-weight: 800;
-  line-height: 1.03;
-  letter-spacing: -.035em;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-title {
-  max-width: 16ch;
-  font-size: clamp(34px, 3vw, 52px);
-}
-
-body.in-index #carousel.ds-vilgain-rail .extended-banner-text {
-  max-width: 32ch;
-  padding: 0;
-  background: transparent;
-  color: rgba(255, 255, 255, .9);
-  font-size: 13px;
-  line-height: 1.42;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-text {
-  font-size: 15px;
-}
-
-body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
-  display: inline-flex;
-  min-height: 40px;
-  margin-top: 7px;
-  padding: 0 18px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: #242729;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: .015em;
-  pointer-events: auto;
-  transition: background .2s ease, color .2s ease, transform .2s ease;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-link {
-  min-height: 56px;
-  padding: 0 28px;
-  border-radius: 9px;
-  font-size: 14px;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-texts {
-  padding: 26px 22px;
-}
-
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-title {
-  font-size: clamp(21px, 1.65vw, 28px);
-}
-
-body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-link {
-  min-height: 40px;
-  padding: 0 18px;
-  border-radius: 8px;
-  font-size: 12px;
-}
-
-body.in-index #carousel.ds-vilgain-rail .carousel-control,
-body.in-index #carousel.ds-vilgain-rail .carousel-indicators,
-body.in-index .ds-banner-toolbar,
-body.in-index .ds-clean-scroll-hint {
-  display: none !important;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  body.in-index #carousel.ds-vilgain-rail .item > a:hover img {
-    filter: saturate(1.025) contrast(1.01);
-    transform: scale(1.016);
+@media(max-width:767px){
+  body.in-index .banners-row{margin-bottom:64px!important}
+  body.in-index #carousel.ds-fashion-slider{
+    height:calc(100svh - 26px);
+    min-height:620px;
+    max-height:820px;
   }
-
-  body.in-index #carousel.ds-vilgain-rail .item > a:hover .extended-banner-link {
-    background: #fff;
-    color: #242729;
-    transform: translateY(-1px);
+  body.in-index #carousel.ds-fashion-slider .item img,
+  body.in-index #carousel.ds-fashion-slider .swiper-slide img{object-position:center;filter:saturate(.84) contrast(1.06) brightness(.76)}
+  body.in-index #carousel.ds-fashion-slider .extended-banner-texts{
+    right:18px!important;
+    bottom:90px!important;
+    left:18px!important;
+    width:auto!important;
   }
+  body.in-index #carousel.ds-fashion-slider .extended-banner-title{
+    max-width:11ch!important;
+    font-size:clamp(42px,13.5vw,66px)!important;
+  }
+  body.in-index #carousel.ds-fashion-slider .extended-banner-text{max-width:30ch!important;margin-top:14px!important;font-size:13px!important}
+  body.in-index #carousel.ds-fashion-slider .extended-banner-link{min-height:44px!important;margin-top:22px!important;padding:0 18px!important;font-size:10px!important}
+  .ds-fashion-slider-ui{right:14px;bottom:22px;gap:5px}
+  .ds-fashion-slider-button{width:40px;height:40px}
+  .ds-fashion-slider-fraction{min-width:58px;padding:0 5px;font-size:9px}
+  .ds-fashion-slider-mark{display:none}
 }
 
-/* Shoptet voľby „iba mobil“ a „iba desktop“. */
-@media (min-width: 768px) {
-  body.in-index #carousel.ds-vilgain-rail .item.visible-xs {
-    display: none !important;
-  }
-}
-
-@media (max-width: 767px) {
-  body.in-index .banners-row {
-    --ds-vg-gutter: 12px;
-    --ds-vg-gap: 10px;
-    margin-top: 12px;
-    margin-bottom: 34px;
-  }
-
-  body.in-index .banners-row::before {
-    top: -12px;
-    right: -12px;
-    bottom: -34px;
-    left: -12px;
-  }
-
-  body.in-index #carousel:not(.ds-vilgain-rail) {
-    border-radius: 15px;
-  }
-
-  body.in-index #carousel.ds-vilgain-rail .carousel-inner {
-    gap: 10px;
-    cursor: auto;
-  }
-
-  body.in-index #carousel.ds-vilgain-rail .item,
-  body.in-index #carousel.ds-vilgain-rail .item.active,
-  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero,
-  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card {
-    width: auto !important;
-    height: auto;
-    min-height: 0;
-    flex: 0 0 86vw;
-    aspect-ratio: 4 / 5;
-    border-radius: 15px;
-  }
-
-  body.in-index #carousel.ds-vilgain-rail .item.hidden-xs {
-    display: none !important;
-  }
-
-  body.in-index #carousel.ds-vilgain-rail .extended-banner-texts,
-  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-texts {
-    padding: 24px 21px;
-  }
-
-  body.in-index #carousel.ds-vilgain-rail .extended-banner-title,
-  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-title,
-  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-title {
-    max-width: 16ch;
-    font-size: clamp(25px, 8vw, 34px);
-  }
-
-  body.in-index #carousel.ds-vilgain-rail .extended-banner-text,
-  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-text {
-    max-width: 30ch;
-    font-size: 13px;
-  }
-
-  body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
-    min-height: 44px;
-    padding: 0 19px;
-    border-radius: 8px;
-    font-size: 12px;
-  }
-
-  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-hero .extended-banner-link,
-  body.in-index #carousel.ds-vilgain-rail .item.ds-vg-card .extended-banner-link {
-    min-height: 44px;
-    padding: 0 19px;
-    border-radius: 8px;
-    font-size: 12px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body.in-index #carousel.ds-vilgain-rail .carousel-inner {
-    scroll-behavior: auto;
-  }
-
-  body.in-index #carousel.ds-vilgain-rail .item img,
-  body.in-index #carousel.ds-vilgain-rail .extended-banner-link {
-    transition: none;
-  }
+@media(prefers-reduced-motion:reduce){
+  body.in-index #carousel.ds-fashion-slider .item img,
+  body.in-index #carousel.ds-fashion-slider .swiper-slide img,
+  body.in-index #carousel.ds-fashion-slider .extended-banner-texts{transition:none!important}
 }
