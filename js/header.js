@@ -12,15 +12,34 @@
 
   function $(s,r){return (r||document).querySelector(s)}
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
-  function text(v){return (v||'').replace(/\s+/g,' ').trim()}
+  function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function esc(v){return String(v||'').replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})}
+  function cleanLinkText(a){
+    if(!a)return'';
+    var c=a.cloneNode(true);
+    c.querySelectorAll('.submenu-arrow,svg,i,.menu-image').forEach(function(n){n.remove()});
+    return clean(c.textContent);
+  }
+
+  function directChildren(li){
+    var submenu=li.querySelector(':scope > .menu-level-2, :scope > ul.menu-level-2');
+    if(!submenu)return[];
+    return Array.prototype.slice.call(submenu.children).map(function(child){
+      var a=child.querySelector(':scope > a[href]');
+      if(!a)return null;
+      var label=cleanLinkText(a);
+      return label?{text:label,href:a.href}:null;
+    }).filter(Boolean);
+  }
 
   function getNav(){
-    return $$('#navigation .menu-level-1 > li > a[href]').map(function(a){
-      var clone=a.cloneNode(true);
-      clone.querySelectorAll('.submenu-arrow,svg,i').forEach(function(n){n.remove()});
-      return {text:text(clone.textContent),href:a.href};
-    }).filter(function(x){return x.text}).slice(0,7);
+    return $$('#navigation .menu-level-1 > li').map(function(li){
+      var a=li.querySelector(':scope > a[href]');
+      if(!a)return null;
+      var label=cleanLinkText(a);
+      if(!label)return null;
+      return {text:label,href:a.href,children:directChildren(li)};
+    }).filter(Boolean).slice(0,7);
   }
 
   function getData(){
@@ -35,21 +54,45 @@
       homeHref:logoLink&&logoLink.href||'/',
       nav:getNav(),
       cartHref:cart&&cart.href||'/kosik/',
-      cartCount:text(cartCount&&cartCount.textContent),
+      cartCount:clean(cartCount&&cartCount.textContent),
       accountHref:account&&account.href||'#'
     };
+  }
+
+  function navHtml(data){
+    var path=location.pathname.replace(/\/$/,'')||'/';
+    return data.nav.map(function(item){
+      var active=(new URL(item.href,location.href).pathname.replace(/\/$/,'')||'/')===path?' is-active':'';
+      var children=item.children||[];
+      var submenu='';
+      if(children.length){
+        var visible=children.slice(0,16);
+        submenu='<div class="ds-site-submenu"><div class="ds-site-submenu-inner">'+
+          '<div class="ds-site-submenu-head"><span>'+esc(item.text)+'</span><a href="'+esc(item.href)+'">Zobraziť všetko →</a></div>'+
+          '<div class="ds-site-submenu-grid">'+visible.map(function(child){return '<a href="'+esc(child.href)+'">'+esc(child.text)+'</a>'}).join('')+'</div>'+
+        '</div></div>';
+      }
+      return '<div class="ds-site-nav-item'+(children.length?' has-submenu':'')+'"><a class="ds-site-nav-link'+active+'" href="'+esc(item.href)+'">'+esc(item.text)+'</a>'+submenu+'</div>';
+    }).join('');
+  }
+
+  function mobileHtml(data){
+    return data.nav.map(function(item){
+      var child=(item.children||[]).slice(0,10);
+      if(!child.length)return '<a class="ds-mobile-main" href="'+esc(item.href)+'">'+esc(item.text)+'</a>';
+      return '<details><summary>'+esc(item.text)+'</summary><div class="ds-mobile-sub">'+child.map(function(x){return '<a href="'+esc(x.href)+'">'+esc(x.text)+'</a>'}).join('')+'<a href="'+esc(item.href)+'">Zobraziť všetko →</a></div></details>';
+    }).join('');
   }
 
   function buildHeader(data){
     var h=document.createElement('header');
     h.id='ds-site-header';
-    var path=location.pathname.replace(/\/$/,'')||'/';
     h.innerHTML=
       '<a class="ds-site-announcement" href="#"><span></span>NOVÝ DROP JE VONKU →</a>'+
       '<div class="ds-site-main">'+
         '<button class="ds-site-mobile-menu" type="button" aria-label="Menu">'+icons.menu+'</button>'+
         '<a class="ds-site-logo" href="'+esc(data.homeHref)+'">'+(data.logoSrc?'<img src="'+esc(data.logoSrc)+'" alt="'+esc(data.logoAlt)+'">':'DOTYK SLOV')+'</a>'+
-        '<nav class="ds-site-nav" aria-label="Hlavná navigácia">'+data.nav.map(function(item){var active=(new URL(item.href,location.href).pathname.replace(/\/$/,'')||'/')===path?' is-active':'';return '<a class="'+active+'" href="'+esc(item.href)+'">'+esc(item.text)+'</a>'}).join('')+'</nav>'+
+        '<nav class="ds-site-nav" aria-label="Hlavná navigácia">'+navHtml(data)+'</nav>'+
         '<div class="ds-site-tools">'+
           '<button class="ds-site-search-open" type="button">'+icons.search+'<span>Hľadať</span></button>'+
           '<button class="ds-site-wishlist" type="button" aria-label="Obľúbené">'+icons.heart+'</button>'+
@@ -57,13 +100,13 @@
           '<a class="ds-site-cart" href="'+esc(data.cartHref)+'" aria-label="Košík">'+icons.bag+(data.cartCount?'<b>'+esc(data.cartCount)+'</b>':'')+'</a>'+
         '</div>'+
       '</div>'+
-      '<div class="ds-site-mobile-panel">'+data.nav.map(function(item){return '<a href="'+esc(item.href)+'">'+esc(item.text)+'</a>'}).join('')+'</div>';
+      '<div class="ds-site-mobile-panel">'+mobileHtml(data)+'</div>';
     return h;
   }
 
   function buildSearch(){
     var nativeSearch=$('#header .search');
-    if(!nativeSearch) return null;
+    if(!nativeSearch)return null;
     var overlay=document.createElement('div');
     overlay.id='ds-site-search';
     overlay.innerHTML='<div class="ds-site-search-inner"><div class="ds-site-search-top"><span>HĽADAŤ V DOTYKU</span><button type="button" class="ds-site-search-close" aria-label="Zavrieť">×</button></div><div class="ds-site-search-slot"></div><div class="ds-site-search-hints"></div></div>';
@@ -87,12 +130,12 @@
   }
 
   function mount(){
-    if($('#ds-site-header')) return true;
+    if($('#ds-site-header'))return true;
     var sourceHeader=$('#header');
     var sourceNav=$('#navigation');
-    if(!sourceHeader||!sourceNav) return false;
+    if(!sourceHeader||!sourceNav)return false;
     var data=getData();
-    if(!data.nav.length) return false;
+    if(!data.nav.length)return false;
 
     var custom=buildHeader(data);
     var wrapper=$('.overall-wrapper')||document.body;
@@ -103,19 +146,21 @@
     var announcement=$('.ds-site-announcement',custom);
     var newest=data.nav.find(function(x){return /novink|new|výpredaj|vypredaj|limit/i.test(x.text)});
     announcement.href=newest&&newest.href||'#';
-    if(announcement.getAttribute('href')==='#') announcement.addEventListener('click',function(e){e.preventDefault()});
+    if(announcement.getAttribute('href')==='#')announcement.addEventListener('click',function(e){e.preventDefault()});
 
     function searchTop(){document.documentElement.style.setProperty('--ds-site-search-top',Math.max(0,Math.round(custom.getBoundingClientRect().bottom))+'px')}
     function sticky(){
-      if(document.body.classList.contains('in-index')) custom.classList.toggle('is-stuck',scrollY>60);
-      else custom.classList.toggle('is-stuck',scrollY>18);
+      custom.classList.toggle('is-stuck',document.body.classList.contains('in-index')?scrollY>60:scrollY>18);
       searchTop();
     }
     function closeSearch(){document.body.classList.remove('ds-site-search-open')}
 
     var open=$('.ds-site-search-open',custom);
     var close=searchOverlay&&$('.ds-site-search-close',searchOverlay);
-    if(open&&searchOverlay){open.addEventListener('click',function(){document.body.classList.remove('ds-site-mobile-open');document.body.classList.add('ds-site-search-open');searchTop();setTimeout(function(){var i=$('.search-input',searchOverlay);if(i)i.focus()},40)});close.addEventListener('click',closeSearch)}
+    if(open&&searchOverlay){
+      open.addEventListener('click',function(){document.body.classList.remove('ds-site-mobile-open');document.body.classList.add('ds-site-search-open');searchTop();setTimeout(function(){var i=$('.search-input',searchOverlay);if(i)i.focus()},40)});
+      close.addEventListener('click',closeSearch);
+    }
 
     $('.ds-site-mobile-menu',custom).addEventListener('click',function(){closeSearch();document.body.classList.toggle('ds-site-mobile-open')});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeSearch();document.body.classList.remove('ds-site-mobile-open')}});
@@ -126,7 +171,7 @@
   }
 
   function boot(){
-    if(mount()) return;
+    if(mount())return;
     var o=new MutationObserver(function(){if(mount())o.disconnect()});
     o.observe(document.documentElement,{childList:true,subtree:true});
     setTimeout(function(){o.disconnect()},6000);
