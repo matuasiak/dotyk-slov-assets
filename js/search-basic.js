@@ -2,7 +2,7 @@
   'use strict';
 
   var SUGGESTIONS=['mám toho dosť','nevolaj mi','citovo nedostupný','overthinking','mikiny'];
-  var BOOST_ORDER=['oblečenie','produkty podľa textu','doplnky'];
+  var CATEGORY_ORDER=['oblečenie','produkty podľa textu','doplnky'];
   var FEATURED_QUERY='mám toho dosť';
   var cache=new Map();
   var activeController=null;
@@ -23,17 +23,11 @@
     return Math.max(0,Math.round(header.getBoundingClientRect().bottom))+8;
   }
 
-  function getBoostCategories(){
+  function getCategories(){
     var links=[];
-
-    $$('#ds-site-header .ds-site-nav-link').forEach(function(a){
-      if(a&&a.href)links.push({text:clean(a.textContent),href:a.href});
-    });
-
+    $$('#ds-site-header .ds-site-nav-link').forEach(function(a){if(a&&a.href)links.push({text:clean(a.textContent),href:a.href})});
     if(!links.length){
-      $$('#navigation .menu-level-1 > li > a[href]').forEach(function(a){
-        links.push({text:clean(a.textContent),href:a.href});
-      });
+      $$('#navigation .menu-level-1 > li > a[href]').forEach(function(a){links.push({text:clean(a.textContent),href:a.href})});
     }
 
     var seen={};
@@ -45,7 +39,7 @@
     });
 
     var picked=[];
-    BOOST_ORDER.forEach(function(wanted){
+    CATEGORY_ORDER.forEach(function(wanted){
       var target=norm(wanted);
       var hit=links.find(function(x){return norm(x.text)===target||norm(x.text).indexOf(target)>=0});
       if(hit)picked.push(hit);
@@ -57,13 +51,11 @@
         if(!picked.some(function(y){return y.href===x.href}))picked.push(x);
       });
     }
-
     return picked.slice(0,3);
   }
 
   function extrasMarkup(){
-    var cats=getBoostCategories();
-
+    var cats=getCategories();
     return ''+
       '<div class="ds-basic-search__extras">'+
         '<div class="ds-basic-search__group">'+
@@ -75,7 +67,7 @@
         '<div class="ds-basic-search__group ds-basic-search__group--categories">'+
           '<span class="ds-basic-search__group-label">Objaviť</span>'+
           '<div class="ds-basic-search__category-links">'+
-            cats.map(function(c,i){return '<a href="'+esc(c.href)+'" class="ds-basic-search__category"><span>'+esc(c.text)+(i<2?'<small>BOOST</small>':'')+'</span><b>→</b></a>'}).join('')+
+            cats.map(function(c){return '<a href="'+esc(c.href)+'" class="ds-basic-search__category"><span>'+esc(c.text)+'</span><b>→</b></a>'}).join('')+
           '</div>'+
         '</div>'+
         '<div class="ds-basic-search__featured" hidden></div>'+
@@ -93,26 +85,69 @@
       '</div>';
   }
 
-  function imageSource(img){
-    if(!img)return'';
-    var src=img.getAttribute('src')||img.getAttribute('data-src')||'';
-    if(!src){
-      var srcset=img.getAttribute('srcset')||img.getAttribute('data-srcset')||'';
-      src=srcset.split(',')[0].trim().split(/\s+/)[0]||'';
+  function validImage(v){
+    if(!v)return'';
+    v=clean(v);
+    if(!v||/^data:/i.test(v)||/^blob:/i.test(v)||/transparent|placeholder|spacer/i.test(v))return'';
+    return absUrl(v);
+  }
+
+  function bestFromSrcset(v){
+    if(!v)return'';
+    var parts=v.split(',').map(function(x){
+      var bits=clean(x).split(/\s+/);
+      var url=bits[0]||'';
+      var descriptor=bits[1]||'';
+      var score=parseFloat(descriptor)||0;
+      if(/w$/i.test(descriptor))score*=10;
+      return {url:url,score:score};
+    }).filter(function(x){return validImage(x.url)});
+    if(!parts.length)return'';
+    parts.sort(function(a,b){return b.score-a.score});
+    return validImage(parts[0].url);
+  }
+
+  function imageSource(img,card){
+    var candidates=[];
+    function push(v){var x=validImage(v);if(x)candidates.push(x)}
+
+    if(img){
+      ['data-src','data-lazy-src','data-original','data-lazy','src'].forEach(function(attr){push(img.getAttribute(attr))});
+      push(bestFromSrcset(img.getAttribute('data-srcset')));
+      push(bestFromSrcset(img.getAttribute('srcset')));
+
+      var picture=img.closest&&img.closest('picture');
+      if(picture){
+        $$('source',picture).forEach(function(source){
+          push(bestFromSrcset(source.getAttribute('data-srcset')));
+          push(bestFromSrcset(source.getAttribute('srcset')));
+        });
+      }
     }
-    return absUrl(src);
+
+    if(card){
+      var linked=card.querySelector('[data-src],[data-lazy-src],[data-original]');
+      if(linked){
+        push(linked.getAttribute('data-src'));
+        push(linked.getAttribute('data-lazy-src'));
+        push(linked.getAttribute('data-original'));
+      }
+      var meta=card.querySelector('meta[itemprop="image"],meta[property="og:image"]');
+      if(meta)push(meta.getAttribute('content'));
+    }
+
+    return candidates[0]||'';
   }
 
   function productFromCard(card){
     var link=$('.p-name a,.name a,.p-in-in a,.product-name a,a.p-name,a.name,.image a',card)||$('a[href]',card);
     var titleNode=$('.p-name,.name,.p-in-in,.product-name',card);
-    var img=$('.image img,.product-image img,img',card);
+    var img=$('.image img,.product-image img,picture img,img',card);
     var price=$('.price-final,.price,.p-bottom .price,.price-standard,.product-price',card);
     var title=clean((titleNode&&titleNode.textContent)||(link&&link.textContent));
     var href=link&&link.getAttribute('href');
-    var image=imageSource(img);
     if(!title||!href)return null;
-    return {title:title,href:absUrl(href),image:image,price:clean(price&&price.textContent)};
+    return {title:title,href:absUrl(href),image:imageSource(img,card),price:clean(price&&price.textContent)};
   }
 
   function parseProducts(html){
@@ -126,9 +161,15 @@
     }).slice(0,8);
   }
 
+  function mediaHtml(p,featured){
+    var cls=featured?'ds-basic-search__featured-media':'ds-basic-search__result-media';
+    if(!p.image)return '<span class="'+cls+'"><i></i></span>';
+    return '<span class="'+cls+'"><img src="'+esc(p.image)+'" alt="" loading="eager" decoding="async" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><i style="display:none"></i></span>';
+  }
+
   function productHtml(p){
     return '<a class="ds-basic-search__result" href="'+esc(p.href)+'">'+
-      '<span class="ds-basic-search__result-media">'+(p.image?'<img src="'+esc(p.image)+'" alt="" loading="lazy">':'<i></i>')+'</span>'+
+      mediaHtml(p,false)+
       '<span class="ds-basic-search__result-copy">'+
         '<span class="ds-basic-search__result-title">'+esc(p.title)+'</span>'+
         (p.price?'<span class="ds-basic-search__result-price">'+esc(p.price)+'</span>':'')+
@@ -140,7 +181,7 @@
     return ''+
       '<span class="ds-basic-search__group-label">Vybrali sme</span>'+
       '<a class="ds-basic-search__featured-card" href="'+esc(p.href)+'">'+
-        '<span class="ds-basic-search__featured-media">'+(p.image?'<img src="'+esc(p.image)+'" alt="" loading="lazy">':'')+'</span>'+
+        mediaHtml(p,true)+
         '<span class="ds-basic-search__featured-copy">'+
           '<span class="ds-basic-search__featured-tag">MOOD</span>'+
           '<span class="ds-basic-search__featured-title">'+esc(p.title)+'</span>'+
@@ -152,17 +193,12 @@
   async function fetchProducts(q){
     var key=norm(q);
     if(cache.has(key))return cache.get(key);
-
     if(activeController)activeController.abort();
     activeController=new AbortController();
 
-    var response=await fetch('/vyhladavanie/?string='+encodeURIComponent(q),{
-      credentials:'same-origin',
-      signal:activeController.signal
-    });
+    var response=await fetch('/vyhladavanie/?string='+encodeURIComponent(q),{credentials:'same-origin',signal:activeController.signal});
     if(!response.ok)throw new Error('search '+response.status);
-    var html=await response.text();
-    var products=parseProducts(html);
+    var products=parseProducts(await response.text());
     cache.set(key,products);
     return products;
   }
@@ -170,11 +206,9 @@
   async function fetchFeatured(){
     var key='featured:'+norm(FEATURED_QUERY);
     if(cache.has(key))return cache.get(key);
-
     var response=await fetch('/vyhladavanie/?string='+encodeURIComponent(FEATURED_QUERY),{credentials:'same-origin'});
     if(!response.ok)throw new Error('featured '+response.status);
-    var html=await response.text();
-    var products=parseProducts(html);
+    var products=parseProducts(await response.text());
     var featured=products[0]||null;
     cache.set(key,featured);
     return featured;
@@ -188,7 +222,6 @@
 
     var oldTrigger=$('.ds-site-search-open');
     if(!oldTrigger)return false;
-
     var trigger=oldTrigger.cloneNode(true);
     oldTrigger.replaceWith(trigger);
 
@@ -202,6 +235,7 @@
       '</div>'+
       '<form class="ds-basic-search__form" action="/vyhladavanie/" method="get" role="search">'+
         '<input class="ds-basic-search__input" type="search" name="string" placeholder="Hľadať" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="search" enterkeyhint="search">'+
+        '<button class="ds-basic-search__clear" type="button" aria-label="Vymazať hľadanie">×</button>'+
         '<button class="ds-basic-search__submit" type="submit" aria-label="Hľadať">'+
           '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>'+
         '</button>'+
@@ -210,6 +244,7 @@
 
     var input=$('.ds-basic-search__input',panel);
     var close=$('.ds-basic-search__close',panel);
+    var clear=$('.ds-basic-search__clear',panel);
     var extras=$('.ds-basic-search__extras',panel);
     var featured=$('.ds-basic-search__featured',panel);
     var live=$('.ds-basic-search__live',panel);
@@ -219,9 +254,8 @@
     var renderToken=0;
     var featuredLoaded=false;
 
-    function syncTop(){
-      document.documentElement.style.setProperty('--ds-basic-search-top',getTop()+'px');
-    }
+    function syncTop(){document.documentElement.style.setProperty('--ds-basic-search-top',getTop()+'px')}
+    function syncClear(){clear.classList.toggle('is-visible',!!clean(input.value))}
 
     function loadFeatured(){
       if(featuredLoaded)return;
@@ -230,9 +264,7 @@
         if(!product)return;
         featured.innerHTML=featuredHtml(product);
         featured.hidden=false;
-      }).catch(function(){
-        featured.hidden=true;
-      });
+      }).catch(function(){featured.hidden=true});
     }
 
     function showExtras(){
@@ -245,7 +277,7 @@
     async function showResults(){
       var q=clean(input.value);
       var token=++renderToken;
-
+      syncClear();
       if(q.length<2){showExtras();return}
 
       extras.hidden=true;
@@ -256,11 +288,7 @@
       try{
         var products=await fetchProducts(q);
         if(token!==renderToken)return;
-        if(products.length){
-          results.innerHTML=products.map(productHtml).join('');
-        }else{
-          results.innerHTML='<p class="ds-basic-search__state">Nič sme nenašli. Možno to zatiaľ ostalo len v hlave.</p>';
-        }
+        results.innerHTML=products.length?products.map(productHtml).join(''):'<p class="ds-basic-search__state">Nič sme nenašli. Možno to zatiaľ ostalo len v hlave.</p>';
       }catch(err){
         if(err&&err.name==='AbortError')return;
         if(token!==renderToken)return;
@@ -268,10 +296,7 @@
       }
     }
 
-    function queueResults(){
-      clearTimeout(timer);
-      timer=setTimeout(showResults,220);
-    }
+    function queueResults(){clearTimeout(timer);syncClear();timer=setTimeout(showResults,220)}
 
     function open(){
       syncTop();
@@ -279,6 +304,7 @@
       panel.setAttribute('aria-hidden','false');
       trigger.setAttribute('aria-expanded','true');
       loadFeatured();
+      syncClear();
       setTimeout(function(){input.focus({preventScroll:true})},30);
     }
 
@@ -290,27 +316,29 @@
 
     trigger.setAttribute('aria-controls','ds-basic-search');
     trigger.setAttribute('aria-expanded','false');
-    trigger.addEventListener('click',function(e){
-      e.preventDefault();
-      if(panel.classList.contains('is-open'))shut();else open();
-    });
-
+    trigger.addEventListener('click',function(e){e.preventDefault();panel.classList.contains('is-open')?shut():open()});
     close.addEventListener('click',shut);
+
+    clear.addEventListener('click',function(){
+      clearTimeout(timer);
+      renderToken++;
+      input.value='';
+      syncClear();
+      showExtras();
+      input.focus({preventScroll:true});
+    });
 
     panel.addEventListener('click',function(e){
       var chip=e.target.closest('[data-search-q]');
       if(!chip)return;
       input.value=chip.getAttribute('data-search-q')||'';
+      syncClear();
       input.focus({preventScroll:true});
       input.dispatchEvent(new Event('input',{bubbles:true}));
     });
 
     input.addEventListener('input',queueResults);
-
-    document.addEventListener('keydown',function(e){
-      if(e.key==='Escape')shut();
-    });
-
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')shut()});
     document.addEventListener('pointerdown',function(e){
       if(!panel.classList.contains('is-open'))return;
       if(panel.contains(e.target)||trigger.contains(e.target))return;
@@ -325,9 +353,7 @@
 
   function boot(){
     if(build())return;
-    var observer=new MutationObserver(function(){
-      if(build())observer.disconnect();
-    });
+    var observer=new MutationObserver(function(){if(build())observer.disconnect()});
     observer.observe(document.documentElement,{childList:true,subtree:true});
     setTimeout(function(){observer.disconnect()},8000);
   }
