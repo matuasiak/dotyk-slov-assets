@@ -1,5 +1,5 @@
-/* DOTYK SLOV — clean search v1
-   Goal: no layout mutations, no backdrop, no Shoptet whisperer, no suggestions. */
+/* DOTYK SLOV — clean search v2
+   Stable base + suggestions + boosted categories. No layout mutations, no backdrop, no live results. */
 
 #ds-basic-search {
   position: fixed;
@@ -36,7 +36,8 @@
   margin-bottom: 14px;
 }
 
-.ds-basic-search__label {
+.ds-basic-search__label,
+.ds-basic-search__group-label {
   margin: 0;
   color: rgba(245,243,238,.52);
   font-size: 9px;
@@ -120,13 +121,108 @@
   stroke-linejoin: round;
 }
 
+.ds-basic-search__extras {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 0;
+  margin-top: 20px;
+  border-top: 1px solid rgba(245,243,238,.10);
+}
+
+.ds-basic-search__group {
+  min-width: 0;
+  padding: 20px 24px 0 0;
+}
+
+.ds-basic-search__group + .ds-basic-search__group {
+  padding-right: 0;
+  padding-left: 24px;
+  border-left: 1px solid rgba(245,243,238,.10);
+}
+
+.ds-basic-search__group-label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.ds-basic-search__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ds-basic-search__chip {
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid rgba(245,243,238,.18);
+  border-radius: 0;
+  background: transparent;
+  color: rgba(245,243,238,.82);
+  font: 400 12px/1 Inter, Arial, sans-serif;
+  cursor: pointer;
+  transition: background .15s ease,color .15s ease,border-color .15s ease;
+}
+
+.ds-basic-search__chip:hover {
+  border-color: rgba(245,243,238,.50);
+  background: #f5f3ee;
+  color: #0b0b0a;
+}
+
+.ds-basic-search__category-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ds-basic-search__category {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  color: #f5f3ee !important;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none !important;
+}
+
+.ds-basic-search__category > span {
+  min-width: 0;
+}
+
+.ds-basic-search__category small {
+  display: inline-flex;
+  margin-left: 8px;
+  padding: 3px 5px;
+  align-items: center;
+  background: #e7c8cf;
+  color: #0b0b0a;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  vertical-align: middle;
+}
+
+.ds-basic-search__category b {
+  color: rgba(245,243,238,.42);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.ds-basic-search__category:hover {
+  opacity: .58;
+}
+
 @media (max-width: 767px) {
   #ds-basic-search {
     top: var(--ds-basic-search-top, 96px);
     right: 12px;
     left: 12px;
     width: auto;
+    max-height: calc(100dvh - var(--ds-basic-search-top,96px) - 16px);
     padding: 16px 16px 18px;
+    overflow: auto;
     transform: translateY(-6px);
   }
 
@@ -144,5 +240,36 @@
     top: 4px;
     width: 46px;
     height: 46px;
+  }
+
+  .ds-basic-search__extras {
+    display: block;
+    margin-top: 16px;
+  }
+
+  .ds-basic-search__group,
+  .ds-basic-search__group + .ds-basic-search__group {
+    padding: 16px 0 0;
+    border-left: 0;
+  }
+
+  .ds-basic-search__group + .ds-basic-search__group {
+    margin-top: 16px;
+    border-top: 1px solid rgba(245,243,238,.10);
+  }
+
+  .ds-basic-search__chips {
+    gap: 7px;
+  }
+
+  .ds-basic-search__chip {
+    min-height: 32px;
+    padding: 0 9px;
+    font-size: 11px;
+  }
+
+  .ds-basic-search__category {
+    min-height: 36px;
+    font-size: 12px;
   }
 }
