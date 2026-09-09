@@ -1,0 +1,67 @@
+:root {
+  /* Brand surfaces */
+  --ds-v2-offwhite: #f7f5f0;
+  --ds-v2-ink: #181817;
+  --ds-v2-stone: #ece9e3;
+  --ds-v2-pink: #e7c8cf;
+
+  /* Functional neutrals */
+  --ds-v2-text-muted: rgba(24, 24, 23, 0.66);
+  --ds-v2-text-soft: rgba(24, 24, 23, 0.48);
+  --ds-v2-border: rgba(24, 24, 23, 0.12);
+  --ds-v2-border-strong: rgba(24, 24, 23, 0.22);
+  --ds-v2-dark-border: rgba(247, 245, 240, 0.18);
+
+  /* Typography */
+  --ds-v2-font-sans: Inter, "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, sans-serif;
+  --ds-v2-weight-light: 300;
+  --ds-v2-weight-regular: 400;
+  --ds-v2-weight-medium: 500;
+
+  --ds-v2-text-xs: 12px;
+  --ds-v2-text-sm: 14px;
+  --ds-v2-text-base: 16px;
+  --ds-v2-text-lg: 18px;
+  --ds-v2-text-xl: 24px;
+  --ds-v2-text-2xl: 32px;
+  --ds-v2-heading: clamp(36px, 4.4vw, 48px);
+  --ds-v2-hero: clamp(48px, 6.2vw, 72px);
+
+  /* Layout */
+  --ds-v2-max: 1280px;
+  --ds-v2-gutter: 32px;
+  --ds-v2-gutter-mobile: 16px;
+
+  /* 8px spacing system */
+  --ds-v2-space-1: 8px;
+  --ds-v2-space-2: 16px;
+  --ds-v2-space-3: 24px;
+  --ds-v2-space-4: 32px;
+  --ds-v2-space-5: 40px;
+  --ds-v2-space-6: 48px;
+  --ds-v2-space-8: 64px;
+  --ds-v2-space-10: 80px;
+  --ds-v2-space-12: 96px;
+  --ds-v2-space-16: 128px;
+
+  /* Radius — restrained */
+  --ds-v2-radius-sm: 12px;
+  --ds-v2-radius: 16px;
+  --ds-v2-radius-lg: 24px;
+  --ds-v2-radius-xl: 32px;
+  --ds-v2-radius-pill: 999px;
+
+  /* Motion */
+  --ds-v2-ease: cubic-bezier(.22, 1, .36, 1);
+  --ds-v2-duration-fast: 180ms;
+  --ds-v2-duration: 420ms;
+  --ds-v2-duration-slow: 700ms;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --ds-v2-gutter: var(--ds-v2-gutter-mobile);
+    --ds-v2-hero: clamp(42px, 12vw, 58px);
+    --ds-v2-heading: clamp(32px, 9vw, 42px);
+  }
+}
