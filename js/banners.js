@@ -1,168 +1,210 @@
 (function () {
   'use strict';
 
-  function mountVilgainRail() {
-    if (!document.body.classList.contains('in-index')) return;
+  var SWIPER_JS = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+  var SWIPER_CSS = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css';
 
-    var carousel = document.querySelector('#carousel');
-    var track = carousel && carousel.querySelector('.carousel-inner');
-    if (!carousel || !track || carousel.dataset.dsVilgainMounted === 'true') return;
+  function loadSwiper() {
+    if (window.Swiper) return Promise.resolve(window.Swiper);
 
-    var items = Array.prototype.filter.call(track.children, function (item) {
-      return item.matches('.item') && item.querySelector('a[href] img');
+    if (!document.querySelector('link[data-ds-swiper]')) {
+      var css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = SWIPER_CSS;
+      css.dataset.dsSwiper = 'true';
+      document.head.appendChild(css);
+    }
+
+    return new Promise(function (resolve, reject) {
+      var existing = document.querySelector('script[data-ds-swiper]');
+      if (existing) {
+        existing.addEventListener('load', function () { resolve(window.Swiper); }, { once: true });
+        existing.addEventListener('error', reject, { once: true });
+        return;
+      }
+
+      var script = document.createElement('script');
+      script.src = SWIPER_JS;
+      script.async = true;
+      script.dataset.dsSwiper = 'true';
+      script.onload = function () { resolve(window.Swiper); };
+      script.onerror = reject;
+      document.head.appendChild(script);
     });
+  }
 
-    /* Pri jednom banneri nechávame bezpečné natívne zobrazenie Shoptetu. */
-    if (items.length < 2) return;
-
-    carousel.dataset.dsVilgainMounted = 'true';
-    carousel.dataset.dsCleanMounted = 'true';
-    carousel.dataset.dsEditorialMounted = 'true';
+  function cleanBootstrapCarousel(carousel) {
     carousel.removeAttribute('data-ride');
     carousel.setAttribute('data-interval', 'false');
-    carousel.classList.remove('ds-banner-clean', 'ds-editorial-grid', 'ds-one-card');
-    carousel.classList.add('ds-vilgain-rail');
-    track.classList.remove('ds-banner-clean-track');
-    track.setAttribute('tabindex', '0');
-    track.setAttribute('aria-label', 'Ponuky a kolekcie Dotyk Slov');
-
-    Array.prototype.forEach.call(
-      document.querySelectorAll('.ds-banner-toolbar, .ds-clean-scroll-hint'),
-      function (element) { element.remove(); }
-    );
 
     if (window.jQuery && window.jQuery.fn && typeof window.jQuery.fn.carousel === 'function') {
       try {
         window.jQuery(carousel).carousel('pause');
-      } catch (error) {
-        /* Bannerový rail nesmie zablokovať ostatný Shoptet kód. */
+      } catch (_) {
+        /* Native Shoptet carousel must never block our fallback. */
       }
     }
+  }
 
-    items.forEach(function (item, index) {
-      var image = item.querySelector('img');
-      var link = item.querySelector('a[href]');
-      var adminTexts = item.querySelector('.extended-banner-texts');
-      var adminTitle = item.querySelector('.extended-banner-title');
-      var adminDescription = item.querySelector('.extended-banner-text');
-      var adminCta = item.querySelector('.extended-banner-link');
-      var hasTitle = Boolean(adminTitle && adminTitle.textContent.trim());
-      var hasDescription = Boolean(adminDescription && adminDescription.textContent.trim());
-      var hasCta = Boolean(adminCta && adminCta.textContent.trim());
+  function getSlides(track) {
+    return Array.prototype.filter.call(track.children, function (item) {
+      return item.matches('.item') && item.querySelector('img');
+    });
+  }
 
-      item.classList.remove(
-        'next', 'prev', 'left', 'right',
-        'ds-editorial-card', 'ds-editorial-wide',
-        'ds-has-admin-copy', 'ds-has-admin-cta',
-        'ds-vg-hero', 'ds-vg-card', 'ds-vg-has-copy',
-        'ds-vg-has-text', 'ds-vg-has-cta'
+  function prepareSlides(slides) {
+    slides.forEach(function (slide, index) {
+      var title = slide.querySelector('.extended-banner-title');
+      var text = slide.querySelector('.extended-banner-text');
+      var cta = slide.querySelector('.extended-banner-link');
+      var copy = slide.querySelector('.extended-banner-texts');
+      var image = slide.querySelector('img');
+      var link = slide.querySelector('a[href]');
+
+      var hasCopy = Boolean(
+        (title && title.textContent.trim()) ||
+        (text && text.textContent.trim()) ||
+        (cta && cta.textContent.trim())
       );
-      item.classList.add(index === 0 ? 'ds-vg-hero' : 'ds-vg-card');
-      item.classList.toggle(
-        'ds-vg-has-copy',
-        Boolean(adminTexts && adminTexts.textContent.trim())
-      );
-      item.classList.toggle('ds-vg-has-text', hasTitle || hasDescription);
-      item.classList.toggle('ds-vg-has-cta', hasCta);
-      item.setAttribute('data-ds-banner-position', String(index + 1));
-      item.style.removeProperty('--ds-source-ratio');
 
-      if (link && !link.getAttribute('aria-label') && image.alt) {
-        link.setAttribute('aria-label', image.alt);
+      slide.classList.remove('active', 'next', 'prev', 'left', 'right');
+      slide.classList.add('swiper-slide');
+      slide.classList.toggle('ds-fashion-has-copy', hasCopy);
+      slide.dataset.dsSlide = String(index + 1);
+
+      if (copy && hasCopy) copy.removeAttribute('style');
+
+      if (image) {
+        image.removeAttribute('width');
+        image.removeAttribute('height');
+        if (index === 0) image.setAttribute('fetchpriority', 'high');
+        else image.setAttribute('loading', 'lazy');
+      }
+
+      if (link && image && !link.getAttribute('aria-label')) {
+        link.setAttribute('aria-label', image.alt || ('Dotyk Slov slide ' + (index + 1)));
       }
     });
+  }
 
-    function nearestIndex() {
-      var trackLeft = track.getBoundingClientRect().left;
-      var bestIndex = 0;
-      var bestDistance = Infinity;
+  function createUi(carousel, count) {
+    var old = carousel.querySelector('.ds-fashion-slider-ui');
+    if (old) old.remove();
 
-      items.forEach(function (item, index) {
-        if (window.getComputedStyle(item).display === 'none') return;
-        var distance = Math.abs(item.getBoundingClientRect().left - trackLeft);
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          bestIndex = index;
+    var ui = document.createElement('div');
+    ui.className = 'ds-fashion-slider-ui';
+    ui.innerHTML =
+      '<button class="ds-fashion-slider-button ds-fashion-slider-prev" type="button" aria-label="Predchádzajúci slide">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>' +
+      '</button>' +
+      '<div class="ds-fashion-slider-fraction"><strong>01</strong> / <span>' + String(count).padStart(2, '0') + '</span></div>' +
+      '<button class="ds-fashion-slider-button ds-fashion-slider-next" type="button" aria-label="Ďalší slide">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>' +
+      '</button>';
+
+    carousel.appendChild(ui);
+
+    var mark = document.createElement('div');
+    mark.className = 'ds-fashion-slider-mark';
+    mark.textContent = 'veci, ktoré sa niekedy ťažko hovoria';
+    carousel.appendChild(mark);
+
+    return ui;
+  }
+
+  function mountFallback(carousel, track, slides) {
+    carousel.classList.add('ds-fashion-slider');
+    slides[0].classList.add('active');
+    createUi(carousel, slides.length);
+  }
+
+  function mountFashionSlider() {
+    if (!document.body.classList.contains('in-index')) return;
+
+    var carousel = document.querySelector('#carousel');
+    var track = carousel && carousel.querySelector('.carousel-inner');
+    if (!carousel || !track || carousel.dataset.dsFashionMounted === 'true') return;
+
+    var slides = getSlides(track);
+    if (!slides.length) return;
+
+    carousel.dataset.dsFashionMounted = 'true';
+    cleanBootstrapCarousel(carousel);
+    prepareSlides(slides);
+
+    carousel.classList.remove('ds-vilgain-rail', 'ds-banner-clean', 'ds-editorial-grid');
+    carousel.classList.add('swiper', 'ds-fashion-slider');
+    track.classList.add('swiper-wrapper');
+
+    var ui = createUi(carousel, slides.length);
+    var current = ui.querySelector('.ds-fashion-slider-fraction strong');
+
+    if (slides.length === 1) {
+      slides[0].classList.add('swiper-slide-active', 'active');
+      ui.querySelectorAll('.ds-fashion-slider-button').forEach(function (button) {
+        button.style.display = 'none';
+      });
+      return;
+    }
+
+    loadSwiper().then(function (Swiper) {
+      if (!Swiper) {
+        mountFallback(carousel, track, slides);
+        return;
+      }
+
+      var slider = new Swiper(carousel, {
+        loop: true,
+        speed: 1050,
+        grabCursor: true,
+        allowTouchMove: true,
+        watchSlidesProgress: true,
+        effect: 'creative',
+        creativeEffect: {
+          limitProgress: 2,
+          prev: {
+            translate: ['-18%', 0, -1],
+            scale: 0.96,
+            opacity: 0.45
+          },
+          next: {
+            translate: ['100%', 0, 0],
+            scale: 1,
+            opacity: 1
+          }
+        },
+        autoplay: {
+          delay: 5600,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true
+        },
+        keyboard: {
+          enabled: true,
+          onlyInViewport: true
+        },
+        navigation: {
+          nextEl: ui.querySelector('.ds-fashion-slider-next'),
+          prevEl: ui.querySelector('.ds-fashion-slider-prev')
+        },
+        on: {
+          init: function (swiper) {
+            current.textContent = String(swiper.realIndex + 1).padStart(2, '0');
+          },
+          slideChange: function (swiper) {
+            current.textContent = String(swiper.realIndex + 1).padStart(2, '0');
+          }
         }
       });
 
-      return bestIndex;
-    }
-
-    function goTo(index) {
-      var visibleItems = items.filter(function (item) {
-        return window.getComputedStyle(item).display !== 'none';
-      });
-      var safeIndex = Math.max(0, Math.min(visibleItems.length - 1, index));
-      var target = visibleItems[safeIndex];
-      if (!target) return;
-      track.scrollTo({
-        left: target.offsetLeft - track.offsetLeft,
-        behavior: 'smooth'
-      });
-    }
-
-    track.addEventListener('keydown', function (event) {
-      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-      event.preventDefault();
-      var visibleItems = items.filter(function (item) {
-        return window.getComputedStyle(item).display !== 'none';
-      });
-      var currentItem = items[nearestIndex()];
-      var currentVisibleIndex = Math.max(0, visibleItems.indexOf(currentItem));
-      goTo(currentVisibleIndex + (event.key === 'ArrowRight' ? 1 : -1));
+      carousel.dsFashionSwiper = slider;
+    }).catch(function () {
+      mountFallback(carousel, track, slides);
     });
-
-    /* Na počítači sa dá rail chytiť myšou. Mobil používa natívny swipe. */
-    var dragging = false;
-    var moved = false;
-    var startX = 0;
-    var startScrollLeft = 0;
-
-    track.addEventListener('pointerdown', function (event) {
-      if (event.pointerType === 'touch' || event.button !== 0) return;
-      dragging = true;
-      moved = false;
-      startX = event.clientX;
-      startScrollLeft = track.scrollLeft;
-      track.classList.add('is-dragging');
-      track.setPointerCapture(event.pointerId);
-    });
-
-    track.addEventListener('pointermove', function (event) {
-      if (!dragging) return;
-      var delta = event.clientX - startX;
-      if (Math.abs(delta) > 5) moved = true;
-      track.scrollLeft = startScrollLeft - delta;
-    });
-
-    function stopDragging(event) {
-      if (!dragging) return;
-      dragging = false;
-      track.classList.remove('is-dragging');
-      if (track.hasPointerCapture(event.pointerId)) {
-        track.releasePointerCapture(event.pointerId);
-      }
-      window.setTimeout(function () { moved = false; }, 0);
-    }
-
-    track.addEventListener('pointerup', stopDragging);
-    track.addEventListener('pointercancel', stopDragging);
-    track.addEventListener('dragstart', function (event) {
-      event.preventDefault();
-    });
-
-    track.addEventListener('click', function (event) {
-      if (!moved) return;
-      event.preventDefault();
-      event.stopPropagation();
-      moved = false;
-    }, true);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mountVilgainRail, { once: true });
+    document.addEventListener('DOMContentLoaded', mountFashionSlider, { once: true });
   } else {
-    mountVilgainRail();
+    mountFashionSlider();
   }
 })();
