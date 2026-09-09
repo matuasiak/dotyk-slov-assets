@@ -1,4 +1,4 @@
-/* DOTYK SLOV — clean search v5
+/* DOTYK SLOV — clean search v6
    Stable search with suggestions, categories, featured product and live results.
    No backdrop and no page-layout mutations. */
 
@@ -48,14 +48,55 @@
 .ds-basic-search__input::placeholder{color:rgba(245,243,238,.35);opacity:1}
 .ds-basic-search__input::-webkit-search-cancel-button{display:none}
 
-.ds-basic-search__clear{
-  position:absolute;top:8px;right:56px;display:grid;width:40px;height:48px;padding:0;place-items:center;
-  border:0!important;outline:0!important;background:transparent!important;box-shadow:none!important;color:rgba(245,243,238,.55);
-  font:300 22px/1 Inter,Arial,sans-serif;cursor:pointer;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s ease,color .12s ease
+/* Hard reset against Shoptet button styles. */
+#ds-basic-search .ds-basic-search__clear,
+#ds-basic-search .ds-basic-search__clear:hover,
+#ds-basic-search .ds-basic-search__clear:focus,
+#ds-basic-search .ds-basic-search__clear:focus-visible,
+#ds-basic-search .ds-basic-search__clear:active{
+  position:absolute!important;
+  top:50%!important;
+  right:58px!important;
+  bottom:auto!important;
+  left:auto!important;
+  z-index:4!important;
+  display:flex!important;
+  width:32px!important;
+  min-width:0!important;
+  max-width:32px!important;
+  height:32px!important;
+  min-height:0!important;
+  max-height:32px!important;
+  margin:0!important;
+  padding:0!important;
+  align-items:center!important;
+  justify-content:center!important;
+  float:none!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  -webkit-box-shadow:none!important;
+  color:rgba(245,243,238,.58)!important;
+  font:300 22px/1 Inter,Arial,sans-serif!important;
+  text-indent:0!important;
+  text-transform:none!important;
+  transform:translateY(-50%)!important;
+  -webkit-appearance:none!important;
+  appearance:none!important;
+  cursor:pointer!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
 }
-.ds-basic-search__clear.is-visible{opacity:1;visibility:visible;pointer-events:auto}
-.ds-basic-search__clear:hover{color:#f5f3ee}
-.ds-basic-search__clear:focus,.ds-basic-search__clear:focus-visible{outline:0!important;box-shadow:none!important}
+#ds-basic-search .ds-basic-search__clear.is-visible{
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+#ds-basic-search .ds-basic-search__clear.is-visible:hover{color:#f5f3ee!important}
 
 .ds-basic-search__submit{
   position:absolute;top:8px;right:0;display:grid;width:48px;height:48px;padding:0;place-items:center;
@@ -118,8 +159,12 @@
   #ds-basic-search .ds-basic-search__input,
   #ds-basic-search .ds-basic-search__input:focus,
   #ds-basic-search .ds-basic-search__input:focus-visible,
-  #ds-basic-search .ds-basic-search__input:active{height:56px;padding-right:104px!important;font-size:28px!important}
-  .ds-basic-search__clear{top:4px;right:52px;width:36px;height:46px;font-size:21px}
+  #ds-basic-search .ds-basic-search__input:active{height:56px;padding-right:102px!important;font-size:28px!important}
+  #ds-basic-search .ds-basic-search__clear,
+  #ds-basic-search .ds-basic-search__clear:hover,
+  #ds-basic-search .ds-basic-search__clear:focus,
+  #ds-basic-search .ds-basic-search__clear:focus-visible,
+  #ds-basic-search .ds-basic-search__clear:active{right:54px!important;width:30px!important;max-width:30px!important;height:30px!important;max-height:30px!important;font-size:20px!important}
   .ds-basic-search__submit{top:4px;width:46px;height:46px}
   .ds-basic-search__extras{display:block;margin-top:16px}
   .ds-basic-search__group,.ds-basic-search__group + .ds-basic-search__group,.ds-basic-search__featured{padding:16px 0 0;border-left:0}
