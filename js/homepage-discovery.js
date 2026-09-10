@@ -1,6 +1,20 @@
 (function(){
   'use strict';
 
+  /* Temporary prototype layer: load AI model imagery as a real stylesheet.
+     This is intentionally injected after the page CSS so it wins over
+     Shoptet/category thumbnails. Remove when real campaign photos are ready. */
+  var AI_DEMO_CSS='https://matuasiak.github.io/dotyk-slov-assets/css/homepage-discovery-ai-demo.css?v=2';
+  function ensureAiDemoCss(){
+    if(document.querySelector('link[data-ds-ai-demo]'))return;
+    var link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href=AI_DEMO_CSS;
+    link.setAttribute('data-ds-ai-demo','1');
+    document.head.appendChild(link);
+  }
+  ensureAiDemoCss();
+
   var ROUTES=[
     {title:'Tričká',match:['tričká','tricka'],imageA:'',imageB:''},
     {title:'Mikiny',match:['mikiny','mikina'],imageA:'',imageB:''},
