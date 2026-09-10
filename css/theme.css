@@ -1,0 +1,181 @@
+/* DOTYK SLOV — central theme v1
+   Load this file LAST. Component CSS keeps layout/fallbacks;
+   this file is the single source of truth for brand colour decisions. */
+
+:root{
+  /* Core palette */
+  --ds-color-canvas:#E7E0D5;       /* warm stone */
+  --ds-color-surface:#F3EEE6;      /* bone / off-white */
+  --ds-color-surface-2:#D8D0C4;    /* deeper stone */
+  --ds-color-ink:#25241F;          /* warm ink */
+  --ds-color-ink-rgb:37,36,31;
+
+  --ds-color-dark:#303129;         /* deep olive-charcoal */
+  --ds-color-dark-rgb:48,49,41;
+  --ds-color-dark-soft:#3B3832;    /* brown-charcoal */
+  --ds-color-dark-soft-rgb:59,56,50;
+
+  --ds-color-moss:#70745E;
+  --ds-color-moss-deep:#515647;
+  --ds-color-mocha:#79675A;
+  --ds-color-pebble:#A5ABA7;
+  --ds-color-blush:#D8B9BE;
+
+  /* Semantic colours */
+  --ds-color-on-dark:#F5F0E7;
+  --ds-color-on-dark-muted:rgba(245,240,231,.62);
+  --ds-color-on-dark-faint:rgba(245,240,231,.40);
+  --ds-color-line-dark:rgba(245,240,231,.14);
+  --ds-color-line-dark-soft:rgba(245,240,231,.09);
+
+  --ds-color-on-light:var(--ds-color-ink);
+  --ds-color-on-light-muted:rgba(37,36,31,.58);
+  --ds-color-on-light-faint:rgba(37,36,31,.38);
+  --ds-color-line-light:rgba(37,36,31,.13);
+
+  --ds-color-accent:var(--ds-color-blush);
+  --ds-color-overlay:rgba(20,20,17,.66);
+
+  /* Compatibility aliases used by existing component CSS */
+  --ds-black:var(--ds-color-dark);
+  --ds-black-2:var(--ds-color-dark-soft);
+  --ds-white:var(--ds-color-on-dark);
+  --ds-muted:var(--ds-color-on-dark-muted);
+  --ds-line:var(--ds-color-line-dark);
+  --ds-pink:var(--ds-color-accent);
+}
+
+/* ---------- Global canvas ---------- */
+html,body{
+  background:var(--ds-color-canvas);
+  color:var(--ds-color-ink);
+}
+body.in-index .overall-wrapper{
+  background:var(--ds-color-canvas);
+}
+
+/* ---------- Header ---------- */
+#ds-site-header{
+  background:var(--ds-color-dark)!important;
+  color:var(--ds-color-on-dark)!important;
+  box-shadow:0 -48px 0 var(--ds-color-dark)!important;
+}
+body.in-index #ds-site-header{background:transparent!important}
+body.in-index #ds-site-header.is-stuck,
+body:not(.in-index) #ds-site-header.is-stuck{
+  background:rgba(var(--ds-color-dark-rgb),.985)!important;
+  border-bottom-color:var(--ds-color-line-dark)!important;
+}
+body:not(.in-index) #ds-site-header{background:var(--ds-color-dark)!important}
+.ds-site-announcement{background:var(--ds-color-dark)!important;color:var(--ds-color-on-dark)!important}
+.ds-site-submenu{background:rgba(var(--ds-color-dark-rgb),.995)!important;border-color:var(--ds-color-line-dark-soft)!important}
+.ds-site-logo,.ds-site-nav-link,.ds-site-tools button,.ds-site-tools a{color:var(--ds-color-on-dark)!important}
+.ds-site-cart b{background:var(--ds-color-accent)!important;color:var(--ds-color-ink)!important}
+
+/* ---------- Hero ---------- */
+#ds-fashion-hero{
+  background:var(--ds-color-dark)!important;
+  color:var(--ds-color-on-dark)!important;
+}
+#ds-fashion-hero .swiper-slide{
+  --slide-bg:var(--ds-color-dark)!important;
+  background:var(--ds-color-dark)!important;
+}
+.ds-fs-bgword-back{color:rgba(245,240,231,.90)!important}
+.ds-fs-bgword-front{-webkit-text-stroke-color:rgba(245,240,231,.27)!important}
+.ds-fs-copy h2,.ds-fs-cta,.ds-fs-button{color:var(--ds-color-on-dark)!important}
+.ds-fs-kicker,.ds-fs-copy p,.ds-fs-side,.ds-fs-fraction,.ds-fs-index{color:var(--ds-color-on-dark-muted)!important}
+.ds-fs-cta{border-color:rgba(245,240,231,.54)!important}
+.ds-fs-cta:hover{background:var(--ds-color-surface)!important;color:var(--ds-color-ink)!important}
+
+/* ---------- Search ---------- */
+#ds-basic-search{
+  background:var(--ds-color-dark)!important;
+  color:var(--ds-color-on-dark)!important;
+  border-color:var(--ds-color-line-dark)!important;
+}
+.ds-basic-search__label,.ds-basic-search__group-label{color:var(--ds-color-on-dark-muted)!important}
+.ds-basic-search__close,
+#ds-basic-search .ds-basic-search__input,
+#ds-basic-search .ds-basic-search__input:focus,
+#ds-basic-search .ds-basic-search__input:focus-visible,
+#ds-basic-search .ds-basic-search__input:active,
+.ds-basic-search__submit,
+.ds-basic-search__category,
+.ds-basic-search__featured-card,
+.ds-basic-search__featured-title,
+.ds-basic-search__result,
+.ds-basic-search__result-title{color:var(--ds-color-on-dark)!important}
+#ds-basic-search .ds-basic-search__input,
+#ds-basic-search .ds-basic-search__input:focus,
+#ds-basic-search .ds-basic-search__input:focus-visible,
+#ds-basic-search .ds-basic-search__input:active{border-bottom-color:rgba(245,240,231,.32)!important}
+.ds-basic-search__input::placeholder{color:rgba(245,240,231,.34)!important}
+.ds-basic-search__submit{border-color:rgba(245,240,231,.22)!important}
+.ds-basic-search__extras,.ds-basic-search__live,.ds-basic-search__featured,.ds-basic-search__group + .ds-basic-search__group{border-color:var(--ds-color-line-dark-soft)!important}
+.ds-basic-search__chip{border-color:rgba(245,240,231,.18)!important;color:rgba(245,240,231,.82)!important}
+.ds-basic-search__chip:hover{background:var(--ds-color-surface)!important;color:var(--ds-color-ink)!important;border-color:var(--ds-color-surface)!important}
+.ds-basic-search__featured-tag{background:var(--ds-color-accent)!important;color:var(--ds-color-ink)!important}
+.ds-basic-search__featured-media,.ds-basic-search__result-media{background:var(--ds-color-dark-soft)!important}
+.ds-basic-search__featured-price,.ds-basic-search__result-price,.ds-basic-search__state,.ds-basic-search__all{color:var(--ds-color-on-dark-muted)!important}
+
+/* ---------- Cart drawer ---------- */
+#ds-cart-drawer,.ds-cart-footer{
+  background:var(--ds-color-dark)!important;
+  color:var(--ds-color-on-dark)!important;
+}
+#ds-cart-backdrop{background:var(--ds-color-overlay)!important}
+.ds-cart-head,.ds-cart-item,.ds-cart-footer,.ds-cart-delivery{border-color:var(--ds-color-line-dark-soft)!important}
+.ds-cart-head__count{background:var(--ds-color-accent)!important;color:var(--ds-color-ink)!important}
+.ds-cart-close,.ds-cart-item,.ds-cart-item__name,.ds-cart-item__price,.ds-cart-qty button,.ds-cart-qty span{color:var(--ds-color-on-dark)!important}
+.ds-cart-item__variant,.ds-cart-state,.ds-cart-empty__copy,.ds-cart-remove,.ds-cart-delivery__label,.ds-cart-summary span,.ds-cart-checkout-note{color:var(--ds-color-on-dark-muted)!important}
+.ds-cart-item__media{background:var(--ds-color-dark-soft)!important}
+.ds-cart-qty{border-color:rgba(245,240,231,.18)!important}
+.ds-cart-upsell{background:var(--ds-color-dark-soft)!important;border-color:var(--ds-color-line-dark)!important}
+.ds-cart-upsell__eyebrow{color:var(--ds-color-accent)!important}
+.ds-cart-upsell__name,.ds-cart-upsell__action{color:var(--ds-color-on-dark)!important}
+.ds-cart-shipping{
+  background:var(--ds-color-dark-soft)!important;
+  border-color:rgba(216,185,190,.40)!important;
+}
+.ds-cart-shipping__eyebrow i,.ds-cart-shipping__track i{background:var(--ds-color-accent)!important}
+.ds-cart-shipping__row span{color:var(--ds-color-on-dark)!important}
+.ds-cart-shipping__row strong{color:var(--ds-color-accent)!important}
+.ds-cart-cta{background:var(--ds-color-surface)!important;border-color:var(--ds-color-surface)!important;color:var(--ds-color-ink)!important}
+
+/* ---------- Homepage discovery: warm stone ---------- */
+#ds-home-discovery{
+  background:var(--ds-color-canvas)!important;
+  color:var(--ds-color-on-light)!important;
+  border-top-color:var(--ds-color-line-light)!important;
+}
+.ds-home-kicker{color:var(--ds-color-mocha)!important}
+.ds-home-intro h2,.ds-home-discovery-head h3{color:var(--ds-color-on-light)!important}
+.ds-home-intro p{color:var(--ds-color-on-light-muted)!important}
+.ds-home-discovery-head span{color:var(--ds-color-on-light-faint)!important}
+.ds-home-tile,.ds-home-tile__media{background:var(--ds-color-surface-2)!important}
+.ds-home-tile::after{
+  background:linear-gradient(180deg,rgba(var(--ds-color-ink-rgb),.05) 20%,rgba(var(--ds-color-ink-rgb),.58) 100%)!important;
+}
+.ds-home-tile__title,.ds-home-tile__arrow{color:var(--ds-color-on-dark)!important}
+.ds-home-tile__meta{color:rgba(245,240,231,.52)!important}
+.ds-home-tile__arrow{border-color:rgba(245,240,231,.42)!important}
+.ds-home-tile:hover .ds-home-tile__arrow{background:var(--ds-color-surface)!important;color:var(--ds-color-ink)!important;border-color:var(--ds-color-surface)!important}
+
+/* Trust strip becomes the darker earthy beat, not black. */
+.ds-home-trust{
+  background:var(--ds-color-moss-deep)!important;
+  color:var(--ds-color-on-dark)!important;
+  border-top-color:rgba(245,240,231,.12)!important;
+}
+.ds-home-trust__item{border-color:rgba(245,240,231,.12)!important}
+.ds-home-trust__index{color:var(--ds-color-accent)!important}
+.ds-home-trust__title{color:var(--ds-color-on-dark)!important}
+.ds-home-trust__copy{color:var(--ds-color-on-dark-muted)!important}
+
+/* Utility / future aliases */
+.ds-bg-canvas{background:var(--ds-color-canvas)!important}
+.ds-bg-surface{background:var(--ds-color-surface)!important}
+.ds-bg-dark{background:var(--ds-color-dark)!important;color:var(--ds-color-on-dark)!important}
+.ds-bg-moss{background:var(--ds-color-moss)!important;color:var(--ds-color-on-dark)!important}
+.ds-text-accent{color:var(--ds-color-accent)!important}
