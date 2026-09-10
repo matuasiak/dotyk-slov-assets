@@ -1,19 +1,20 @@
 (function(){
   'use strict';
 
-  var PRODUCT_ROUTES=[
-    {title:'tričká',match:['tričká','tricka']},
-    {title:'mikiny',match:['mikiny','mikina']},
-    {title:'doplnky',match:['doplnky','doplnok']},
-    {title:'novinky',match:['novinky','nové','nove']},
-    {title:'limitky',match:['limitky','limitované','limitovane']}
+  var CATEGORY_CONFIG=[
+    {title:'Tričká',match:['tričká','tricka']},
+    {title:'Cropy',match:['cropy','crop topy','crop top','crop']},
+    {title:'Mikiny',match:['mikiny','mikina']},
+    {title:'Doplnky',match:['doplnky','doplnok']},
+    {title:'Novinky',match:['novinky','nové','nove']},
+    {title:'Limitky',match:['limitky','limitované','limitovane']}
   ];
 
   function $(s,r){return (r||document).querySelector(s)}
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
   function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function norm(v){return clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
-  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]})}
   function absUrl(v){if(!v)return'';try{return new URL(v,location.origin).href}catch(_){return v}}
 
   function validImage(v){
@@ -27,21 +28,35 @@
     if(!v)return'';
     var parts=v.split(',').map(function(x){
       var bits=clean(x).split(/\s+/);
-      return {url:bits[0]||'',score:parseFloat(bits[1])||0};
+      var score=parseFloat(bits[1])||0;
+      if(/w$/i.test(bits[1]||''))score*=10;
+      return {url:bits[0]||'',score:score};
     }).filter(function(x){return validImage(x.url)});
     if(!parts.length)return'';
     parts.sort(function(a,b){return b.score-a.score});
     return validImage(parts[0].url);
   }
 
-  function imageFromNode(img){
-    if(!img)return'';
-    var attrs=['data-src','data-lazy-src','data-original','data-lazy','src'];
-    for(var i=0;i<attrs.length;i++){
-      var v=validImage(img.getAttribute(attrs[i]));
-      if(v)return v;
+  function imageFromNode(img,scope){
+    var out=[];
+    function push(v){var x=validImage(v);if(x&&out.indexOf(x)<0)out.push(x)}
+    if(img){
+      ['data-src','data-lazy-src','data-original','data-lazy','src'].forEach(function(a){push(img.getAttribute(a))});
+      push(bestFromSrcset(img.getAttribute('data-srcset')));
+      push(bestFromSrcset(img.getAttribute('srcset')));
+      var picture=img.closest&&img.closest('picture');
+      if(picture){
+        $$('source',picture).forEach(function(source){
+          push(bestFromSrcset(source.getAttribute('data-srcset')));
+          push(bestFromSrcset(source.getAttribute('srcset')));
+        });
+      }
     }
-    return bestFromSrcset(img.getAttribute('data-srcset'))||bestFromSrcset(img.getAttribute('srcset'))||'';
+    if(scope){
+      var meta=$('meta[itemprop="image"],meta[property="og:image"]',scope);
+      if(meta)push(meta.getAttribute('content'));
+    }
+    return out[0]||'';
   }
 
   function allMenuLinks(){
@@ -80,24 +95,6 @@
     return null;
   }
 
-  function textRoutes(){
-    var navItems=$$('#ds-site-header .ds-site-nav-item');
-    for(var i=0;i<navItems.length;i++){
-      var link=$('.ds-site-nav-link',navItems[i]);
-      if(!link)continue;
-      var label=norm(link.textContent);
-      if(label.indexOf('produkty podla textu')<0&&label.indexOf('podla textu')<0)continue;
-      var subs=$$('.ds-site-submenu-grid a[href]',navItems[i]).map(function(a){
-        return {title:clean(a.textContent),href:a.href};
-      }).filter(function(x){return x.title&&x.href});
-      if(subs.length)return subs.slice(0,6);
-    }
-
-    var links=allMenuLinks();
-    var fallback=links.find(function(x){return x.norm.indexOf('podla textu')>=0});
-    return fallback?[{title:'všetky texty',href:fallback.href}]:[];
-  }
-
   async function fetchCategoryImage(href,index){
     if(!href)return'';
     try{
@@ -105,136 +102,63 @@
       if(!response.ok)return'';
       var doc=new DOMParser().parseFromString(await response.text(),'text/html');
       var cards=$$('.products-block .product,.products .product,.product-item,[data-micro-product-id]',doc);
-      var preferred=cards[index%Math.max(cards.length,1)]||cards[0];
-      var img=preferred&&$('.image img,.product-image img,picture img,img',preferred);
-      var src=imageFromNode(img);
-      if(src)return src;
-      var categoryImg=$('.category-header img,.category-perex img,.banner img',doc);
-      return imageFromNode(categoryImg);
+      if(cards.length){
+        var preferred=cards[Math.min(index%3,cards.length-1)]||cards[0];
+        var img=$('.image img,.product-image img,picture img,img',preferred);
+        var src=imageFromNode(img,preferred);
+        if(src)return src;
+      }
+      var categoryImg=$('.category-header img,.category-perex img,.banner img,picture img',doc);
+      return imageFromNode(categoryImg,doc);
     }catch(_){return''}
   }
 
-  function routeHtml(route,index,group){
-    return '<a class="ds-home-route'+(index===0?' is-active':'')+'" href="'+esc(route.href||'#')+'" data-ds-route="'+group+'-'+index+'" data-index="'+index+'">'+
-      '<span class="ds-home-route__index">0'+(index+1)+'</span>'+ 
-      '<span class="ds-home-route__title">'+esc(route.title)+'</span>'+ 
-      '<span class="ds-home-route__thumb"></span>'+ 
-      '<span class="ds-home-route__arrow">→</span>'+ 
+  function cardHtml(route,index){
+    return '<a class="ds-home-category-card" href="'+esc(route.href)+'" data-ds-category-card="'+index+'">'+
+      '<span class="ds-home-category-card__media"><i></i></span>'+ 
+      '<span class="ds-home-category-card__foot">'+
+        '<span class="ds-home-category-card__title">'+esc(route.title)+'</span>'+ 
+        '<span class="ds-home-category-card__arrow">→</span>'+ 
+      '</span>'+ 
     '</a>';
   }
 
-  function groupHtml(routes,group,active){
-    return '<div class="ds-home-route-group'+(active?' is-active':'')+'" data-ds-group="'+group+'" '+(active?'':'hidden')+'>'+routes.map(function(r,i){return routeHtml(r,i,group)}).join('')+'</div>';
-  }
-
-  function markup(productRoutes,textRouteList){
+  function markup(routes){
     return ''+
       '<section id="ds-home-discovery" aria-label="Objaviť Dotyk Slov">'+
-        '<div class="ds-home-discovery-shell">'+
-          '<div class="ds-home-discovery-copy">'+
-            '<span class="ds-home-kicker">DOTYK SLOV / NÁJDI SI SVOJE</span>'+ 
-            '<h2>nie podľa trendu.<br>podľa seba.</h2>'+ 
-            '<p>Dve cesty. Podľa toho, čo chceš nosiť — alebo čo chceš povedať bez slov.</p>'+ 
-          '</div>'+ 
-          '<div class="ds-home-navigator">'+
-            '<div class="ds-home-tabs" role="tablist" aria-label="Spôsob výberu">'+
-              '<button type="button" class="is-active" data-ds-tab="product" role="tab" aria-selected="true">podľa produktu</button>'+ 
-              '<button type="button" data-ds-tab="text" role="tab" aria-selected="false">podľa textu</button>'+ 
-            '</div>'+ 
-            '<div class="ds-home-navigator__body">'+
-              '<div class="ds-home-route-lists">'+
-                groupHtml(productRoutes,'product',true)+
-                groupHtml(textRouteList,'text',false)+
-              '</div>'+ 
-              '<a class="ds-home-preview" href="'+esc(productRoutes[0]&&productRoutes[0].href||'#')+'" aria-label="Otvoriť kategóriu">'+
-                '<span class="ds-home-preview__media"></span>'+ 
-                '<span class="ds-home-preview__meta"><span>DISCOVER</span><strong>'+esc(productRoutes[0]&&productRoutes[0].title||'')+'</strong><b>→</b></span>'+ 
-              '</a>'+ 
-            '</div>'+ 
+        '<div class="ds-home-trust" aria-label="Prečo Dotyk Slov">'+
+          '<div class="ds-home-trust__inner">'+
+            '<div class="ds-home-trust__item"><span class="ds-home-trust__index">01</span><span><strong>slovenská značka</strong><small>vzniká doma, nie v katalógu.</small></span></div>'+ 
+            '<div class="ds-home-trust__item"><span class="ds-home-trust__index">02</span><span><strong>vlastné texty</strong><small>veci, ktoré inde nenájdeš.</small></span></div>'+ 
+            '<div class="ds-home-trust__item"><span class="ds-home-trust__index">03</span><span><strong>tlačíme u nás</strong><small>od nápadu po hotový kus.</small></span></div>'+ 
+            '<div class="ds-home-trust__item"><span class="ds-home-trust__index">04</span><span><strong>doprava zdarma</strong><small>limit strážime priamo v košíku.</small></span></div>'+ 
           '</div>'+ 
         '</div>'+ 
-        '<div class="ds-home-trust">'+
-          '<div class="ds-home-trust__inner">'+
-            '<div class="ds-home-trust__item"><span class="ds-home-trust__index">01</span><span class="ds-home-trust__title">slovenská značka</span><span class="ds-home-trust__copy">navrhnuté doma. nosené všade.</span></div>'+ 
-            '<div class="ds-home-trust__item"><span class="ds-home-trust__index">02</span><span class="ds-home-trust__title">vlastné myšlienky</span><span class="ds-home-trust__copy">žiadne katalógové slogany.</span></div>'+ 
-            '<div class="ds-home-trust__item"><span class="ds-home-trust__index">03</span><span class="ds-home-trust__title">tlačíme u nás</span><span class="ds-home-trust__copy">od nápadu po hotový kus.</span></div>'+ 
-            '<div class="ds-home-trust__item"><span class="ds-home-trust__index">04</span><span class="ds-home-trust__title">doprava zdarma</span><span class="ds-home-trust__copy">keď košík trafí svoj limit.</span></div>'+ 
+        '<div class="ds-home-category-shell">'+
+          '<div class="ds-home-category-head">'+
+            '<div><span class="ds-home-kicker">RÝCHLY VÝBER</span><h2>nájdi si svoje.</h2></div>'+ 
+            '<p>Bez zbytočného hľadania. Vyber si kategóriu a ideš.</p>'+ 
           '</div>'+ 
+          '<div class="ds-home-category-grid">'+routes.map(cardHtml).join('')+'</div>'+ 
         '</div>'+ 
       '</section>';
   }
 
-  function setupGroupImages(routes,group,root,cache){
-    if(cache[group])return cache[group];
-    cache[group]=Promise.all(routes.map(async function(route,index){
+  async function hydrate(routes,root){
+    await Promise.all(routes.map(async function(route,index){
       var image=await fetchCategoryImage(route.href,index);
-      route.image=image;
-      if(image){
-        var thumb=$('[data-ds-route="'+group+'-'+index+'"] .ds-home-route__thumb',root);
-        if(thumb){
-          var img=document.createElement('img');
-          img.src=image;img.alt='';img.loading='lazy';img.decoding='async';thumb.appendChild(img);
-        }
-      }
-      return route;
-    }));
-    return cache[group];
-  }
-
-  function applyPreview(route,root){
-    if(!route)return;
-    var preview=$('.ds-home-preview',root);
-    var media=$('.ds-home-preview__media',root);
-    var title=$('.ds-home-preview__meta strong',root);
-    if(preview)preview.href=route.href||'#';
-    if(title)title.textContent=route.title||'';
-    if(media){
+      if(!image)return;
+      var media=$('[data-ds-category-card="'+index+'"] .ds-home-category-card__media',root);
+      if(!media)return;
       media.innerHTML='';
-      if(route.image){
-        var img=document.createElement('img');
-        img.src=route.image;img.alt='';img.decoding='async';media.appendChild(img);
-      }
-    }
-  }
-
-  function wire(root,groups){
-    var cache={};
-    var activeGroup='product';
-
-    function activate(group,index){
-      var routes=groups[group]||[];
-      if(!routes.length)return;
-      index=Math.max(0,Math.min(index,routes.length-1));
-      $$('[data-ds-group="'+group+'"] .ds-home-route',root).forEach(function(a,i){a.classList.toggle('is-active',i===index)});
-      setupGroupImages(routes,group,root,cache).then(function(){applyPreview(routes[index],root)});
-    }
-
-    $$('.ds-home-tabs button',root).forEach(function(button){
-      button.addEventListener('click',function(){
-        var group=button.getAttribute('data-ds-tab');
-        if(!groups[group]||!groups[group].length)return;
-        activeGroup=group;
-        $$('.ds-home-tabs button',root).forEach(function(b){
-          var on=b===button;b.classList.toggle('is-active',on);b.setAttribute('aria-selected',on?'true':'false');
-        });
-        $$('.ds-home-route-group',root).forEach(function(g){
-          var on=g.getAttribute('data-ds-group')===group;g.hidden=!on;g.classList.toggle('is-active',on);
-        });
-        activate(group,0);
-      });
-    });
-
-    $$('.ds-home-route',root).forEach(function(a){
-      function preview(){
-        var bits=(a.getAttribute('data-ds-route')||'').split('-');
-        var group=bits[0],index=parseInt(bits[1],10)||0;
-        if(group===activeGroup)activate(group,index);
-      }
-      a.addEventListener('mouseenter',preview);
-      a.addEventListener('focus',preview);
-    });
-
-    setupGroupImages(groups.product,'product',root,cache).then(function(){activate('product',0)});
+      var img=document.createElement('img');
+      img.src=image;
+      img.alt='';
+      img.loading=index<2?'eager':'lazy';
+      img.decoding='async';
+      img.onerror=function(){media.innerHTML='<i></i>'};
+      media.appendChild(img);
+    }));
   }
 
   function build(){
@@ -248,24 +172,20 @@
     if(!links.length)return false;
 
     var used={};
-    var products=PRODUCT_ROUTES.map(function(config){
+    var routes=CATEGORY_CONFIG.map(function(config){
       var hit=findRoute(config,links,used);
-      if(hit)used[hit.href]=1;
-      return hit?{title:config.title,href:hit.href}:null;
+      if(!hit)return null;
+      used[hit.href]=1;
+      return {title:config.title,href:hit.href};
     }).filter(Boolean);
 
-    if(!products.length)return false;
-    var texts=textRoutes();
-    if(!texts.length){
-      var fallback=links.find(function(x){return x.norm.indexOf('podla textu')>=0});
-      if(fallback)texts=[{title:'všetky texty',href:fallback.href}];
-    }
+    if(!routes.length)return false;
 
     var holder=document.createElement('div');
-    holder.innerHTML=markup(products,texts);
+    holder.innerHTML=markup(routes);
     var section=holder.firstElementChild;
     hero.insertAdjacentElement('afterend',section);
-    wire(section,{product:products,text:texts});
+    hydrate(routes,section);
     return true;
   }
 
