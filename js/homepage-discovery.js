@@ -1,11 +1,12 @@
 (function(){
   'use strict';
 
-  var TILE_CONFIG=[
+  var PRODUCT_ROUTES=[
     {title:'tričká',match:['tričká','tricka']},
     {title:'mikiny',match:['mikiny','mikina']},
-    {title:'podľa textu',match:['produkty podľa textu','podľa textu','podla textu']},
-    {title:'doplnky',match:['doplnky','doplnok']}
+    {title:'doplnky',match:['doplnky','doplnok']},
+    {title:'novinky',match:['novinky','nové','nove']},
+    {title:'limitky',match:['limitky','limitované','limitovane']}
   ];
 
   function $(s,r){return (r||document).querySelector(s)}
@@ -43,22 +44,19 @@
     return bestFromSrcset(img.getAttribute('data-srcset'))||bestFromSrcset(img.getAttribute('srcset'))||'';
   }
 
-  function getMenuLinks(){
+  function allMenuLinks(){
     var out=[];
     $$('#ds-site-header .ds-site-nav-link,#ds-site-header .ds-site-submenu-grid a[href]').forEach(function(a){
       if(!a.href)return;
       var text=clean(a.textContent);
-      if(!text)return;
-      out.push({text:text,href:a.href,norm:norm(text)});
+      if(text)out.push({text:text,href:a.href,norm:norm(text)});
     });
-
     if(!out.length){
       $$('#navigation a[href]').forEach(function(a){
         var text=clean(a.textContent);
         if(text)out.push({text:text,href:a.href,norm:norm(text)});
       });
     }
-
     var seen={};
     return out.filter(function(x){
       var key=x.href+'|'+x.norm;
@@ -68,7 +66,7 @@
     });
   }
 
-  function findLink(config,links,used){
+  function findRoute(config,links,used){
     for(var i=0;i<config.match.length;i++){
       var wanted=norm(config.match[i]);
       var exact=links.find(function(x){return !used[x.href]&&x.norm===wanted});
@@ -79,7 +77,25 @@
       var hit=links.find(function(x){return !used[x.href]&&x.norm.indexOf(partial)>=0});
       if(hit)return hit;
     }
-    return links.find(function(x){return !used[x.href]})||null;
+    return null;
+  }
+
+  function textRoutes(){
+    var navItems=$$('#ds-site-header .ds-site-nav-item');
+    for(var i=0;i<navItems.length;i++){
+      var link=$('.ds-site-nav-link',navItems[i]);
+      if(!link)continue;
+      var label=norm(link.textContent);
+      if(label.indexOf('produkty podla textu')<0&&label.indexOf('podla textu')<0)continue;
+      var subs=$$('.ds-site-submenu-grid a[href]',navItems[i]).map(function(a){
+        return {title:clean(a.textContent),href:a.href};
+      }).filter(function(x){return x.title&&x.href});
+      if(subs.length)return subs.slice(0,6);
+    }
+
+    var links=allMenuLinks();
+    var fallback=links.find(function(x){return x.norm.indexOf('podla textu')>=0});
+    return fallback?[{title:'všetky texty',href:fallback.href}]:[];
   }
 
   async function fetchCategoryImage(href,index){
@@ -93,39 +109,49 @@
       var img=preferred&&$('.image img,.product-image img,picture img,img',preferred);
       var src=imageFromNode(img);
       if(src)return src;
-
       var categoryImg=$('.category-header img,.category-perex img,.banner img',doc);
       return imageFromNode(categoryImg);
     }catch(_){return''}
   }
 
-  function tileHtml(tile,index){
-    return '<a class="ds-home-tile" href="'+esc(tile.href||'#')+'" data-ds-home-tile="'+index+'">'+
-      '<span class="ds-home-tile__media"></span>'+ 
-      '<span class="ds-home-tile__meta">0'+(index+1)+' / DISCOVER</span>'+ 
-      '<span class="ds-home-tile__copy">'+
-        '<span class="ds-home-tile__title">'+esc(tile.title)+'</span>'+ 
-        '<span class="ds-home-tile__arrow">→</span>'+ 
-      '</span>'+ 
+  function routeHtml(route,index,group){
+    return '<a class="ds-home-route'+(index===0?' is-active':'')+'" href="'+esc(route.href||'#')+'" data-ds-route="'+group+'-'+index+'" data-index="'+index+'">'+
+      '<span class="ds-home-route__index">0'+(index+1)+'</span>'+ 
+      '<span class="ds-home-route__title">'+esc(route.title)+'</span>'+ 
+      '<span class="ds-home-route__thumb"></span>'+ 
+      '<span class="ds-home-route__arrow">→</span>'+ 
     '</a>';
   }
 
-  function markup(tiles){
+  function groupHtml(routes,group,active){
+    return '<div class="ds-home-route-group'+(active?' is-active':'')+'" data-ds-group="'+group+'" '+(active?'':'hidden')+'>'+routes.map(function(r,i){return routeHtml(r,i,group)}).join('')+'</div>';
+  }
+
+  function markup(productRoutes,textRouteList){
     return ''+
       '<section id="ds-home-discovery" aria-label="Objaviť Dotyk Slov">'+
-        '<div class="ds-home-intro">'+
-          '<div>'+ 
-            '<span class="ds-home-kicker">DOTYK SLOV / NIE VŠETKO TREBA POVEDAŤ NAHLAS</span>'+ 
-            '<h2>veci, ktoré ostali v hlave.</h2>'+ 
+        '<div class="ds-home-discovery-shell">'+
+          '<div class="ds-home-discovery-copy">'+
+            '<span class="ds-home-kicker">DOTYK SLOV / NÁJDI SI SVOJE</span>'+ 
+            '<h2>nie podľa trendu.<br>podľa seba.</h2>'+ 
+            '<p>Dve cesty. Podľa toho, čo chceš nosiť — alebo čo chceš povedať bez slov.</p>'+ 
           '</div>'+ 
-          '<p>Vyber si, čo dnes povieš bez toho, aby si musel niečo vysvetľovať.</p>'+ 
-        '</div>'+ 
-        '<div class="ds-home-discovery-wrap">'+
-          '<div class="ds-home-discovery-head">'+
-            '<h3>vyber si náladu.</h3>'+ 
-            '<span>01—04</span>'+ 
+          '<div class="ds-home-navigator">'+
+            '<div class="ds-home-tabs" role="tablist" aria-label="Spôsob výberu">'+
+              '<button type="button" class="is-active" data-ds-tab="product" role="tab" aria-selected="true">podľa produktu</button>'+ 
+              '<button type="button" data-ds-tab="text" role="tab" aria-selected="false">podľa textu</button>'+ 
+            '</div>'+ 
+            '<div class="ds-home-navigator__body">'+
+              '<div class="ds-home-route-lists">'+
+                groupHtml(productRoutes,'product',true)+
+                groupHtml(textRouteList,'text',false)+
+              '</div>'+ 
+              '<a class="ds-home-preview" href="'+esc(productRoutes[0]&&productRoutes[0].href||'#')+'" aria-label="Otvoriť kategóriu">'+
+                '<span class="ds-home-preview__media"></span>'+ 
+                '<span class="ds-home-preview__meta"><span>DISCOVER</span><strong>'+esc(productRoutes[0]&&productRoutes[0].title||'')+'</strong><b>→</b></span>'+ 
+              '</a>'+ 
+            '</div>'+ 
           '</div>'+ 
-          '<div class="ds-home-discovery-grid">'+tiles.map(tileHtml).join('')+'</div>'+ 
         '</div>'+ 
         '<div class="ds-home-trust">'+
           '<div class="ds-home-trust__inner">'+
@@ -138,19 +164,77 @@
       '</section>';
   }
 
-  async function hydrateImages(tiles,root){
-    await Promise.all(tiles.map(async function(tile,index){
-      var image=await fetchCategoryImage(tile.href,index);
-      if(!image)return;
-      var media=$('[data-ds-home-tile="'+index+'"] .ds-home-tile__media',root);
-      if(!media)return;
-      var img=document.createElement('img');
-      img.src=image;
-      img.alt='';
-      img.loading=index<2?'eager':'lazy';
-      img.decoding='async';
-      media.appendChild(img);
+  function setupGroupImages(routes,group,root,cache){
+    if(cache[group])return cache[group];
+    cache[group]=Promise.all(routes.map(async function(route,index){
+      var image=await fetchCategoryImage(route.href,index);
+      route.image=image;
+      if(image){
+        var thumb=$('[data-ds-route="'+group+'-'+index+'"] .ds-home-route__thumb',root);
+        if(thumb){
+          var img=document.createElement('img');
+          img.src=image;img.alt='';img.loading='lazy';img.decoding='async';thumb.appendChild(img);
+        }
+      }
+      return route;
     }));
+    return cache[group];
+  }
+
+  function applyPreview(route,root){
+    if(!route)return;
+    var preview=$('.ds-home-preview',root);
+    var media=$('.ds-home-preview__media',root);
+    var title=$('.ds-home-preview__meta strong',root);
+    if(preview)preview.href=route.href||'#';
+    if(title)title.textContent=route.title||'';
+    if(media){
+      media.innerHTML='';
+      if(route.image){
+        var img=document.createElement('img');
+        img.src=route.image;img.alt='';img.decoding='async';media.appendChild(img);
+      }
+    }
+  }
+
+  function wire(root,groups){
+    var cache={};
+    var activeGroup='product';
+
+    function activate(group,index){
+      var routes=groups[group]||[];
+      if(!routes.length)return;
+      index=Math.max(0,Math.min(index,routes.length-1));
+      $$('[data-ds-group="'+group+'"] .ds-home-route',root).forEach(function(a,i){a.classList.toggle('is-active',i===index)});
+      setupGroupImages(routes,group,root,cache).then(function(){applyPreview(routes[index],root)});
+    }
+
+    $$('.ds-home-tabs button',root).forEach(function(button){
+      button.addEventListener('click',function(){
+        var group=button.getAttribute('data-ds-tab');
+        if(!groups[group]||!groups[group].length)return;
+        activeGroup=group;
+        $$('.ds-home-tabs button',root).forEach(function(b){
+          var on=b===button;b.classList.toggle('is-active',on);b.setAttribute('aria-selected',on?'true':'false');
+        });
+        $$('.ds-home-route-group',root).forEach(function(g){
+          var on=g.getAttribute('data-ds-group')===group;g.hidden=!on;g.classList.toggle('is-active',on);
+        });
+        activate(group,0);
+      });
+    });
+
+    $$('.ds-home-route',root).forEach(function(a){
+      function preview(){
+        var bits=(a.getAttribute('data-ds-route')||'').split('-');
+        var group=bits[0],index=parseInt(bits[1],10)||0;
+        if(group===activeGroup)activate(group,index);
+      }
+      a.addEventListener('mouseenter',preview);
+      a.addEventListener('focus',preview);
+    });
+
+    setupGroupImages(groups.product,'product',root,cache).then(function(){activate('product',0)});
   }
 
   function build(){
@@ -160,21 +244,28 @@
     var hero=$('#ds-fashion-hero')||$('.banners-row');
     if(!hero||!hero.parentNode)return false;
 
-    var links=getMenuLinks();
+    var links=allMenuLinks();
     if(!links.length)return false;
 
     var used={};
-    var tiles=TILE_CONFIG.map(function(config){
-      var link=findLink(config,links,used);
-      if(link)used[link.href]=1;
-      return {title:config.title,href:link?link.href:'#'};
-    });
+    var products=PRODUCT_ROUTES.map(function(config){
+      var hit=findRoute(config,links,used);
+      if(hit)used[hit.href]=1;
+      return hit?{title:config.title,href:hit.href}:null;
+    }).filter(Boolean);
+
+    if(!products.length)return false;
+    var texts=textRoutes();
+    if(!texts.length){
+      var fallback=links.find(function(x){return x.norm.indexOf('podla textu')>=0});
+      if(fallback)texts=[{title:'všetky texty',href:fallback.href}];
+    }
 
     var holder=document.createElement('div');
-    holder.innerHTML=markup(tiles);
+    holder.innerHTML=markup(products,texts);
     var section=holder.firstElementChild;
     hero.insertAdjacentElement('afterend',section);
-    hydrateImages(tiles,section);
+    wire(section,{product:products,text:texts});
     return true;
   }
 
