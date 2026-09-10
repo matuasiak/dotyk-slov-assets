@@ -1,23 +1,44 @@
 (function(){
   'use strict';
 
-  /* Temporary prototype layer: load AI model imagery as a real stylesheet.
-     This is intentionally injected after the page CSS so it wins over
-     Shoptet/category thumbnails. Remove when real campaign photos are ready. */
-  var AI_DEMO_CSS='https://matuasiak.github.io/dotyk-slov-assets/css/homepage-discovery-ai-demo.css?v=3';
-  function ensureAiDemoCss(){
-    var old=document.querySelector('link[data-ds-ai-demo]');
-    if(old){
-      if(old.href!==AI_DEMO_CSS)old.href=AI_DEMO_CSS;
-      return;
+  var AI_SPRITE='https://matuasiak.github.io/dotyk-slov-assets/images/ai-nav-sprite.svg?v=4';
+  var MODEL_IMAGES={
+    'Tričká':{
+      a:'0% 0%',b:'33.333% 0%',
+      fallbackA:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=82',
+      fallbackB:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=82'
+    },
+    'Mikiny':{
+      a:'66.667% 0%',b:'100% 0%',
+      fallbackA:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=82',
+      fallbackB:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=82'
+    },
+    'Cropy':{
+      a:'0% 100%',b:'33.333% 100%',
+      fallbackA:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=82',
+      fallbackB:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=82'
+    },
+    'Doplnky':{
+      a:'66.667% 100%',b:'100% 100%',
+      fallbackA:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=82',
+      fallbackB:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=82'
+    },
+    'Novinky':{
+      a:'33.333% 0%',b:'66.667% 100%',
+      fallbackA:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=82',
+      fallbackB:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=82'
+    },
+    'Limitky':{
+      a:'100% 0%',b:'0% 100%',
+      fallbackA:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=82',
+      fallbackB:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=82'
+    },
+    'Vlastný text':{
+      a:'66.667% 0%',b:'33.333% 100%',
+      fallbackA:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=82',
+      fallbackB:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=82'
     }
-    var link=document.createElement('link');
-    link.rel='stylesheet';
-    link.href=AI_DEMO_CSS;
-    link.setAttribute('data-ds-ai-demo','1');
-    document.head.appendChild(link);
-  }
-  ensureAiDemoCss();
+  };
 
   var ROUTES=[
     {title:'Tričká',match:['tričká','tricka'],imageA:'',imageB:''},
@@ -175,11 +196,31 @@
     target.appendChild(img);
   }
 
+  function applyModelBackground(slot,position,fallback){
+    if(!slot)return;
+    slot.innerHTML='';
+    slot.style.backgroundImage='url("'+AI_SPRITE+'"), url("'+fallback+'")';
+    slot.style.backgroundSize='400% 200%, cover';
+    slot.style.backgroundRepeat='no-repeat, no-repeat';
+    slot.style.backgroundPosition=position+', center';
+    slot.style.backgroundColor='var(--ds-surface-warm,#D8CEC2)';
+  }
+
   async function hydrate(route,index,root){
     var card=$('[data-ds-visual="'+index+'"]',root);
     if(!card)return;
     var slotA=$('.ds-visual-card__image--a',card);
     var slotB=$('.ds-visual-card__image--b',card);
+    var model=MODEL_IMAGES[route.title];
+
+    /* Prototype mode: never fetch old Shoptet imagery when a model treatment exists. */
+    if(model){
+      applyModelBackground(slotA,model.a,model.fallbackA);
+      applyModelBackground(slotB,model.b,model.fallbackB);
+      card.classList.add('has-hover-image','has-model-image');
+      return;
+    }
+
     var a=validImage(route.imageA),b=validImage(route.imageB);
     if(!a||!b){
       var fetched=await fetchCategoryImages(route.href);
