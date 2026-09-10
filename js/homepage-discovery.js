@@ -199,11 +199,11 @@
   function applyModelBackground(slot,position,fallback){
     if(!slot)return;
     slot.innerHTML='';
-    slot.style.backgroundImage='url("'+AI_SPRITE+'"), url("'+fallback+'")';
-    slot.style.backgroundSize='400% 200%, cover';
-    slot.style.backgroundRepeat='no-repeat, no-repeat';
-    slot.style.backgroundPosition=position+', center';
-    slot.style.backgroundColor='var(--ds-surface-warm,#D8CEC2)';
+    slot.style.setProperty('background-image','url("'+AI_SPRITE+'"), url("'+fallback+'")','important');
+    slot.style.setProperty('background-size','400% 200%, cover','important');
+    slot.style.setProperty('background-repeat','no-repeat, no-repeat','important');
+    slot.style.setProperty('background-position',position+', center','important');
+    slot.style.setProperty('background-color','var(--ds-surface-warm,#D8CEC2)','important');
   }
 
   async function hydrate(route,index,root){
