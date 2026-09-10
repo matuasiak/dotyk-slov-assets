@@ -4,9 +4,13 @@
   /* Temporary prototype layer: load AI model imagery as a real stylesheet.
      This is intentionally injected after the page CSS so it wins over
      Shoptet/category thumbnails. Remove when real campaign photos are ready. */
-  var AI_DEMO_CSS='https://matuasiak.github.io/dotyk-slov-assets/css/homepage-discovery-ai-demo.css?v=2';
+  var AI_DEMO_CSS='https://matuasiak.github.io/dotyk-slov-assets/css/homepage-discovery-ai-demo.css?v=3';
   function ensureAiDemoCss(){
-    if(document.querySelector('link[data-ds-ai-demo]'))return;
+    var old=document.querySelector('link[data-ds-ai-demo]');
+    if(old){
+      if(old.href!==AI_DEMO_CSS)old.href=AI_DEMO_CSS;
+      return;
+    }
     var link=document.createElement('link');
     link.rel='stylesheet';
     link.href=AI_DEMO_CSS;
