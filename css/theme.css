@@ -1,49 +1,62 @@
-/* DOTYK SLOV — central theme v2 / WARM MINERAL
+/* DOTYK SLOV — central theme v3 / STELLA EARTH
    Load this file LAST.
    Single source of truth for all custom brand colours. */
 
 :root{
-  /* Core palette — warm stone / taupe / espresso / dusty blush */
-  --ds-color-canvas:#E8E1D8;       /* warm mineral stone */
-  --ds-color-surface:#F4F0E9;      /* bone / soft off-white */
-  --ds-color-surface-2:#CFC5B9;    /* taupe stone */
+  /* Main brand palette */
+  --ds-color-text:#28231F;
+  --ds-color-background:#ECE5DB;
+  --ds-color-primary:#4A3E37;
+  --ds-color-secondary:#B7A99B;
+  --ds-color-accent:#D6B4BB;
 
-  --ds-color-ink:#272320;          /* warm ink */
-  --ds-color-ink-rgb:39,35,32;
+  /* Extended surfaces */
+  --ds-color-surface:#F5F1EA;
+  --ds-color-surface-2:#D8CEC2;
+  --ds-color-deep:#332B27;
+  --ds-color-primary-soft:#5B4C44;
+  --ds-color-clay:#8F7466;
+  --ds-color-pebble:#AAA8A3;
 
-  --ds-color-dark:#302A27;         /* espresso charcoal */
-  --ds-color-dark-rgb:48,42,39;
-  --ds-color-dark-soft:#403834;    /* soft brown charcoal */
-  --ds-color-dark-soft-rgb:64,56,52;
+  /* RGB helpers */
+  --ds-color-text-rgb:40,35,31;
+  --ds-color-primary-rgb:74,62,55;
+  --ds-color-deep-rgb:51,43,39;
 
-  --ds-color-taupe:#9B8374;        /* clay / taupe accent */
-  --ds-color-taupe-deep:#6D5B52;   /* deeper earthy beat */
-  --ds-color-pebble:#B7B2AA;       /* muted mineral grey */
-  --ds-color-blush:#D8B7BE;        /* dusty pink */
+  /* Semantic aliases */
+  --ds-color-canvas:var(--ds-color-background);
+  --ds-color-ink:var(--ds-color-text);
+  --ds-color-ink-rgb:var(--ds-color-text-rgb);
+  --ds-color-dark:var(--ds-color-primary);
+  --ds-color-dark-rgb:var(--ds-color-primary-rgb);
+  --ds-color-dark-soft:var(--ds-color-primary-soft);
+  --ds-color-dark-soft-rgb:91,76,68;
+  --ds-color-taupe:var(--ds-color-secondary);
+  --ds-color-taupe-deep:var(--ds-color-primary-soft);
+  --ds-color-blush:var(--ds-color-accent);
 
-  /* Backward-compatible aliases so old components never break */
-  --ds-color-mocha:var(--ds-color-taupe);
-  --ds-color-moss:var(--ds-color-taupe);
-  --ds-color-moss-deep:var(--ds-color-taupe-deep);
+  /* Backward compatibility for existing components */
+  --ds-color-mocha:var(--ds-color-primary);
+  --ds-color-moss:var(--ds-color-secondary);
+  --ds-color-moss-deep:var(--ds-color-primary-soft);
 
-  /* Semantic colours */
-  --ds-color-on-dark:#F5F0E8;
-  --ds-color-on-dark-muted:rgba(245,240,232,.62);
-  --ds-color-on-dark-faint:rgba(245,240,232,.40);
-  --ds-color-line-dark:rgba(245,240,232,.14);
-  --ds-color-line-dark-soft:rgba(245,240,232,.09);
+  /* Contrast system */
+  --ds-color-on-dark:#F6F0E8;
+  --ds-color-on-dark-muted:rgba(246,240,232,.64);
+  --ds-color-on-dark-faint:rgba(246,240,232,.40);
+  --ds-color-line-dark:rgba(246,240,232,.14);
+  --ds-color-line-dark-soft:rgba(246,240,232,.09);
 
-  --ds-color-on-light:var(--ds-color-ink);
-  --ds-color-on-light-muted:rgba(39,35,32,.58);
-  --ds-color-on-light-faint:rgba(39,35,32,.38);
-  --ds-color-line-light:rgba(39,35,32,.13);
+  --ds-color-on-light:var(--ds-color-text);
+  --ds-color-on-light-muted:rgba(40,35,31,.60);
+  --ds-color-on-light-faint:rgba(40,35,31,.40);
+  --ds-color-line-light:rgba(40,35,31,.13);
 
-  --ds-color-accent:var(--ds-color-blush);
-  --ds-color-overlay:rgba(31,25,22,.66);
+  --ds-color-overlay:rgba(40,35,31,.64);
 
-  /* Compatibility aliases used by existing component CSS */
-  --ds-black:var(--ds-color-dark);
-  --ds-black-2:var(--ds-color-dark-soft);
+  /* Legacy aliases */
+  --ds-black:var(--ds-color-primary);
+  --ds-black-2:var(--ds-color-primary-soft);
   --ds-white:var(--ds-color-on-dark);
   --ds-muted:var(--ds-color-on-dark-muted);
   --ds-line:var(--ds-color-line-dark);
@@ -52,50 +65,50 @@
 
 /* ---------- Global canvas ---------- */
 html,body{
-  background:var(--ds-color-canvas);
-  color:var(--ds-color-ink);
+  background:var(--ds-color-background);
+  color:var(--ds-color-text);
 }
 body.in-index .overall-wrapper{
-  background:var(--ds-color-canvas);
+  background:var(--ds-color-background);
 }
 
 /* ---------- Header ---------- */
 #ds-site-header{
-  background:var(--ds-color-dark)!important;
+  background:var(--ds-color-primary)!important;
   color:var(--ds-color-on-dark)!important;
-  box-shadow:0 -48px 0 var(--ds-color-dark)!important;
+  box-shadow:0 -48px 0 var(--ds-color-primary)!important;
 }
 body.in-index #ds-site-header{background:transparent!important}
 body.in-index #ds-site-header.is-stuck,
 body:not(.in-index) #ds-site-header.is-stuck{
-  background:rgba(var(--ds-color-dark-rgb),.985)!important;
+  background:rgba(var(--ds-color-primary-rgb),.985)!important;
   border-bottom-color:var(--ds-color-line-dark)!important;
 }
-body:not(.in-index) #ds-site-header{background:var(--ds-color-dark)!important}
-.ds-site-announcement{background:var(--ds-color-dark)!important;color:var(--ds-color-on-dark)!important}
-.ds-site-submenu{background:rgba(var(--ds-color-dark-rgb),.995)!important;border-color:var(--ds-color-line-dark-soft)!important}
+body:not(.in-index) #ds-site-header{background:var(--ds-color-primary)!important}
+.ds-site-announcement{background:var(--ds-color-deep)!important;color:var(--ds-color-on-dark)!important}
+.ds-site-submenu{background:rgba(var(--ds-color-primary-rgb),.995)!important;border-color:var(--ds-color-line-dark-soft)!important}
 .ds-site-logo,.ds-site-nav-link,.ds-site-tools button,.ds-site-tools a{color:var(--ds-color-on-dark)!important}
-.ds-site-cart b{background:var(--ds-color-accent)!important;color:var(--ds-color-ink)!important}
+.ds-site-cart b{background:var(--ds-color-accent)!important;color:var(--ds-color-text)!important}
 
 /* ---------- Hero ---------- */
 #ds-fashion-hero{
-  background:var(--ds-color-dark)!important;
+  background:var(--ds-color-primary)!important;
   color:var(--ds-color-on-dark)!important;
 }
 #ds-fashion-hero .swiper-slide{
-  --slide-bg:var(--ds-color-dark)!important;
-  background:var(--ds-color-dark)!important;
+  --slide-bg:var(--ds-color-primary)!important;
+  background:var(--ds-color-primary)!important;
 }
-.ds-fs-bgword-back{color:rgba(245,240,232,.90)!important}
-.ds-fs-bgword-front{-webkit-text-stroke-color:rgba(245,240,232,.27)!important}
+.ds-fs-bgword-back{color:rgba(246,240,232,.90)!important}
+.ds-fs-bgword-front{-webkit-text-stroke-color:rgba(246,240,232,.27)!important}
 .ds-fs-copy h2,.ds-fs-cta,.ds-fs-button{color:var(--ds-color-on-dark)!important}
 .ds-fs-kicker,.ds-fs-copy p,.ds-fs-side,.ds-fs-fraction,.ds-fs-index{color:var(--ds-color-on-dark-muted)!important}
-.ds-fs-cta{border-color:rgba(245,240,232,.54)!important}
-.ds-fs-cta:hover{background:var(--ds-color-surface)!important;color:var(--ds-color-ink)!important}
+.ds-fs-cta{border-color:rgba(246,240,232,.54)!important}
+.ds-fs-cta:hover{background:var(--ds-color-surface)!important;color:var(--ds-color-text)!important}
 
 /* ---------- Search ---------- */
 #ds-basic-search{
-  background:var(--ds-color-dark)!important;
+  background:var(--ds-color-primary)!important;
   color:var(--ds-color-on-dark)!important;
   border-color:var(--ds-color-line-dark)!important;
 }
@@ -114,74 +127,75 @@ body:not(.in-index) #ds-site-header{background:var(--ds-color-dark)!important}
 #ds-basic-search .ds-basic-search__input,
 #ds-basic-search .ds-basic-search__input:focus,
 #ds-basic-search .ds-basic-search__input:focus-visible,
-#ds-basic-search .ds-basic-search__input:active{border-bottom-color:rgba(245,240,232,.32)!important}
-.ds-basic-search__input::placeholder{color:rgba(245,240,232,.34)!important}
-.ds-basic-search__submit{border-color:rgba(245,240,232,.22)!important}
+#ds-basic-search .ds-basic-search__input:active{border-bottom-color:rgba(246,240,232,.32)!important}
+.ds-basic-search__input::placeholder{color:rgba(246,240,232,.34)!important}
+.ds-basic-search__submit{border-color:rgba(246,240,232,.22)!important}
 .ds-basic-search__extras,.ds-basic-search__live,.ds-basic-search__featured,.ds-basic-search__group + .ds-basic-search__group{border-color:var(--ds-color-line-dark-soft)!important}
-.ds-basic-search__chip{border-color:rgba(245,240,232,.18)!important;color:rgba(245,240,232,.82)!important}
-.ds-basic-search__chip:hover{background:var(--ds-color-surface)!important;color:var(--ds-color-ink)!important;border-color:var(--ds-color-surface)!important}
-.ds-basic-search__featured-tag{background:var(--ds-color-accent)!important;color:var(--ds-color-ink)!important}
-.ds-basic-search__featured-media,.ds-basic-search__result-media{background:var(--ds-color-dark-soft)!important}
+.ds-basic-search__chip{border-color:rgba(246,240,232,.18)!important;color:rgba(246,240,232,.82)!important}
+.ds-basic-search__chip:hover{background:var(--ds-color-surface)!important;color:var(--ds-color-text)!important;border-color:var(--ds-color-surface)!important}
+.ds-basic-search__featured-tag{background:var(--ds-color-accent)!important;color:var(--ds-color-text)!important}
+.ds-basic-search__featured-media,.ds-basic-search__result-media{background:var(--ds-color-primary-soft)!important}
 .ds-basic-search__featured-price,.ds-basic-search__result-price,.ds-basic-search__state,.ds-basic-search__all{color:var(--ds-color-on-dark-muted)!important}
 
 /* ---------- Cart drawer ---------- */
 #ds-cart-drawer,.ds-cart-footer{
-  background:var(--ds-color-dark)!important;
+  background:var(--ds-color-primary)!important;
   color:var(--ds-color-on-dark)!important;
 }
 #ds-cart-backdrop{background:var(--ds-color-overlay)!important}
 .ds-cart-head,.ds-cart-item,.ds-cart-footer,.ds-cart-delivery{border-color:var(--ds-color-line-dark-soft)!important}
-.ds-cart-head__count{background:var(--ds-color-accent)!important;color:var(--ds-color-ink)!important}
+.ds-cart-head__count{background:var(--ds-color-accent)!important;color:var(--ds-color-text)!important}
 .ds-cart-close,.ds-cart-item,.ds-cart-item__name,.ds-cart-item__price,.ds-cart-qty button,.ds-cart-qty span{color:var(--ds-color-on-dark)!important}
 .ds-cart-item__variant,.ds-cart-state,.ds-cart-empty__copy,.ds-cart-remove,.ds-cart-delivery__label,.ds-cart-summary span,.ds-cart-checkout-note{color:var(--ds-color-on-dark-muted)!important}
-.ds-cart-item__media{background:var(--ds-color-dark-soft)!important}
-.ds-cart-qty{border-color:rgba(245,240,232,.18)!important}
-.ds-cart-upsell{background:var(--ds-color-dark-soft)!important;border-color:var(--ds-color-line-dark)!important}
+.ds-cart-item__media{background:var(--ds-color-primary-soft)!important}
+.ds-cart-qty{border-color:rgba(246,240,232,.18)!important}
+.ds-cart-upsell{background:var(--ds-color-primary-soft)!important;border-color:var(--ds-color-line-dark)!important}
 .ds-cart-upsell__eyebrow{color:var(--ds-color-accent)!important}
 .ds-cart-upsell__name,.ds-cart-upsell__action{color:var(--ds-color-on-dark)!important}
 .ds-cart-shipping{
-  background:var(--ds-color-dark-soft)!important;
-  border-color:rgba(216,183,190,.42)!important;
+  background:var(--ds-color-primary-soft)!important;
+  border-color:rgba(214,180,187,.42)!important;
 }
 .ds-cart-shipping__eyebrow i,.ds-cart-shipping__track i{background:var(--ds-color-accent)!important}
 .ds-cart-shipping__row span{color:var(--ds-color-on-dark)!important}
 .ds-cart-shipping__row strong{color:var(--ds-color-accent)!important}
-.ds-cart-cta{background:var(--ds-color-surface)!important;border-color:var(--ds-color-surface)!important;color:var(--ds-color-ink)!important}
+.ds-cart-cta{background:var(--ds-color-surface)!important;border-color:var(--ds-color-surface)!important;color:var(--ds-color-text)!important}
 
 /* ---------- Homepage discovery ---------- */
 #ds-home-discovery{
-  background:var(--ds-color-canvas)!important;
-  color:var(--ds-color-on-light)!important;
+  background:var(--ds-color-background)!important;
+  color:var(--ds-color-text)!important;
   border-top-color:var(--ds-color-line-light)!important;
 }
-.ds-home-kicker{color:var(--ds-color-taupe-deep)!important}
-.ds-home-intro h2,.ds-home-discovery-head h3{color:var(--ds-color-on-light)!important}
+.ds-home-kicker{color:var(--ds-color-clay)!important}
+.ds-home-intro h2,.ds-home-discovery-head h3{color:var(--ds-color-text)!important}
 .ds-home-intro p{color:var(--ds-color-on-light-muted)!important}
 .ds-home-discovery-head span{color:var(--ds-color-on-light-faint)!important}
 .ds-home-tile,.ds-home-tile__media{background:var(--ds-color-surface-2)!important}
 .ds-home-tile::after{
-  background:linear-gradient(180deg,rgba(var(--ds-color-ink-rgb),.04) 18%,rgba(var(--ds-color-ink-rgb),.54) 100%)!important;
+  background:linear-gradient(180deg,rgba(var(--ds-color-text-rgb),.03) 18%,rgba(var(--ds-color-text-rgb),.50) 100%)!important;
 }
 .ds-home-tile__title,.ds-home-tile__arrow{color:var(--ds-color-on-dark)!important}
-.ds-home-tile__meta{color:rgba(245,240,232,.54)!important}
-.ds-home-tile__arrow{border-color:rgba(245,240,232,.44)!important}
-.ds-home-tile:hover .ds-home-tile__arrow{background:var(--ds-color-surface)!important;color:var(--ds-color-ink)!important;border-color:var(--ds-color-surface)!important}
+.ds-home-tile__meta{color:rgba(246,240,232,.56)!important}
+.ds-home-tile__arrow{border-color:rgba(246,240,232,.44)!important}
+.ds-home-tile:hover .ds-home-tile__arrow{background:var(--ds-color-surface)!important;color:var(--ds-color-text)!important;border-color:var(--ds-color-surface)!important}
 
-/* Trust strip = warm taupe, not olive and not black. */
+/* Trust strip = secondary taupe beat, lighter than header/hero. */
 .ds-home-trust{
-  background:var(--ds-color-taupe-deep)!important;
-  color:var(--ds-color-on-dark)!important;
-  border-top-color:rgba(245,240,232,.12)!important;
+  background:var(--ds-color-secondary)!important;
+  color:var(--ds-color-text)!important;
+  border-top-color:rgba(var(--ds-color-text-rgb),.10)!important;
 }
-.ds-home-trust__item{border-color:rgba(245,240,232,.12)!important}
-.ds-home-trust__index{color:var(--ds-color-accent)!important}
-.ds-home-trust__title{color:var(--ds-color-on-dark)!important}
-.ds-home-trust__copy{color:var(--ds-color-on-dark-muted)!important}
+.ds-home-trust__item{border-color:rgba(var(--ds-color-text-rgb),.11)!important}
+.ds-home-trust__index{color:var(--ds-color-primary)!important}
+.ds-home-trust__title{color:var(--ds-color-text)!important}
+.ds-home-trust__copy{color:rgba(var(--ds-color-text-rgb),.58)!important}
 
-/* Utility / future aliases */
-.ds-bg-canvas{background:var(--ds-color-canvas)!important}
+/* ---------- Utilities / future modules ---------- */
+.ds-bg-canvas{background:var(--ds-color-background)!important}
 .ds-bg-surface{background:var(--ds-color-surface)!important}
-.ds-bg-dark{background:var(--ds-color-dark)!important;color:var(--ds-color-on-dark)!important}
-.ds-bg-taupe{background:var(--ds-color-taupe)!important;color:var(--ds-color-on-dark)!important}
-.ds-bg-moss{background:var(--ds-color-taupe)!important;color:var(--ds-color-on-dark)!important}
+.ds-bg-primary{background:var(--ds-color-primary)!important;color:var(--ds-color-on-dark)!important}
+.ds-bg-secondary{background:var(--ds-color-secondary)!important;color:var(--ds-color-text)!important}
+.ds-bg-dark{background:var(--ds-color-primary)!important;color:var(--ds-color-on-dark)!important}
+.ds-bg-taupe,.ds-bg-moss{background:var(--ds-color-secondary)!important;color:var(--ds-color-text)!important}
 .ds-text-accent{color:var(--ds-color-accent)!important}
