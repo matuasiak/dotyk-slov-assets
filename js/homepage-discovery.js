@@ -1,20 +1,53 @@
 (function(){
   'use strict';
 
-  var ROUTES=[
-    {title:'Tričká',match:['tričká','tricka'],meta:'oversize / regular',copy:'to, čo povieš bez toho, aby si niečo hovoril.'},
-    {title:'Cropy',match:['cropy','crop'],meta:'short fit',copy:'kratšie. stále dosť výrečné.'},
-    {title:'Mikiny',match:['mikiny','mikina'],meta:'hoodies',copy:'na dni, keď chceš zmiznúť trochu viac.'},
-    {title:'Doplnky',match:['doplnky','doplnok'],meta:'small things',copy:'malé veci. veľa povedia.'},
-    {title:'Novinky',match:['novinky','nové','nove'],meta:'fresh',copy:'čerstvo vonku. kým to ešte nie je všade.'},
-    {title:'Limitky',match:['limitky','limitované','limitovane'],meta:'limited',copy:'keď nechceš mať to isté ako všetci.'}
+  var MAIN_ROUTES=[
+    {title:'Tričká',match:['tričká','tricka'],meta:'oversize / regular',imageA:'',imageB:''},
+    {title:'Mikiny',match:['mikiny','mikina'],meta:'hoodies',imageA:'',imageB:''},
+    {title:'Cropy',match:['cropy','crop'],meta:'short fit',imageA:'',imageB:''},
+    {title:'Doplnky',match:['doplnky','doplnok'],meta:'small things',imageA:'',imageB:''}
+  ];
+
+  var SECONDARY_ROUTES=[
+    {title:'Novinky',match:['novinky','nové','nove']},
+    {title:'Limitky',match:['limitky','limitované','limitovane']},
+    {title:'Vlastný text',match:['vlastný text','vlastny text','produkty podľa textu','produkty podla textu','podľa textu','podla textu']}
   ];
 
   function $(s,r){return (r||document).querySelector(s)}
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
   function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function norm(v){return clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
-  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]})}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function absUrl(v){if(!v)return'';try{return new URL(v,location.origin).href}catch(_){return v}}
+
+  function validImage(v){
+    if(!v)return'';
+    v=clean(v);
+    if(!v||/^data:/i.test(v)||/^blob:/i.test(v)||/transparent|placeholder|spacer/i.test(v))return'';
+    return absUrl(v);
+  }
+
+  function bestFromSrcset(v){
+    if(!v)return'';
+    var parts=v.split(',').map(function(x){
+      var bits=clean(x).split(/\s+/);
+      return {url:bits[0]||'',score:parseFloat(bits[1])||0};
+    }).filter(function(x){return validImage(x.url)});
+    if(!parts.length)return'';
+    parts.sort(function(a,b){return b.score-a.score});
+    return validImage(parts[0].url);
+  }
+
+  function imageFromNode(img){
+    if(!img)return'';
+    var attrs=['data-src','data-lazy-src','data-original','data-lazy','src'];
+    for(var i=0;i<attrs.length;i++){
+      var v=validImage(img.getAttribute(attrs[i]));
+      if(v)return v;
+    }
+    return bestFromSrcset(img.getAttribute('data-srcset'))||bestFromSrcset(img.getAttribute('srcset'))||'';
+  }
 
   function allMenuLinks(){
     var out=[];
@@ -52,9 +85,7 @@
   }
 
   function getShoptetValue(key){
-    try{
-      if(typeof window.getShoptetDataLayer==='function')return window.getShoptetDataLayer(key);
-    }catch(_){}
+    try{if(typeof window.getShoptetDataLayer==='function')return window.getShoptetDataLayer(key)}catch(_){}
     try{
       var layers=window.dataLayer||[];
       for(var i=layers.length-1;i>=0;i--){
@@ -84,27 +115,73 @@
     '</div>';
   }
 
-  function railCard(route,index){
-    return '<a class="ds-rail-card" href="'+esc(route.href)+'" data-ds-rail="'+index+'">'+
-      '<span class="ds-rail-card__index">0'+(index+1)+'</span>'+ 
-      '<span class="ds-rail-card__meta">'+esc(route.meta)+'</span>'+ 
-      '<span class="ds-rail-card__title">'+esc(route.title)+'</span>'+ 
-      '<span class="ds-rail-card__copy">'+esc(route.copy)+'</span>'+ 
-      '<span class="ds-rail-card__arrow">→</span>'+ 
+  async function fetchCategoryImages(href){
+    if(!href)return[];
+    try{
+      var response=await fetch(href,{credentials:'same-origin',cache:'force-cache'});
+      if(!response.ok)return[];
+      var doc=new DOMParser().parseFromString(await response.text(),'text/html');
+      var candidates=[];
+
+      $$('.category-header img,.category-perex img,.banner img,.products-block .product img,.products .product img,.product-item img,[data-micro-product-id] img',doc).forEach(function(img){
+        var src=imageFromNode(img);
+        if(src&&candidates.indexOf(src)<0)candidates.push(src);
+      });
+      return candidates.slice(0,2);
+    }catch(_){return[]}
+  }
+
+  function mainCard(route,index){
+    return '<a class="ds-editorial-card" href="'+esc(route.href)+'" data-ds-editorial="'+index+'">'+
+      '<span class="ds-editorial-card__media">'+
+        '<span class="ds-editorial-card__image ds-editorial-card__image--a"></span>'+ 
+        '<span class="ds-editorial-card__image ds-editorial-card__image--b"></span>'+ 
+      '</span>'+ 
+      '<span class="ds-editorial-card__shade"></span>'+ 
+      '<span class="ds-editorial-card__top"><span>0'+(index+1)+'</span><span>'+esc(route.meta)+'</span></span>'+ 
+      '<span class="ds-editorial-card__bottom"><strong>'+esc(route.title)+'</strong><b>→</b></span>'+ 
     '</a>';
   }
 
-  function markup(routes){
+  function secondaryLink(route){
+    return '<a class="ds-home-secondary-link" href="'+esc(route.href)+'"><span>'+esc(route.title)+'</span><b>→</b></a>';
+  }
+
+  function markup(main,secondary){
     return '<section id="ds-home-discovery" aria-label="Rýchla navigácia">'+
       trustMarkup()+
-      '<div class="ds-home-rail-wrap">'+
-        '<div class="ds-home-rail-head">'+
-          '<div><span class="ds-home-kicker">RÝCHLO TAM, KAM CHCEŠ</span><h2>vyber si svoje.</h2></div>'+ 
-          '<p>Bez podmenu. Bez zbytočného scrollovania.</p>'+ 
+      '<div class="ds-home-editorial">'+
+        '<div class="ds-home-editorial__head">'+
+          '<div><span class="ds-home-kicker">NÁJDI SI SVOJE</span><h2>obleč si náladu.</h2></div>'+ 
+          '<p>Štyri rýchle cesty. Zvyšok už je medzi tebou a skriňou.</p>'+ 
         '</div>'+ 
-        '<div class="ds-home-rail" role="navigation" aria-label="Kategórie">'+routes.map(railCard).join('')+'</div>'+ 
+        '<div class="ds-home-editorial__cards" role="navigation" aria-label="Hlavné kategórie">'+main.map(mainCard).join('')+'</div>'+ 
+        (secondary.length?'<div class="ds-home-secondary" aria-label="Ďalšie kategórie">'+secondary.map(secondaryLink).join('')+'</div>':'')+
       '</div>'+ 
     '</section>';
+  }
+
+  function addImage(target,src,alt){
+    if(!target||!src)return;
+    var img=document.createElement('img');
+    img.src=src;img.alt=alt||'';img.loading='lazy';img.decoding='async';
+    target.appendChild(img);
+  }
+
+  async function hydrate(route,index,root){
+    var card=$('[data-ds-editorial="'+index+'"]',root);
+    if(!card)return;
+    var slotA=$('.ds-editorial-card__image--a',card);
+    var slotB=$('.ds-editorial-card__image--b',card);
+    var a=validImage(route.imageA),b=validImage(route.imageB);
+    if(!a||!b){
+      var fetched=await fetchCategoryImages(route.href);
+      if(!a)a=fetched[0]||'';
+      if(!b)b=fetched[1]||fetched[0]||'';
+    }
+    addImage(slotA,a,route.title);
+    addImage(slotB,b,route.title);
+    if(b&&b!==a)card.classList.add('has-hover-image');
   }
 
   function build(){
@@ -115,20 +192,30 @@
 
     var links=allMenuLinks();
     if(!links.length)return false;
-
     var used={};
-    var routes=[];
-    ROUTES.forEach(function(config){
+
+    var main=[];
+    MAIN_ROUTES.forEach(function(config){
       var hit=findRoute(config,links,used);
       if(!hit)return;
       used[hit.href]=1;
-      routes.push({title:config.title,href:hit.href,meta:config.meta,copy:config.copy});
+      main.push({title:config.title,href:hit.href,meta:config.meta,imageA:config.imageA,imageB:config.imageB});
     });
-    if(!routes.length)return false;
+    if(!main.length)return false;
+
+    var secondary=[];
+    SECONDARY_ROUTES.forEach(function(config){
+      var hit=findRoute(config,links,used);
+      if(!hit)return;
+      used[hit.href]=1;
+      secondary.push({title:config.title,href:hit.href});
+    });
 
     var holder=document.createElement('div');
-    holder.innerHTML=markup(routes);
-    hero.insertAdjacentElement('afterend',holder.firstElementChild);
+    holder.innerHTML=markup(main,secondary);
+    var section=holder.firstElementChild;
+    hero.insertAdjacentElement('afterend',section);
+    main.forEach(function(route,index){hydrate(route,index,section)});
     return true;
   }
 
