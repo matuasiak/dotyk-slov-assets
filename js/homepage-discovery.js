@@ -1,17 +1,14 @@
 (function(){
   'use strict';
 
-  var MAIN_ROUTES=[
-    {title:'Tričká',match:['tričká','tricka'],meta:'oversize / regular',imageA:'',imageB:''},
-    {title:'Mikiny',match:['mikiny','mikina'],meta:'hoodies',imageA:'',imageB:''},
-    {title:'Cropy',match:['cropy','crop'],meta:'short fit',imageA:'',imageB:''},
-    {title:'Doplnky',match:['doplnky','doplnok'],meta:'small things',imageA:'',imageB:''}
-  ];
-
-  var SECONDARY_ROUTES=[
-    {title:'Novinky',match:['novinky','nové','nove']},
-    {title:'Limitky',match:['limitky','limitované','limitovane']},
-    {title:'Vlastný text',match:['vlastný text','vlastny text','produkty podľa textu','produkty podla textu','podľa textu','podla textu']}
+  var ROUTES=[
+    {title:'Tričká',match:['tričká','tricka'],imageA:'',imageB:''},
+    {title:'Mikiny',match:['mikiny','mikina'],imageA:'',imageB:''},
+    {title:'Cropy',match:['cropy','crop'],imageA:'',imageB:''},
+    {title:'Doplnky',match:['doplnky','doplnok'],imageA:'',imageB:''},
+    {title:'Novinky',match:['novinky','nové','nove'],imageA:'',imageB:''},
+    {title:'Limitky',match:['limitky','limitované','limitovane'],imageA:'',imageB:''},
+    {title:'Vlastný text',match:['vlastný text','vlastny text','produkty podľa textu','produkty podla textu','podľa textu','podla textu'],imageA:'',imageB:''}
   ];
 
   function $(s,r){return (r||document).querySelector(s)}
@@ -122,7 +119,6 @@
       if(!response.ok)return[];
       var doc=new DOMParser().parseFromString(await response.text(),'text/html');
       var candidates=[];
-
       $$('.category-header img,.category-perex img,.banner img,.products-block .product img,.products .product img,.product-item img,[data-micro-product-id] img',doc).forEach(function(img){
         var src=imageFromNode(img);
         if(src&&candidates.indexOf(src)<0)candidates.push(src);
@@ -131,32 +127,22 @@
     }catch(_){return[]}
   }
 
-  function mainCard(route,index){
-    return '<a class="ds-editorial-card" href="'+esc(route.href)+'" data-ds-editorial="'+index+'">'+
-      '<span class="ds-editorial-card__media">'+
-        '<span class="ds-editorial-card__image ds-editorial-card__image--a"></span>'+ 
-        '<span class="ds-editorial-card__image ds-editorial-card__image--b"></span>'+ 
+  function cardMarkup(route,index){
+    return '<a class="ds-visual-card" href="'+esc(route.href)+'" data-ds-visual="'+index+'" aria-label="'+esc(route.title)+'">'+
+      '<span class="ds-visual-card__media">'+
+        '<span class="ds-visual-card__image ds-visual-card__image--a"></span>'+ 
+        '<span class="ds-visual-card__image ds-visual-card__image--b"></span>'+ 
       '</span>'+ 
-      '<span class="ds-editorial-card__shade"></span>'+ 
-      '<span class="ds-editorial-card__top"><span>0'+(index+1)+'</span><span>'+esc(route.meta)+'</span></span>'+ 
-      '<span class="ds-editorial-card__bottom"><strong>'+esc(route.title)+'</strong><b>→</b></span>'+ 
+      '<span class="ds-visual-card__shade"></span>'+ 
+      '<span class="ds-visual-card__label"><strong>'+esc(route.title)+'</strong><span class="ds-visual-card__arrow">→</span></span>'+ 
     '</a>';
   }
 
-  function secondaryLink(route){
-    return '<a class="ds-home-secondary-link" href="'+esc(route.href)+'"><span>'+esc(route.title)+'</span><b>→</b></a>';
-  }
-
-  function markup(main,secondary){
+  function markup(routes){
     return '<section id="ds-home-discovery" aria-label="Rýchla navigácia">'+
       trustMarkup()+
-      '<div class="ds-home-editorial">'+
-        '<div class="ds-home-editorial__head">'+
-          '<div><span class="ds-home-kicker">NÁJDI SI SVOJE</span><h2>obleč si náladu.</h2></div>'+ 
-          '<p>Štyri rýchle cesty. Zvyšok už je medzi tebou a skriňou.</p>'+ 
-        '</div>'+ 
-        '<div class="ds-home-editorial__cards" role="navigation" aria-label="Hlavné kategórie">'+main.map(mainCard).join('')+'</div>'+ 
-        (secondary.length?'<div class="ds-home-secondary" aria-label="Ďalšie kategórie">'+secondary.map(secondaryLink).join('')+'</div>':'')+
+      '<div class="ds-home-visualnav">'+
+        '<div class="ds-home-visualnav__track" role="navigation" aria-label="Kategórie">'+routes.map(cardMarkup).join('')+'</div>'+ 
       '</div>'+ 
     '</section>';
   }
@@ -164,15 +150,18 @@
   function addImage(target,src,alt){
     if(!target||!src)return;
     var img=document.createElement('img');
-    img.src=src;img.alt=alt||'';img.loading='lazy';img.decoding='async';
+    img.src=src;
+    img.alt=alt||'';
+    img.loading='lazy';
+    img.decoding='async';
     target.appendChild(img);
   }
 
   async function hydrate(route,index,root){
-    var card=$('[data-ds-editorial="'+index+'"]',root);
+    var card=$('[data-ds-visual="'+index+'"]',root);
     if(!card)return;
-    var slotA=$('.ds-editorial-card__image--a',card);
-    var slotB=$('.ds-editorial-card__image--b',card);
+    var slotA=$('.ds-visual-card__image--a',card);
+    var slotB=$('.ds-visual-card__image--b',card);
     var a=validImage(route.imageA),b=validImage(route.imageB);
     if(!a||!b){
       var fetched=await fetchCategoryImages(route.href);
@@ -187,35 +176,29 @@
   function build(){
     if(!document.body.classList.contains('in-index'))return true;
     if($('#ds-home-discovery'))return true;
+
     var hero=$('#ds-fashion-hero')||$('.banners-row');
     if(!hero||!hero.parentNode)return false;
 
     var links=allMenuLinks();
     if(!links.length)return false;
     var used={};
+    var routes=[];
 
-    var main=[];
-    MAIN_ROUTES.forEach(function(config){
+    ROUTES.forEach(function(config){
       var hit=findRoute(config,links,used);
       if(!hit)return;
       used[hit.href]=1;
-      main.push({title:config.title,href:hit.href,meta:config.meta,imageA:config.imageA,imageB:config.imageB});
+      routes.push({title:config.title,href:hit.href,imageA:config.imageA,imageB:config.imageB});
     });
-    if(!main.length)return false;
 
-    var secondary=[];
-    SECONDARY_ROUTES.forEach(function(config){
-      var hit=findRoute(config,links,used);
-      if(!hit)return;
-      used[hit.href]=1;
-      secondary.push({title:config.title,href:hit.href});
-    });
+    if(!routes.length)return false;
 
     var holder=document.createElement('div');
-    holder.innerHTML=markup(main,secondary);
+    holder.innerHTML=markup(routes);
     var section=holder.firstElementChild;
     hero.insertAdjacentElement('afterend',section);
-    main.forEach(function(route,index){hydrate(route,index,section)});
+    routes.forEach(function(route,index){hydrate(route,index,section)});
     return true;
   }
 
