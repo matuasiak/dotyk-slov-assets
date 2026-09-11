@@ -1,4 +1,4 @@
-/* DOTYK SLOV — homepage discovery v14 / model navigation + full bleed editorial */
+/* DOTYK SLOV — homepage discovery v15 / centered model navigation + full bleed editorial */
 body.in-index #ds-fashion-hero{margin-bottom:0!important}
 body.in-index #ds-home-discovery + #ds-new-arrivals-gallery{margin-top:0!important}
 
@@ -115,13 +115,19 @@ body.in-index #ds-home-discovery + #ds-new-arrivals-gallery{margin-top:0!importa
   letter-spacing:-.035em;
 }
 #ds-home-discovery .ds-home-quicknav__grid{
-  display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr));
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:stretch;
   gap:8px;
+  width:100%;
 }
 #ds-home-discovery .ds-category-card{
   position:relative;
+  flex:0 1 220px;
+  width:220px;
   min-width:0;
+  max-width:240px;
   aspect-ratio:4/5;
   display:block;
   overflow:hidden;
@@ -263,8 +269,12 @@ body.in-index #ds-home-discovery + #ds-new-arrivals-gallery{margin-top:0!importa
 }
 
 @media(max-width:1180px){
-  #ds-home-discovery .ds-home-quicknav__grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-  #ds-home-discovery .ds-category-card{aspect-ratio:4/5}
+  #ds-home-discovery .ds-category-card{
+    flex:0 1 calc((100% - 16px)/3);
+    width:calc((100% - 16px)/3);
+    max-width:none;
+    aspect-ratio:4/5;
+  }
 }
 
 @media(max-width:767px){
@@ -285,10 +295,16 @@ body.in-index #ds-home-discovery + #ds-new-arrivals-gallery{margin-top:0!importa
   #ds-home-discovery .ds-home-quicknav__head>span{font-size:7px}
   #ds-home-discovery .ds-home-quicknav__head>strong{font-size:18px}
   #ds-home-discovery .ds-home-quicknav__grid{
+    display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:6px;
   }
-  #ds-home-discovery .ds-category-card{aspect-ratio:4/5}
+  #ds-home-discovery .ds-category-card{
+    width:auto;
+    max-width:none;
+    min-width:0;
+    aspect-ratio:4/5;
+  }
   #ds-home-discovery .ds-category-card__index{top:7px;left:7px;width:21px;height:21px;font-size:6px}
   #ds-home-discovery .ds-category-card__label{right:8px;bottom:8px;left:8px}
   #ds-home-discovery .ds-category-card__label strong{font-size:14px}
