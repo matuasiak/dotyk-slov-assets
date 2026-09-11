@@ -2,7 +2,7 @@
 (function(){
   'use strict';
 
-  var EDITORIAL_IMAGE='https://matuasiak.github.io/dotyk-slov-assets/story.jpg';
+  var EDITORIAL_IMAGE='https://matuasiak.github.io/dotyk-slov-assets/images/story.jpg';
 
   var ROUTES=[
     {title:'Tričká',match:['tričká','tricka']},
