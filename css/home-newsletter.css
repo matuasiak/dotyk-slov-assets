@@ -1,11 +1,32 @@
-/* DOTYK SLOV — modular newsletter v1 */
-#ds-home-newsletter{width:100vw;margin:0 calc(50% - 50vw);background:#EEE9E2;color:var(--ds-text,#28231F);font-family:Inter,"Helvetica Neue",Arial,sans-serif;border-top:1px solid rgba(40,35,31,.08)}
-#ds-home-newsletter .ds-news-wrap{width:min(calc(100% - (2 * clamp(20px,3vw,54px))),1460px);margin:0 auto;padding:clamp(54px,7vw,96px) 0;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);gap:clamp(40px,7vw,100px);align-items:end}
-#ds-home-newsletter .ds-news-copy>span{display:block;margin-bottom:10px;color:var(--ds-on-light-faint,rgba(40,35,31,.4));font-size:9px;font-weight:600;letter-spacing:.16em}
-#ds-home-newsletter h2{margin:0;font-size:clamp(36px,4vw,60px);font-weight:300;line-height:.98;letter-spacing:-.055em}
-#ds-home-newsletter .ds-news-copy p{max-width:480px;margin:18px 0 0;color:var(--ds-on-light-muted,rgba(40,35,31,.6));font-size:13px;line-height:1.5}
-#ds-home-newsletter .ds-news-form>p{margin:0;color:var(--ds-on-light-muted,rgba(40,35,31,.6));font-size:11px}
-#ds-home-newsletter form{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;width:100%!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important}
-#ds-home-newsletter input[type="email"],#ds-home-newsletter input[type="text"]{width:100%!important;min-height:50px!important;padding:0 14px!important;background:#F8F5F0!important;border:1px solid rgba(40,35,31,.13)!important;border-radius:0!important;box-shadow:none!important;color:var(--ds-text,#28231F)!important;font-size:12px!important}
-#ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{min-height:50px!important;padding:0 18px!important;background:var(--ds-primary-deep,#332B27)!important;border:1px solid var(--ds-primary-deep,#332B27)!important;border-radius:0!important;box-shadow:none!important;color:var(--ds-on-primary,#F6F0E8)!important;font-size:10px!important;font-weight:500!important}
-@media(max-width:767px){#ds-home-newsletter .ds-news-wrap{width:calc(100% - 24px);padding:46px 0 52px;grid-template-columns:1fr;gap:28px}#ds-home-newsletter h2{font-size:32px}#ds-home-newsletter .ds-news-copy p{font-size:11px}#ds-home-newsletter form{grid-template-columns:1fr!important}#ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{width:100%!important}}
+/* DOTYK SLOV — modular newsletter v2 */
+#ds-home-newsletter{
+  width:100vw;
+  margin:0 calc(50% - 50vw);
+  background:#F6F5F2;
+  color:#191918;
+  font-family:Inter,"Helvetica Neue",Arial,sans-serif;
+  border-top:1px solid rgba(25,25,24,.08);
+}
+#ds-home-newsletter .ds-news-wrap{
+  width:min(calc(100% - 40px),1460px);
+  margin:0 auto;
+  padding:44px 0 50px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(360px,.8fr);
+  gap:50px;
+  align-items:center;
+}
+#ds-home-newsletter .ds-news-copy>span{display:block;margin-bottom:7px;color:#74716C;font-size:8px;font-weight:600;letter-spacing:.15em}
+#ds-home-newsletter h2{margin:0;color:#191918;font-size:clamp(24px,2.6vw,36px);font-weight:400;line-height:1;letter-spacing:-.04em}
+#ds-home-newsletter .ds-news-copy p{max-width:480px;margin:9px 0 0;color:#74716C;font-size:11px;line-height:1.45}
+#ds-home-newsletter .ds-news-form>p{margin:0;color:#74716C;font-size:10px}
+#ds-home-newsletter form{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:0!important;width:100%!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important}
+#ds-home-newsletter input[type="email"],#ds-home-newsletter input[type="text"]{width:100%!important;min-height:46px!important;padding:0 13px!important;background:#FBFAF7!important;border:1px solid rgba(25,25,24,.14)!important;border-right:0!important;border-radius:0!important;box-shadow:none!important;color:#191918!important;font-size:11px!important}
+#ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{min-height:46px!important;padding:0 16px!important;background:#191918!important;border:1px solid #191918!important;border-radius:0!important;box-shadow:none!important;color:#fff!important;font-size:9px!important;font-weight:500!important;letter-spacing:.04em!important}
+@media(max-width:767px){
+  #ds-home-newsletter .ds-news-wrap{width:calc(100% - 24px);padding:38px 0 42px;grid-template-columns:1fr;gap:22px}
+  #ds-home-newsletter h2{font-size:27px}
+  #ds-home-newsletter .ds-news-copy p{font-size:10px}
+  #ds-home-newsletter form{grid-template-columns:minmax(0,1fr) auto!important}
+  #ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{width:auto!important;padding:0 13px!important}
+}
