@@ -1,6 +1,6 @@
-/* DOTYK SLOV — Circular New Arrivals Gallery v1
-   Shoptet-native implementation inspired by the React CircularGallery component.
-   Pulls products from the Novinky category / NEW flags and renders a 3D rotating gallery. */
+/* DOTYK SLOV — New Arrivals Arc Gallery v2
+   Shoptet-native. Pulls products from Novinky / NEW flags.
+   Desktop = readable 3D arc. Mobile = swipe carousel. */
 (function(){
   'use strict';
 
@@ -15,7 +15,6 @@
   function norm(v){return clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
   function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function absUrl(v){if(!v)return'';try{return new URL(v,location.origin).href}catch(_){return v}}
-  function clamp(v,min,max){return Math.min(max,Math.max(min,v))}
 
   function validImage(v){
     if(!v)return'';
@@ -23,7 +22,6 @@
     if(!v||/^data:/i.test(v)||/^blob:/i.test(v)||/transparent|placeholder|spacer/i.test(v))return'';
     return absUrl(v);
   }
-
   function bestFromSrcset(v){
     if(!v)return'';
     var parts=v.split(',').map(function(x){
@@ -34,7 +32,6 @@
     parts.sort(function(a,b){return b.score-a.score});
     return validImage(parts[0].url);
   }
-
   function imageFromNode(img){
     if(!img)return'';
     var attrs=['data-src','data-lazy-src','data-original','data-lazy','src'];
@@ -44,7 +41,6 @@
     }
     return bestFromSrcset(img.getAttribute('data-srcset'))||bestFromSrcset(img.getAttribute('srcset'))||'';
   }
-
   function firstText(root,selectors){
     for(var i=0;i<selectors.length;i++){
       var el=$(selectors[i],root);
@@ -53,7 +49,6 @@
     }
     return'';
   }
-
   function firstLink(root,selectors){
     for(var i=0;i<selectors.length;i++){
       var el=$(selectors[i],root);
@@ -61,72 +56,31 @@
     }
     return null;
   }
-
   function candidateProductNodes(doc){
-    var selectors=[
-      '.products-block .product',
-      '.products .product',
-      '.product-item',
-      '[data-micro-product-id]'
-    ];
+    var selectors=['.products-block .product','.products .product','.product-item','[data-micro-product-id]'];
     var out=[];
     selectors.forEach(function(sel){
-      $$(sel,doc).forEach(function(node){
-        if(out.indexOf(node)<0)out.push(node);
-      });
+      $$(sel,doc).forEach(function(node){if(out.indexOf(node)<0)out.push(node)});
     });
     return out;
   }
-
   function productFromNode(node){
     if(!node)return null;
-
-    var link=firstLink(node,[
-      'a.name[href]',
-      '.name a[href]',
-      '.p-name a[href]',
-      '.p-in-in a[href]',
-      '.product-name a[href]',
-      'h2 a[href]',
-      'h3 a[href]',
-      'a[data-micro="url"][href]'
-    ]);
+    var link=firstLink(node,['a.name[href]','.name a[href]','.p-name a[href]','.p-in-in a[href]','.product-name a[href]','h2 a[href]','h3 a[href]','a[data-micro="url"][href]']);
     if(!link){
       var links=$$('a[href]',node).filter(function(a){return a.querySelector('img')||clean(a.textContent)});
       link=links[0]||null;
     }
     if(!link||!link.href)return null;
 
-    var name=firstText(node,[
-      '[data-micro="name"]',
-      '.name',
-      '.p-name',
-      '.p-in-in',
-      '.product-name',
-      'h2',
-      'h3'
-    ])||clean(link.getAttribute('title'))||clean(link.textContent);
+    var name=firstText(node,['[data-micro="name"]','.name','.p-name','.p-in-in','.product-name','h2','h3'])||clean(link.getAttribute('title'))||clean(link.textContent);
     if(!name)return null;
-
-    var price=firstText(node,[
-      '.price-final strong',
-      '.price-final',
-      '.p-final-price',
-      '[data-micro="price"]',
-      '.price'
-    ]);
-
+    var price=firstText(node,['.price-final strong','.price-final','.p-final-price','[data-micro="price"]','.price']);
     var img=imageFromNode($('img',node));
     if(!img)return null;
 
-    return {
-      name:name,
-      price:price||'',
-      href:absUrl(link.href),
-      image:img
-    };
+    return {name:name,price:price||'',href:absUrl(link.href),image:img};
   }
-
   function uniqueProducts(nodes,onlyNew){
     var seen={};
     var out=[];
@@ -143,11 +97,7 @@
     });
     return out;
   }
-
-  function allNavLinks(){
-    return $$('#ds-site-header a[href],#navigation a[href],#ds-home-discovery a[href]');
-  }
-
+  function allNavLinks(){return $$('#ds-site-header a[href],#navigation a[href],#ds-home-discovery a[href]')}
   function findSourceHref(){
     var wanted=norm(SOURCE_LABEL);
     var links=allNavLinks();
@@ -159,7 +109,6 @@
     });
     return partial?partial.href:'';
   }
-
   async function fetchDocument(url){
     if(!url)return null;
     try{
@@ -168,7 +117,6 @@
       return new DOMParser().parseFromString(await response.text(),'text/html');
     }catch(_){return null}
   }
-
   async function loadProducts(){
     var products=uniqueProducts(candidateProductNodes(document),true);
     var sourceHref=findSourceHref();
@@ -180,18 +128,13 @@
         if(fromCategory.length)products=fromCategory;
       }
     }
-
     if(products.length<MIN_ITEMS){
       var fallbackDoc=await fetchDocument('/novinky/');
       if(fallbackDoc){
         var fallback=uniqueProducts(candidateProductNodes(fallbackDoc),false);
-        if(fallback.length){
-          sourceHref=sourceHref||absUrl('/novinky/');
-          products=fallback;
-        }
+        if(fallback.length){sourceHref=sourceHref||absUrl('/novinky/');products=fallback}
       }
     }
-
     if(products.length<MIN_ITEMS){
       var allOnPage=uniqueProducts(candidateProductNodes(document),false);
       allOnPage.forEach(function(p){
@@ -199,7 +142,6 @@
         if(!products.some(function(x){return x.href===p.href}))products.push(p);
       });
     }
-
     return {items:products.slice(0,MAX_ITEMS),href:sourceHref};
   }
 
@@ -219,16 +161,15 @@
         '</div>'+ 
         '<div class="ds-circular-new__footer">'+
           '<button class="ds-circular-new__control" type="button" data-ds-circular-prev aria-label="Predchádzajúci produkt">←</button>'+ 
-          '<span class="ds-circular-new__hint">potiahni / scrolluj</span>'+ 
+          '<span class="ds-circular-new__hint">potiahni / swipe</span>'+ 
           '<button class="ds-circular-new__control" type="button" data-ds-circular-next aria-label="Ďalší produkt">→</button>'+ 
         '</div>'+ 
       '</div>'+ 
     '</section>';
   }
 
-  function productMarkup(item,index,count){
-    var angle=(360/count)*index;
-    return '<a class="ds-circular-product" href="'+esc(item.href)+'" style="--ds-item-angle:'+angle+'deg" aria-label="'+esc(item.name)+'">'+
+  function productMarkup(item,index){
+    return '<a class="ds-circular-product" href="'+esc(item.href)+'" data-ds-arc-index="'+index+'" aria-label="'+esc(item.name)+'">'+
       '<span class="ds-circular-product__card">'+
         '<img class="ds-circular-product__image" src="'+esc(item.image)+'" alt="'+esc(item.name)+'" loading="lazy" decoding="async">'+
         '<span class="ds-circular-product__arrow">↗</span>'+ 
@@ -244,147 +185,131 @@
   }
 
   function ensureStyles(){
-    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=1';
+    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=2';
     var existing=document.querySelector('link[data-ds-new-arrivals-css]');
     if(existing){if(existing.href!==href)existing.href=href;return}
     var link=document.createElement('link');
-    link.rel='stylesheet';
-    link.href=href;
-    link.setAttribute('data-ds-new-arrivals-css','1');
+    link.rel='stylesheet';link.href=href;link.setAttribute('data-ds-new-arrivals-css','1');
     document.head.appendChild(link);
   }
 
-  function initInteraction(section,items){
+  function initInteraction(section){
     var stage=$('.ds-circular-new__stage',section);
-    var ring=$('.ds-circular-new__ring',section);
     var cards=$$('.ds-circular-product',section);
-    if(!stage||!ring||!cards.length)return;
+    if(!stage||!cards.length)return;
 
-    var state={
-      rotation:0,
-      visible:true,
-      interacting:false,
-      drag:false,
-      dragMoved:false,
-      startX:0,
-      startRotation:0,
-      lastScrollY:window.scrollY,
-      interactionTimer:null,
-      raf:null
-    };
+    var active=0;
+    var drag=false;
+    var dragMoved=false;
+    var startX=0;
+    var autoTimer=null;
+    var mobile=window.matchMedia('(max-width:767px)');
 
-    var anglePer=360/cards.length;
-
-    function markInteraction(){
-      state.interacting=true;
-      if(state.interactionTimer)clearTimeout(state.interactionTimer);
-      state.interactionTimer=setTimeout(function(){state.interacting=false},180);
+    function wrapDiff(index,current,count){
+      var d=index-current;
+      if(d>count/2)d-=count;
+      if(d<-count/2)d+=count;
+      return d;
     }
 
-    function setRadius(){
-      var width=stage.clientWidth||window.innerWidth;
-      var radius;
-      if(width<480)radius=Math.max(225,width*.66);
-      else if(width<800)radius=Math.min(390,width*.54);
-      else if(width<1200)radius=Math.min(490,width*.42);
-      else radius=Math.min(620,width*.365);
-      stage.style.setProperty('--ds-gallery-radius',Math.round(radius)+'px');
-    }
-
-    function updateDepth(){
+    function renderDesktop(){
+      var width=stage.clientWidth||1200;
+      var step=Math.max(150,Math.min(230,width*.16));
       cards.forEach(function(card,i){
-        var itemAngle=i*anglePer;
-        var relative=(itemAngle+state.rotation)%360;
-        if(relative<0)relative+=360;
-        var normalized=Math.abs(relative>180?360-relative:relative);
-        var opacity=Math.max(.14,1-(normalized/145));
-        var scale=1-(Math.min(normalized,120)/120)*.11;
-        card.style.opacity=String(opacity);
-        card.style.zIndex=String(Math.round(100-normalized));
-        card.style.pointerEvents=normalized<82?'auto':'none';
-        var inner=$('.ds-circular-product__card',card);
-        if(inner)inner.style.transform='scale('+scale.toFixed(3)+')';
+        var rel=wrapDiff(i,active,cards.length);
+        var abs=Math.abs(rel);
+        var visible=abs<=3;
+        var x=rel*step;
+        var y=abs*20;
+        var rotate=rel*-8;
+        var scale=abs===0?1:Math.max(.76,1-abs*.09);
+        var opacity=abs===0?1:(abs===1?.82:(abs===2?.45:.16));
+        card.style.transform='translate(-50%,-50%) translateX('+x+'px) translateY('+y+'px) rotateY('+rotate+'deg) scale('+scale+')';
+        card.style.opacity=visible?String(opacity):'0';
+        card.style.zIndex=String(20-abs);
+        card.style.pointerEvents=abs<=2?'auto':'none';
+        card.classList.toggle('is-active',abs===0);
       });
     }
 
-    function render(){
-      ring.style.transform='rotateY('+state.rotation+'deg)';
-      updateDepth();
+    function scrollMobile(behavior){
+      var card=cards[active];
+      if(!card)return;
+      var left=card.offsetLeft-(stage.clientWidth-card.clientWidth)/2;
+      stage.scrollTo({left:Math.max(0,left),behavior:behavior||'smooth'});
     }
 
-    function animate(){
-      if(state.visible&&!state.interacting&&!state.drag&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-        state.rotation+=.018;
+    function render(behavior){
+      if(mobile.matches){
+        cards.forEach(function(card){
+          card.style.transform='';card.style.opacity='';card.style.zIndex='';card.style.pointerEvents='';card.classList.remove('is-active');
+        });
+        if(cards[active])cards[active].classList.add('is-active');
+        if(behavior)scrollMobile(behavior);
+      }else{
+        stage.scrollLeft=0;
+        renderDesktop();
       }
-      render();
-      state.raf=requestAnimationFrame(animate);
     }
 
-    stage.addEventListener('pointerdown',function(e){
-      if(e.pointerType==='mouse'&&e.button!==0)return;
-      state.drag=true;
-      state.dragMoved=false;
-      state.startX=e.clientX;
-      state.startRotation=state.rotation;
-      stage.classList.add('is-dragging');
-      try{stage.setPointerCapture(e.pointerId)}catch(_){}
-      markInteraction();
-    });
-
-    stage.addEventListener('pointermove',function(e){
-      if(!state.drag)return;
-      var dx=e.clientX-state.startX;
-      if(Math.abs(dx)>5)state.dragMoved=true;
-      state.rotation=state.startRotation+dx*.24;
-      markInteraction();
-    });
-
-    function endDrag(e){
-      if(!state.drag)return;
-      state.drag=false;
-      stage.classList.remove('is-dragging');
-      try{stage.releasePointerCapture(e.pointerId)}catch(_){}
-      markInteraction();
-      setTimeout(function(){state.dragMoved=false},80);
+    function go(delta,behavior){
+      active=(active+delta+cards.length)%cards.length;
+      render(behavior||'smooth');
+      restartAuto();
     }
-    stage.addEventListener('pointerup',endDrag);
-    stage.addEventListener('pointercancel',endDrag);
 
-    stage.addEventListener('wheel',function(e){
-      state.rotation+=e.deltaY*.045+e.deltaX*.03;
-      markInteraction();
-    },{passive:true});
-
-    stage.addEventListener('click',function(e){
-      if(state.dragMoved){e.preventDefault();e.stopPropagation()}
-    },true);
+    function restartAuto(){
+      if(autoTimer)clearInterval(autoTimer);
+      if(mobile.matches||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+      autoTimer=setInterval(function(){active=(active+1)%cards.length;render()},3600);
+    }
 
     var prev=$('[data-ds-circular-prev]',section);
     var next=$('[data-ds-circular-next]',section);
-    if(prev)prev.addEventListener('click',function(){state.rotation+=anglePer;markInteraction()});
-    if(next)next.addEventListener('click',function(){state.rotation-=anglePer;markInteraction()});
+    if(prev)prev.addEventListener('click',function(){go(-1)});
+    if(next)next.addEventListener('click',function(){go(1)});
 
-    window.addEventListener('scroll',function(){
-      var now=window.scrollY;
-      var delta=now-state.lastScrollY;
-      state.lastScrollY=now;
-      if(!state.visible||Math.abs(delta)>180)return;
-      state.rotation+=delta*.035;
-      markInteraction();
-    },{passive:true});
-
-    window.addEventListener('resize',setRadius,{passive:true});
-
-    if('IntersectionObserver' in window){
-      var observer=new IntersectionObserver(function(entries){
-        state.visible=!!(entries[0]&&entries[0].isIntersecting);
-      },{threshold:.08});
-      observer.observe(section);
+    stage.addEventListener('pointerdown',function(e){
+      if(mobile.matches)return;
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      drag=true;dragMoved=false;startX=e.clientX;stage.classList.add('is-dragging');
+      try{stage.setPointerCapture(e.pointerId)}catch(_){}
+      if(autoTimer)clearInterval(autoTimer);
+    });
+    stage.addEventListener('pointermove',function(e){
+      if(!drag||mobile.matches)return;
+      if(Math.abs(e.clientX-startX)>7)dragMoved=true;
+    });
+    function endDrag(e){
+      if(!drag)return;
+      var dx=e.clientX-startX;
+      drag=false;stage.classList.remove('is-dragging');
+      try{stage.releasePointerCapture(e.pointerId)}catch(_){}
+      if(Math.abs(dx)>45)go(dx<0?1:-1);
+      else restartAuto();
+      setTimeout(function(){dragMoved=false},100);
     }
+    stage.addEventListener('pointerup',endDrag);
+    stage.addEventListener('pointercancel',endDrag);
+    stage.addEventListener('click',function(e){if(dragMoved){e.preventDefault();e.stopPropagation()}},true);
 
-    setRadius();
+    stage.addEventListener('wheel',function(e){
+      if(mobile.matches)return;
+      if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>16){
+        e.preventDefault();
+        go(e.deltaX>0?1:-1);
+      }
+    },{passive:false});
+
+    stage.addEventListener('mouseenter',function(){if(autoTimer)clearInterval(autoTimer)});
+    stage.addEventListener('mouseleave',restartAuto);
+
+    if(mobile.addEventListener)mobile.addEventListener('change',function(){render();restartAuto()});
+    else if(mobile.addListener)mobile.addListener(function(){render();restartAuto()});
+    window.addEventListener('resize',function(){render()},{passive:true});
+
     render();
-    animate();
+    restartAuto();
   }
 
   async function build(){
@@ -409,8 +334,8 @@
       return true;
     }
 
-    ring.innerHTML=data.items.map(function(item,index){return productMarkup(item,index,data.items.length)}).join('');
-    initInteraction(section,data.items);
+    ring.innerHTML=data.items.map(productMarkup).join('');
+    initInteraction(section);
     return true;
   }
 
