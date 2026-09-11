@@ -1,0 +1,14 @@
+/* DOTYK SLOV — modular footer redesign v1 */
+#footer.ds-footer-v2{margin-top:0!important;padding:0!important;background:var(--ds-primary-deep,#332B27)!important;color:var(--ds-on-primary,#F6F0E8)!important;border-top:1px solid rgba(246,240,232,.08)!important}
+#footer.ds-footer-v2 .ds-footer-v2__top{padding:44px 0 38px;border-bottom:1px solid rgba(246,240,232,.09)}
+#footer.ds-footer-v2 .ds-footer-v2__inner{width:min(calc(100% - (2 * clamp(20px,3vw,54px))),1460px);margin:0 auto;display:flex;align-items:end;justify-content:space-between;gap:30px}
+#footer.ds-footer-v2 .ds-footer-v2__inner>div>span{display:block;margin-bottom:10px;color:var(--ds-accent,#D6B4BB);font-size:9px;font-weight:600;letter-spacing:.17em}
+#footer.ds-footer-v2 .ds-footer-v2__inner strong{display:block;max-width:700px;color:var(--ds-on-primary,#F6F0E8);font-size:clamp(30px,3.9vw,58px);font-weight:300;line-height:.97;letter-spacing:-.055em}
+#footer.ds-footer-v2 .ds-footer-v2__inner>a{color:var(--ds-on-primary,#F6F0E8)!important;text-decoration:none!important;font-size:10px;border-bottom:1px solid rgba(246,240,232,.18);padding-bottom:4px}
+#footer.ds-footer-v2 .container,#footer.ds-footer-v2 .footer-rows .container{width:min(calc(100% - (2 * clamp(20px,3vw,54px))),1460px)!important;max-width:1460px!important;margin-left:auto!important;margin-right:auto!important}
+#footer.ds-footer-v2 .footer-rows{padding:36px 0 34px!important;background:transparent!important;border:0!important}
+#footer.ds-footer-v2 h3,#footer.ds-footer-v2 h4,#footer.ds-footer-v2 .footer-title{color:var(--ds-on-primary,#F6F0E8)!important;font-size:10px!important;font-weight:500!important;letter-spacing:.04em!important;text-transform:none!important}
+#footer.ds-footer-v2 a{color:rgba(246,240,232,.62)!important;text-decoration:none!important;transition:color .18s ease}
+#footer.ds-footer-v2 a:hover{color:#fff!important}
+#footer.ds-footer-v2 p,#footer.ds-footer-v2 li,#footer.ds-footer-v2 span{color:rgba(246,240,232,.58);border-color:rgba(246,240,232,.08)}
+@media(max-width:767px){#footer.ds-footer-v2 .ds-footer-v2__top{padding:36px 0 30px}#footer.ds-footer-v2 .ds-footer-v2__inner{width:calc(100% - 28px);align-items:start;flex-direction:column;gap:22px}#footer.ds-footer-v2 .ds-footer-v2__inner strong{font-size:34px;max-width:310px}#footer.ds-footer-v2 .footer-rows{padding-top:26px!important}}
