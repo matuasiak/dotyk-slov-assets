@@ -1,53 +1,47 @@
 (function(){
   'use strict';
 
-  var AI_SPRITE='https://matuasiak.github.io/dotyk-slov-assets/images/ai-nav-sprite.svg?v=4';
+  /* Temporary fashion-model imagery for the navigation hub.
+     These are individual HTTPS images on purpose — no sprite/crop hacks. */
   var MODEL_IMAGES={
     'Tričká':{
-      a:'0% 0%',b:'33.333% 0%',
-      fallbackA:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=82',
-      fallbackB:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=82'
+      a:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&h=1200&q=84',
+      b:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&h=1200&q=84'
     },
     'Mikiny':{
-      a:'66.667% 0%',b:'100% 0%',
-      fallbackA:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=82',
-      fallbackB:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=82'
+      a:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&h=1200&q=84',
+      b:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&h=1200&q=84'
     },
     'Cropy':{
-      a:'0% 100%',b:'33.333% 100%',
-      fallbackA:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=82',
-      fallbackB:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=82'
+      a:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&h=1200&q=84',
+      b:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&h=1200&q=84'
     },
     'Doplnky':{
-      a:'66.667% 100%',b:'100% 100%',
-      fallbackA:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=82',
-      fallbackB:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=82'
+      a:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&h=1200&q=84',
+      b:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&h=1200&q=84'
     },
     'Novinky':{
-      a:'33.333% 0%',b:'66.667% 100%',
-      fallbackA:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=82',
-      fallbackB:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=82'
+      a:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&h=1200&q=84',
+      b:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&h=1200&q=84'
     },
     'Limitky':{
-      a:'100% 0%',b:'0% 100%',
-      fallbackA:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=82',
-      fallbackB:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=82'
+      a:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&h=1200&q=84',
+      b:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&h=1200&q=84'
     },
     'Vlastný text':{
-      a:'66.667% 0%',b:'33.333% 100%',
-      fallbackA:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=82',
-      fallbackB:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=82'
+      a:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&h=1200&q=84',
+      b:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&h=1200&q=84'
     }
   };
 
   var ROUTES=[
-    {title:'Tričká',match:['tričká','tricka'],imageA:'',imageB:''},
-    {title:'Mikiny',match:['mikiny','mikina'],imageA:'',imageB:''},
-    {title:'Cropy',match:['cropy','crop'],imageA:'',imageB:''},
-    {title:'Doplnky',match:['doplnky','doplnok'],imageA:'',imageB:''},
-    {title:'Novinky',match:['novinky','nové','nove'],imageA:'',imageB:''},
-    {title:'Limitky',match:['limitky','limitované','limitovane'],imageA:'',imageB:''},
-    {title:'Vlastný text',match:['vlastný text','vlastny text','produkty podľa textu','produkty podla textu','podľa textu','podla textu'],imageA:'',imageB:''}
+    {title:'Tričká',match:['tričká','tricka']},
+    {title:'Mikiny',match:['mikiny','mikina']},
+    {title:'Cropy',match:['cropy','crop']},
+    {title:'Doplnky',match:['doplnky','doplnok']},
+    {title:'Novinky',match:['novinky','nové','nove']},
+    {title:'Limitky',match:['limitky','limitované','limitovane']},
+    {title:'Vlastný text',match:['vlastný text','vlastny text','produkty podľa textu','produkty podla textu','podľa textu','podla textu']}
   ];
 
   function $(s,r){return (r||document).querySelector(s)}
@@ -55,35 +49,6 @@
   function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function norm(v){return clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
   function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-  function absUrl(v){if(!v)return'';try{return new URL(v,location.origin).href}catch(_){return v}}
-
-  function validImage(v){
-    if(!v)return'';
-    v=clean(v);
-    if(!v||/^data:/i.test(v)||/^blob:/i.test(v)||/transparent|placeholder|spacer/i.test(v))return'';
-    return absUrl(v);
-  }
-
-  function bestFromSrcset(v){
-    if(!v)return'';
-    var parts=v.split(',').map(function(x){
-      var bits=clean(x).split(/\s+/);
-      return {url:bits[0]||'',score:parseFloat(bits[1])||0};
-    }).filter(function(x){return validImage(x.url)});
-    if(!parts.length)return'';
-    parts.sort(function(a,b){return b.score-a.score});
-    return validImage(parts[0].url);
-  }
-
-  function imageFromNode(img){
-    if(!img)return'';
-    var attrs=['data-src','data-lazy-src','data-original','data-lazy','src'];
-    for(var i=0;i<attrs.length;i++){
-      var v=validImage(img.getAttribute(attrs[i]));
-      if(v)return v;
-    }
-    return bestFromSrcset(img.getAttribute('data-srcset'))||bestFromSrcset(img.getAttribute('srcset'))||'';
-  }
 
   function allMenuLinks(){
     var out=[];
@@ -151,21 +116,6 @@
     '</div>';
   }
 
-  async function fetchCategoryImages(href){
-    if(!href)return[];
-    try{
-      var response=await fetch(href,{credentials:'same-origin',cache:'force-cache'});
-      if(!response.ok)return[];
-      var doc=new DOMParser().parseFromString(await response.text(),'text/html');
-      var candidates=[];
-      $$('.category-header img,.category-perex img,.banner img,.products-block .product img,.products .product img,.product-item img,[data-micro-product-id] img',doc).forEach(function(img){
-        var src=imageFromNode(img);
-        if(src&&candidates.indexOf(src)<0)candidates.push(src);
-      });
-      return candidates.slice(0,2);
-    }catch(_){return[]}
-  }
-
   function cardMarkup(route,index){
     return '<a class="ds-visual-card" href="'+esc(route.href)+'" data-ds-visual="'+index+'" aria-label="'+esc(route.title)+'">'+
       '<span class="ds-visual-card__media">'+
@@ -188,54 +138,31 @@
 
   function addImage(target,src,alt){
     if(!target||!src)return;
+    target.innerHTML='';
     var img=document.createElement('img');
     img.src=src;
     img.alt=alt||'';
     img.loading='lazy';
     img.decoding='async';
+    img.referrerPolicy='no-referrer';
     target.appendChild(img);
   }
 
-  function applyModelBackground(slot,position,fallback){
-    if(!slot)return;
-    slot.innerHTML='';
-    slot.style.setProperty('background-image','url("'+AI_SPRITE+'"), url("'+fallback+'")','important');
-    slot.style.setProperty('background-size','400% 200%, cover','important');
-    slot.style.setProperty('background-repeat','no-repeat, no-repeat','important');
-    slot.style.setProperty('background-position',position+', center','important');
-    slot.style.setProperty('background-color','var(--ds-surface-warm,#D8CEC2)','important');
-  }
-
-  async function hydrate(route,index,root){
+  function hydrate(route,index,root){
     var card=$('[data-ds-visual="'+index+'"]',root);
     if(!card)return;
     var slotA=$('.ds-visual-card__image--a',card);
     var slotB=$('.ds-visual-card__image--b',card);
     var model=MODEL_IMAGES[route.title];
-
-    /* Prototype mode: never fetch old Shoptet imagery when a model treatment exists. */
-    if(model){
-      applyModelBackground(slotA,model.a,model.fallbackA);
-      applyModelBackground(slotB,model.b,model.fallbackB);
-      card.classList.add('has-hover-image','has-model-image');
-      return;
-    }
-
-    var a=validImage(route.imageA),b=validImage(route.imageB);
-    if(!a||!b){
-      var fetched=await fetchCategoryImages(route.href);
-      if(!a)a=fetched[0]||'';
-      if(!b)b=fetched[1]||fetched[0]||'';
-    }
-    addImage(slotA,a,route.title);
-    addImage(slotB,b,route.title);
-    if(b&&b!==a)card.classList.add('has-hover-image');
+    if(!model)return;
+    addImage(slotA,model.a,route.title);
+    addImage(slotB,model.b,route.title);
+    if(model.b&&model.b!==model.a)card.classList.add('has-hover-image');
   }
 
   function build(){
     if(!document.body.classList.contains('in-index'))return true;
     if($('#ds-home-discovery'))return true;
-
     var hero=$('#ds-fashion-hero')||$('.banners-row');
     if(!hero||!hero.parentNode)return false;
 
@@ -243,14 +170,12 @@
     if(!links.length)return false;
     var used={};
     var routes=[];
-
     ROUTES.forEach(function(config){
       var hit=findRoute(config,links,used);
       if(!hit)return;
       used[hit.href]=1;
-      routes.push({title:config.title,href:hit.href,imageA:config.imageA,imageB:config.imageB});
+      routes.push({title:config.title,href:hit.href});
     });
-
     if(!routes.length)return false;
 
     var holder=document.createElement('div');
