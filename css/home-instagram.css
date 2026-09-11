@@ -1,0 +1,17 @@
+/* DOTYK SLOV — Instagram / shop the feed v1 */
+#ds-home-instagram{width:100vw;margin:0 calc(50% - 50vw);background:#F7F5F0;color:var(--ds-text,#28231F);font-family:Inter,"Helvetica Neue",Arial,sans-serif}
+#ds-home-instagram .ds-ig-wrap{width:min(calc(100% - (2 * clamp(20px,3vw,54px))),1540px);margin:0 auto;padding:clamp(54px,7vw,102px) 0}
+#ds-home-instagram .ds-ig-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:20px}
+#ds-home-instagram .ds-ig-head span{display:block;margin-bottom:10px;color:var(--ds-on-light-faint,rgba(40,35,31,.4));font-size:9px;font-weight:600;letter-spacing:.16em}
+#ds-home-instagram .ds-ig-head h2{max-width:680px;margin:0;font-size:clamp(36px,4vw,60px);font-weight:300;line-height:.98;letter-spacing:-.055em}
+#ds-home-instagram .ds-ig-head>a{color:var(--ds-text,#28231F)!important;text-decoration:none!important;font-size:11px;border-bottom:1px solid var(--ds-line-light,rgba(40,35,31,.14));padding-bottom:4px}
+#ds-home-instagram .ds-ig-grid{display:grid;grid-template-columns:1.15fr 1fr 1.05fr 1.15fr;grid-template-rows:280px 280px;gap:8px}
+#ds-home-instagram .ds-ig-tile{position:relative;overflow:hidden;background:#ECE8E1;min-width:0}
+#ds-home-instagram .ds-ig-tile--1{grid-row:1/3}.ds-ig-tile--3{grid-row:1/3;grid-column:3}.ds-ig-tile--6{grid-column:4}.ds-ig-tile--8{display:none}
+#ds-home-instagram .ds-ig-image{display:block;width:100%;height:100%}
+#ds-home-instagram img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.9) contrast(1.01);transition:transform .7s cubic-bezier(.22,1,.36,1)}
+#ds-home-instagram .ds-ig-hotspot{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;width:44px;height:44px;place-items:center;border:1px solid rgba(40,35,31,.12);border-radius:50%;background:rgba(255,255,255,.94);color:#28231F!important;text-decoration:none!important;font-size:25px;font-weight:300;line-height:1;box-shadow:0 0 0 6px rgba(255,255,255,.28);transition:transform .18s ease,background .18s ease}
+#ds-home-instagram .ds-ig-hotspot--fallback{left:auto;top:auto;right:14px;bottom:14px;transform:none;width:36px;height:36px;font-size:20px;box-shadow:none}
+@media(hover:hover) and (pointer:fine){#ds-home-instagram .ds-ig-tile:hover img{transform:scale(1.025)}#ds-home-instagram .ds-ig-hotspot:hover{transform:translate(-50%,-50%) scale(1.08);background:#fff}#ds-home-instagram .ds-ig-hotspot--fallback:hover{transform:scale(1.08)}}
+@media(max-width:1050px){#ds-home-instagram .ds-ig-grid{grid-template-columns:1fr 1fr 1fr;grid-template-rows:250px 250px 250px}#ds-home-instagram .ds-ig-tile--1{grid-row:1/3}.ds-ig-tile--3{grid-row:auto;grid-column:auto}.ds-ig-tile--8{display:block}}
+@media(max-width:767px){#ds-home-instagram .ds-ig-wrap{width:calc(100% - 24px);padding:46px 0 52px}#ds-home-instagram .ds-ig-head{align-items:start;flex-direction:column;gap:12px;margin-bottom:15px}#ds-home-instagram .ds-ig-head h2{font-size:31px;max-width:310px}#ds-home-instagram .ds-ig-head>a{font-size:9px}#ds-home-instagram .ds-ig-grid{grid-template-columns:1fr 1fr;grid-template-rows:46vw 46vw 46vw 46vw;gap:5px}#ds-home-instagram .ds-ig-tile--1{grid-row:1/3}#ds-home-instagram .ds-ig-tile--3{grid-row:auto}.ds-ig-tile--8{display:block}#ds-home-instagram .ds-ig-hotspot{width:34px;height:34px;font-size:20px;box-shadow:0 0 0 4px rgba(255,255,255,.24)}#ds-home-instagram .ds-ig-hotspot--fallback{right:8px;bottom:8px;width:30px;height:30px;font-size:17px}}
