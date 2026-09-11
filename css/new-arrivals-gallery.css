@@ -1,4 +1,4 @@
-/* DOTYK SLOV — New Arrivals Coverflow v5 */
+/* DOTYK SLOV — New Arrivals Coverflow v6 */
 #ds-new-arrivals-gallery{
   position:relative;
   width:100vw;
@@ -177,9 +177,8 @@
   #ds-new-arrivals-gallery .ds-circular-product{flex-basis:220px;width:220px!important;height:304px!important}
 }
 
-/* Mobile is intentionally a completely different editorial pattern.
-   Navigation above = horizontal category rail.
-   New arrivals here = one featured product + compact vertical list. */
+/* Mobile keeps the same product-card language as desktop,
+   but behaves like a centered native-swipe coverflow. */
 @media(max-width:767px){
   #ds-new-arrivals-gallery{
     background:var(--ds-primary-deep,#332B27)!important;
@@ -187,12 +186,13 @@
     border-color:var(--ds-line-primary,rgba(246,240,232,.12));
   }
   #ds-new-arrivals-gallery .ds-circular-new__inner{
-    width:calc(100% - 24px);
-    padding:30px 0 28px;
+    width:100%;
+    padding:27px 0 24px;
   }
   #ds-new-arrivals-gallery .ds-circular-new__header{
     display:block;
-    margin-bottom:18px;
+    margin-bottom:15px;
+    padding:0 14px;
   }
   #ds-new-arrivals-gallery .ds-circular-new__kicker{
     margin-bottom:8px;
@@ -200,33 +200,46 @@
     font-size:8px;
   }
   #ds-new-arrivals-gallery .ds-circular-new__title{
-    max-width:275px;
+    max-width:285px;
     color:var(--ds-on-primary,#F6F0E8)!important;
-    font-size:30px;
+    font-size:31px;
     line-height:.98;
   }
   #ds-new-arrivals-gallery .ds-circular-new__sub{
     max-width:300px;
-    margin-top:9px;
+    margin-top:8px;
     color:var(--ds-on-primary-muted,rgba(246,240,232,.64))!important;
     font-size:11px;
-    line-height:1.42;
+    line-height:1.4;
   }
   #ds-new-arrivals-gallery .ds-circular-new__all{display:none!important}
 
   #ds-new-arrivals-gallery .ds-circular-new__stage{
+    --ds-mobile-card:min(62vw,240px);
     width:100%;
     height:auto;
-    overflow:visible!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
     perspective:none;
     cursor:auto;
-    touch-action:auto;
+    touch-action:pan-x;
+    scroll-snap-type:x mandatory;
+    scroll-padding-inline:calc((100vw - var(--ds-mobile-card))/2);
+    scrollbar-width:none;
+    padding:6px calc((100vw - var(--ds-mobile-card))/2) 12px;
+    box-sizing:border-box;
+    overscroll-behavior-x:contain;
   }
+  #ds-new-arrivals-gallery .ds-circular-new__stage::-webkit-scrollbar{display:none}
   #ds-new-arrivals-gallery .ds-circular-new__ring{
     position:relative!important;
-    display:block!important;
-    width:100%!important;
+    inset:auto!important;
+    display:flex!important;
+    align-items:center;
+    gap:10px;
+    width:max-content!important;
     height:auto!important;
+    padding:0!important;
     transform:none!important;
     transition:none!important;
   }
@@ -235,104 +248,76 @@
     left:auto!important;
     top:auto!important;
     display:block!important;
-    width:100%!important;
+    flex:0 0 var(--ds-mobile-card)!important;
+    width:var(--ds-mobile-card)!important;
     max-width:none!important;
     height:auto!important;
+    aspect-ratio:3/4;
     margin:0!important;
-    transform:none!important;
+    transform:translateY(10px) scale(.86)!important;
+    transform-origin:center!important;
+    opacity:.38!important;
+    filter:saturate(.72) contrast(.98)!important;
+    pointer-events:auto!important;
+    z-index:1!important;
+    scroll-snap-align:center;
+    scroll-snap-stop:always;
+    transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .28s ease,filter .28s ease!important;
+  }
+  #ds-new-arrivals-gallery .ds-circular-product:has(+ .ds-circular-product.is-active),
+  #ds-new-arrivals-gallery .ds-circular-product.is-active + .ds-circular-product{
+    transform:translateY(5px) scale(.93)!important;
+    opacity:.68!important;
+    filter:saturate(.86)!important;
+  }
+  #ds-new-arrivals-gallery .ds-circular-product.is-active{
+    transform:translateY(0) scale(1)!important;
     opacity:1!important;
     filter:none!important;
-    pointer-events:auto!important;
-    z-index:auto!important;
+    z-index:3!important;
   }
-
-  /* Featured new product */
-  #ds-new-arrivals-gallery .ds-circular-product:first-child{
-    height:232px!important;
-    margin-bottom:10px!important;
-  }
-  #ds-new-arrivals-gallery .ds-circular-product:first-child .ds-circular-product__card{
-    height:100%!important;
-    border:1px solid rgba(246,240,232,.14);
+  #ds-new-arrivals-gallery .ds-circular-product__card{
     border-radius:16px;
+    border-color:rgba(246,240,232,.13);
   }
-  #ds-new-arrivals-gallery .ds-circular-product:first-child .ds-circular-product__meta{
-    right:13px;
-    bottom:12px;
-    left:13px;
+  #ds-new-arrivals-gallery .ds-circular-product.is-active .ds-circular-product__card{
+    border-color:rgba(214,180,187,.5);
   }
-  #ds-new-arrivals-gallery .ds-circular-product:first-child .ds-circular-product__name{font-size:17px}
-  #ds-new-arrivals-gallery .ds-circular-product:first-child .ds-circular-product__price{font-size:10px}
-  #ds-new-arrivals-gallery .ds-circular-product:first-child .ds-circular-product__arrow{
-    right:11px;top:11px;width:28px;height:28px;font-size:10px;
+  #ds-new-arrivals-gallery .ds-circular-product__meta{
+    right:11px;
+    bottom:10px;
+    left:11px;
   }
-
-  /* Three compact editorial rows */
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4){
-    height:88px!important;
+  #ds-new-arrivals-gallery .ds-circular-product__topline{margin-bottom:6px}
+  #ds-new-arrivals-gallery .ds-circular-product__badge{
+    min-height:17px;
+    padding:0 6px;
+    font-size:6px;
   }
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4) .ds-circular-product__card{
-    height:88px!important;
-    padding:8px 0;
-    box-sizing:border-box;
-    overflow:visible;
-    border:0;
-    border-top:1px solid rgba(246,240,232,.12);
-    border-radius:0;
-    background:transparent;
+  #ds-new-arrivals-gallery .ds-circular-product__price{font-size:9px}
+  #ds-new-arrivals-gallery .ds-circular-product__name{
+    font-size:14px;
+    line-height:1.08;
   }
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4) .ds-circular-product__card::after{display:none}
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4) .ds-circular-product__image{
-    inset:8px auto auto 0!important;
-    width:72px!important;
-    height:72px!important;
-    border-radius:8px;
-    object-fit:cover!important;
-  }
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4) .ds-circular-product__meta{
-    top:50%!important;
-    right:38px!important;
-    bottom:auto!important;
-    left:86px!important;
-    transform:translateY(-50%);
-  }
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4) .ds-circular-product__topline{
-    justify-content:flex-start;
-    margin-bottom:4px;
-  }
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4) .ds-circular-product__badge{display:none}
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4) .ds-circular-product__price{
-    color:var(--ds-accent,#D6B4BB)!important;
+  #ds-new-arrivals-gallery .ds-circular-product__arrow{
+    right:9px;
+    top:9px;
+    width:26px;
+    height:26px;
     font-size:9px;
   }
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4) .ds-circular-product__name{
-    color:var(--ds-on-primary,#F6F0E8)!important;
-    font-size:13px;
-    line-height:1.15;
-  }
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+2):nth-child(-n+4) .ds-circular-product__arrow{
-    right:0!important;
-    top:50%!important;
-    width:27px;height:27px;
-    transform:translateY(-50%);
-    border-color:rgba(246,240,232,.3);
-    background:transparent;
-    font-size:9px;
-  }
-
-  #ds-new-arrivals-gallery .ds-circular-product:nth-child(n+5){display:none!important}
 
   #ds-new-arrivals-gallery .ds-circular-new__mobile-all{
     display:flex!important;
     justify-content:space-between;
-    width:100%;
-    min-height:42px;
-    margin-top:13px;
-    padding:0 14px;
+    width:calc(100% - 28px);
+    min-height:40px;
+    margin:8px 14px 0;
+    padding:0 13px;
     box-sizing:border-box;
     border-color:rgba(246,240,232,.24);
     color:var(--ds-on-primary,#F6F0E8)!important;
-    font-size:10px;
+    font-size:9px;
   }
   #ds-new-arrivals-gallery .ds-circular-new__footer{display:none!important}
 }
