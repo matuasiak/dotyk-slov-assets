@@ -1,6 +1,6 @@
-/* DOTYK SLOV — New Arrivals Coverflow v4
+/* DOTYK SLOV — New Arrivals Coverflow v5
    Shoptet-native. Pulls products from Novinky / NEW flags.
-   Desktop = centered coverflow. Mobile = compact native swipe. */
+   Desktop = centered coverflow. Mobile = editorial spotlight + compact product list. */
 (function(){
   'use strict';
 
@@ -13,7 +13,7 @@
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
   function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function norm(v){return clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
-  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]})}
   function absUrl(v){if(!v)return'';try{return new URL(v,location.origin).href}catch(_){return v}}
 
   function validImage(v){
@@ -159,6 +159,7 @@
         '<div class="ds-circular-new__stage" aria-label="Interaktívna galéria noviniek">'+
           '<div class="ds-circular-new__ring"></div>'+ 
         '</div>'+ 
+        (sourceHref?'<a class="ds-circular-new__mobile-all" href="'+esc(sourceHref)+'">Pozrieť všetky novinky <span>→</span></a>':'')+
         '<div class="ds-circular-new__footer">'+
           '<button class="ds-circular-new__control" type="button" data-ds-circular-prev aria-label="Predchádzajúci produkt">←</button>'+ 
           '<span class="ds-circular-new__hint">potiahni / swipe</span>'+ 
@@ -185,7 +186,7 @@
   }
 
   function ensureStyles(){
-    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=4';
+    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=5';
     var existing=document.querySelector('link[data-ds-new-arrivals-css]');
     if(existing){if(existing.href!==href)existing.href=href;return}
     var link=document.createElement('link');
@@ -206,7 +207,6 @@
     var autoTimer=null;
     var autoDirection=1;
     var mobile=window.matchMedia('(max-width:767px)');
-    var scrollTimer=null;
 
     function renderDesktop(){
       var card=cards[active];
@@ -237,32 +237,24 @@
         el.style.opacity='';
         el.style.zIndex='';
         el.style.pointerEvents='';
+        el.classList.remove('is-active');
       });
     }
 
-    function scrollMobile(behavior){
-      var card=cards[active];
-      if(!card)return;
-      var left=card.offsetLeft-(stage.clientWidth-card.clientWidth)/2;
-      stage.scrollTo({left:Math.max(0,left),behavior:behavior||'smooth'});
-    }
-
-    function render(behavior){
+    function render(){
       if(mobile.matches){
         clearDesktopStyles();
-        cards.forEach(function(el,i){el.classList.toggle('is-active',i===active)});
-        if(behavior)scrollMobile(behavior);
       }else{
         stage.scrollLeft=0;
         renderDesktop();
       }
     }
 
-    function go(delta,behavior){
+    function go(delta){
       var next=Math.max(0,Math.min(cards.length-1,active+delta));
       if(next===active)return;
       active=next;
-      render(behavior||'smooth');
+      render();
       restartAuto();
     }
 
@@ -313,22 +305,6 @@
         go(e.deltaX>0?1:-1);
       }
     },{passive:false});
-
-    stage.addEventListener('scroll',function(){
-      if(!mobile.matches)return;
-      if(scrollTimer)clearTimeout(scrollTimer);
-      scrollTimer=setTimeout(function(){
-        var center=stage.scrollLeft+stage.clientWidth/2;
-        var best=0,bestDistance=Infinity;
-        cards.forEach(function(el,i){
-          var c=el.offsetLeft+el.offsetWidth/2;
-          var d=Math.abs(c-center);
-          if(d<bestDistance){bestDistance=d;best=i}
-        });
-        active=best;
-        cards.forEach(function(el,i){el.classList.toggle('is-active',i===active)});
-      },90);
-    },{passive:true});
 
     stage.addEventListener('mouseenter',function(){if(autoTimer)clearInterval(autoTimer)});
     stage.addEventListener('mouseleave',restartAuto);
