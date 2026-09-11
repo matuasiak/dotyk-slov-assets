@@ -1,17 +1,45 @@
-/* DOTYK SLOV — homepage discovery v12 / compact nav + editorial separator */
+/* DOTYK SLOV — homepage discovery v13 / image nav + full bleed editorial media */
 (function(){
   'use strict';
 
   var EDITORIAL_IMAGE='https://matuasiak.github.io/dotyk-slov-assets/images/story.jpg';
+  var EDITORIAL_VIDEO=''; // e.g. https://matuasiak.github.io/dotyk-slov-assets/images/editorial.mp4
 
   var ROUTES=[
     {title:'Tričká',match:['tričká','tricka']},
     {title:'Mikiny',match:['mikiny','mikina']},
-    {title:'Cropy',match:['cropy','crop']},
     {title:'Doplnky',match:['doplnky','doplnok']},
     {title:'Limitky',match:['limitky','limitované','limitovane']},
-    {title:'Vlastný text',match:['vlastný text','vlastny text','produkty podľa textu','produkty podla textu','podľa textu','podla textu']}
+    {title:'Vlastný text',match:['vlastný text','vlastny text','produkty podľa textu','produkty podla textu','podľa textu','podla textu']},
+    {title:'Novinky',match:['novinky','nové','nove']}
   ];
+
+  var MODEL_IMAGES={
+    'Tričká':{
+      a:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1000&h=1300&q=84',
+      b:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&h=1300&q=84'
+    },
+    'Mikiny':{
+      a:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1000&h=1300&q=84',
+      b:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&h=1300&q=84'
+    },
+    'Doplnky':{
+      a:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&h=1300&q=84',
+      b:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1000&h=1300&q=84'
+    },
+    'Limitky':{
+      a:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1000&h=1300&q=84',
+      b:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&h=1300&q=84'
+    },
+    'Vlastný text':{
+      a:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&h=1300&q=84',
+      b:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1000&h=1300&q=84'
+    },
+    'Novinky':{
+      a:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&h=1300&q=84',
+      b:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&h=1300&q=84'
+    }
+  };
 
   function $(s,r){return (r||document).querySelector(s)}
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
@@ -86,11 +114,16 @@
   }
 
   function routeMarkup(route,index){
+    var images=MODEL_IMAGES[route.title]||{};
     var num=String(index+1).padStart(2,'0');
-    return '<a class="ds-quick-link" href="'+esc(route.href)+'" aria-label="'+esc(route.title)+'">'+
-      '<span class="ds-quick-link__index">'+num+'</span>'+ 
-      '<strong>'+esc(route.title)+'</strong>'+ 
-      '<span class="ds-quick-link__arrow">→</span>'+ 
+    return '<a class="ds-category-card'+(images.b?' has-hover-image':'')+'" href="'+esc(route.href)+'" aria-label="'+esc(route.title)+'">'+
+      '<span class="ds-category-card__media">'+
+        (images.a?'<img class="ds-category-card__image ds-category-card__image--a" src="'+esc(images.a)+'" alt="'+esc(route.title)+'" loading="lazy" decoding="async" referrerpolicy="no-referrer">':'')+
+        (images.b?'<img class="ds-category-card__image ds-category-card__image--b" src="'+esc(images.b)+'" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">':'')+
+      '</span>'+ 
+      '<span class="ds-category-card__shade"></span>'+ 
+      '<span class="ds-category-card__index">'+num+'</span>'+ 
+      '<span class="ds-category-card__label"><strong>'+esc(route.title)+'</strong><span>→</span></span>'+ 
     '</a>';
   }
 
@@ -104,11 +137,19 @@
     '</div>';
   }
 
+  function editorialMediaMarkup(){
+    if(EDITORIAL_VIDEO){
+      return '<video class="ds-home-editorial__media" autoplay muted loop playsinline preload="metadata" poster="'+esc(EDITORIAL_IMAGE)+'" aria-label="Dotyk Slov editorial video">'+
+        '<source src="'+esc(EDITORIAL_VIDEO)+'" type="video/mp4">'+
+      '</video>';
+    }
+    return '<img class="ds-home-editorial__media" src="'+esc(EDITORIAL_IMAGE)+'" alt="Dotyk Slov editorial" loading="lazy" decoding="async">';
+  }
+
   function editorialMarkup(){
     return '<section class="ds-home-editorial" aria-label="Dotyk Slov editorial">'+
-      '<div class="ds-home-editorial__image">'+
-        '<img src="'+EDITORIAL_IMAGE+'" alt="Dotyk Slov editorial" loading="lazy" decoding="async">'+
-      '</div>'+ 
+      editorialMediaMarkup()+
+      '<span class="ds-home-editorial__overlay"></span>'+ 
       '<div class="ds-home-editorial__copy">'+
         '<span class="ds-home-editorial__eyebrow">DOTYK / EDITORIAL 01</span>'+ 
         '<h2>veci, ktoré<br>nepovieš nahlas.</h2>'+ 
