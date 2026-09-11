@@ -1,4 +1,4 @@
-/* DOTYK SLOV — New Arrivals Coverflow v3 */
+/* DOTYK SLOV — New Arrivals Coverflow v4 */
 #ds-new-arrivals-gallery{
   position:relative;
   width:100vw;
@@ -54,7 +54,6 @@
   background:var(--ds-primary,#4A3E37);border-color:var(--ds-primary,#4A3E37);color:var(--ds-on-primary,#F6F0E8)!important;
 }
 
-/* Robust coverflow: cards stay in normal flex flow. */
 #ds-new-arrivals-gallery .ds-circular-new__stage{
   position:relative;
   width:100%;
@@ -175,12 +174,38 @@
 }
 
 @media(max-width:767px){
-  #ds-new-arrivals-gallery .ds-circular-new__inner{width:100%;padding:34px 0 30px}
-  #ds-new-arrivals-gallery .ds-circular-new__header{grid-template-columns:1fr;gap:16px;align-items:start;padding:0 14px;margin-bottom:18px}
-  #ds-new-arrivals-gallery .ds-circular-new__kicker{font-size:9px;margin-bottom:9px}
-  #ds-new-arrivals-gallery .ds-circular-new__title{max-width:310px;font-size:37px;line-height:.98}
-  #ds-new-arrivals-gallery .ds-circular-new__sub{max-width:315px;margin-top:10px;font-size:13px}
-  #ds-new-arrivals-gallery .ds-circular-new__all{width:max-content;min-height:36px;padding:0 13px;font-size:10px}
+  #ds-new-arrivals-gallery .ds-circular-new__inner{
+    width:100%;
+    padding:26px 0 20px;
+  }
+  #ds-new-arrivals-gallery .ds-circular-new__header{
+    grid-template-columns:1fr;
+    gap:10px;
+    align-items:start;
+    padding:0 12px;
+    margin-bottom:13px;
+  }
+  #ds-new-arrivals-gallery .ds-circular-new__kicker{
+    margin-bottom:7px;
+    font-size:8px;
+  }
+  #ds-new-arrivals-gallery .ds-circular-new__title{
+    max-width:270px;
+    font-size:30px;
+    line-height:.98;
+  }
+  #ds-new-arrivals-gallery .ds-circular-new__sub{
+    max-width:285px;
+    margin-top:8px;
+    font-size:11px;
+    line-height:1.4;
+  }
+  #ds-new-arrivals-gallery .ds-circular-new__all{
+    width:max-content;
+    min-height:32px;
+    padding:0 11px;
+    font-size:9px;
+  }
   #ds-new-arrivals-gallery .ds-circular-new__stage{
     height:auto;
     overflow-x:auto;
@@ -190,14 +215,14 @@
     touch-action:pan-x;
     scroll-snap-type:x mandatory;
     scrollbar-width:none;
-    padding:0 14px 4px;
+    padding:0 12px 3px;
     box-sizing:border-box;
   }
   #ds-new-arrivals-gallery .ds-circular-new__stage::-webkit-scrollbar{display:none}
   #ds-new-arrivals-gallery .ds-circular-new__ring{
     position:relative!important;
     display:flex!important;
-    gap:9px;
+    gap:8px;
     width:max-content;
     height:auto;
     transform:none!important;
@@ -205,8 +230,8 @@
   }
   #ds-new-arrivals-gallery .ds-circular-product{
     position:relative!important;
-    flex:0 0 min(72vw,270px);
-    width:min(72vw,270px)!important;
+    flex:0 0 min(52vw,205px);
+    width:min(52vw,205px)!important;
     height:auto!important;
     aspect-ratio:3/4;
     transform:none!important;
@@ -216,9 +241,39 @@
     z-index:auto!important;
     scroll-snap-align:center;
   }
-  #ds-new-arrivals-gallery .ds-circular-product__name{font-size:16px}
-  #ds-new-arrivals-gallery .ds-circular-new__footer{margin-top:14px}
-  #ds-new-arrivals-gallery .ds-circular-new__hint{font-size:8px}
+  #ds-new-arrivals-gallery .ds-circular-product__card{
+    border-radius:12px;
+  }
+  #ds-new-arrivals-gallery .ds-circular-product__meta{
+    right:9px;
+    bottom:9px;
+    left:9px;
+  }
+  #ds-new-arrivals-gallery .ds-circular-product__topline{
+    margin-bottom:6px;
+  }
+  #ds-new-arrivals-gallery .ds-circular-product__badge{
+    min-height:16px;
+    padding:0 6px;
+    font-size:6px;
+  }
+  #ds-new-arrivals-gallery .ds-circular-product__price{
+    font-size:8px;
+  }
+  #ds-new-arrivals-gallery .ds-circular-product__name{
+    font-size:13px;
+    line-height:1.08;
+  }
+  #ds-new-arrivals-gallery .ds-circular-product__arrow{
+    right:8px;
+    top:8px;
+    width:24px;
+    height:24px;
+    font-size:9px;
+  }
+  #ds-new-arrivals-gallery .ds-circular-new__footer{
+    display:none;
+  }
 }
 
 @media(prefers-reduced-motion:reduce){
