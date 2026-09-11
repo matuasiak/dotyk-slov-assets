@@ -1,6 +1,6 @@
-/* DOTYK SLOV — New Arrivals Coverflow v3
+/* DOTYK SLOV — New Arrivals Coverflow v4
    Shoptet-native. Pulls products from Novinky / NEW flags.
-   Desktop = centered coverflow. Mobile = native swipe. */
+   Desktop = centered coverflow. Mobile = compact native swipe. */
 (function(){
   'use strict';
 
@@ -185,7 +185,7 @@
   }
 
   function ensureStyles(){
-    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=3';
+    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=4';
     var existing=document.querySelector('link[data-ds-new-arrivals-css]');
     if(existing){if(existing.href!==href)existing.href=href;return}
     var link=document.createElement('link');
