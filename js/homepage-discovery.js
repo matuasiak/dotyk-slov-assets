@@ -1,45 +1,14 @@
+/* DOTYK SLOV — homepage discovery v12 / compact nav + editorial separator */
 (function(){
   'use strict';
 
-  /* Temporary fashion-model imagery for the navigation hub.
-     These are individual HTTPS images on purpose — no sprite/crop hacks. */
-  var MODEL_IMAGES={
-    'Tričká':{
-      a:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&h=1200&q=84',
-      b:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&h=1200&q=84'
-    },
-    'Mikiny':{
-      a:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&h=1200&q=84',
-      b:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&h=1200&q=84'
-    },
-    'Cropy':{
-      a:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&h=1200&q=84',
-      b:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&h=1200&q=84'
-    },
-    'Doplnky':{
-      a:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&h=1200&q=84',
-      b:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&h=1200&q=84'
-    },
-    'Novinky':{
-      a:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&h=1200&q=84',
-      b:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&h=1200&q=84'
-    },
-    'Limitky':{
-      a:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&h=1200&q=84',
-      b:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&h=1200&q=84'
-    },
-    'Vlastný text':{
-      a:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&h=1200&q=84',
-      b:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&h=1200&q=84'
-    }
-  };
+  var EDITORIAL_IMAGE='https://matuasiak.github.io/dotyk-slov-assets/story.jpg';
 
   var ROUTES=[
     {title:'Tričká',match:['tričká','tricka']},
     {title:'Mikiny',match:['mikiny','mikina']},
     {title:'Cropy',match:['cropy','crop']},
     {title:'Doplnky',match:['doplnky','doplnok']},
-    {title:'Novinky',match:['novinky','nové','nove']},
     {title:'Limitky',match:['limitky','limitované','limitovane']},
     {title:'Vlastný text',match:['vlastný text','vlastny text','produkty podľa textu','produkty podla textu','podľa textu','podla textu']}
   ];
@@ -116,48 +85,44 @@
     '</div>';
   }
 
-  function cardMarkup(route,index){
-    return '<a class="ds-visual-card" href="'+esc(route.href)+'" data-ds-visual="'+index+'" aria-label="'+esc(route.title)+'">'+
-      '<span class="ds-visual-card__media">'+
-        '<span class="ds-visual-card__image ds-visual-card__image--a"></span>'+ 
-        '<span class="ds-visual-card__image ds-visual-card__image--b"></span>'+ 
-      '</span>'+ 
-      '<span class="ds-visual-card__shade"></span>'+ 
-      '<span class="ds-visual-card__label"><strong>'+esc(route.title)+'</strong><span class="ds-visual-card__arrow">→</span></span>'+ 
+  function routeMarkup(route,index){
+    var num=String(index+1).padStart(2,'0');
+    return '<a class="ds-quick-link" href="'+esc(route.href)+'" aria-label="'+esc(route.title)+'">'+
+      '<span class="ds-quick-link__index">'+num+'</span>'+ 
+      '<strong>'+esc(route.title)+'</strong>'+ 
+      '<span class="ds-quick-link__arrow">→</span>'+ 
     '</a>';
+  }
+
+  function quickNavMarkup(routes){
+    return '<div class="ds-home-quicknav">'+
+      '<div class="ds-home-quicknav__head">'+
+        '<span>RÝCHLY ROZCESTNÍK</span>'+ 
+        '<strong>kam chceš ísť?</strong>'+ 
+      '</div>'+ 
+      '<nav class="ds-home-quicknav__grid" aria-label="Kategórie">'+routes.map(routeMarkup).join('')+'</nav>'+ 
+    '</div>';
+  }
+
+  function editorialMarkup(){
+    return '<section class="ds-home-editorial" aria-label="Dotyk Slov editorial">'+
+      '<div class="ds-home-editorial__image">'+
+        '<img src="'+EDITORIAL_IMAGE+'" alt="Dotyk Slov editorial" loading="lazy" decoding="async">'+
+      '</div>'+ 
+      '<div class="ds-home-editorial__copy">'+
+        '<span class="ds-home-editorial__eyebrow">DOTYK / EDITORIAL 01</span>'+ 
+        '<h2>veci, ktoré<br>nepovieš nahlas.</h2>'+ 
+        '<p>Oblečenie pre všetko, čo ostalo v hlave.</p>'+ 
+      '</div>'+ 
+    '</section>';
   }
 
   function markup(routes){
     return '<section id="ds-home-discovery" aria-label="Rýchla navigácia">'+
       trustMarkup()+
-      '<div class="ds-home-visualnav">'+
-        '<div class="ds-home-visualnav__track" role="navigation" aria-label="Kategórie">'+routes.map(cardMarkup).join('')+'</div>'+ 
-      '</div>'+ 
+      quickNavMarkup(routes)+
+      editorialMarkup()+
     '</section>';
-  }
-
-  function addImage(target,src,alt){
-    if(!target||!src)return;
-    target.innerHTML='';
-    var img=document.createElement('img');
-    img.src=src;
-    img.alt=alt||'';
-    img.loading='lazy';
-    img.decoding='async';
-    img.referrerPolicy='no-referrer';
-    target.appendChild(img);
-  }
-
-  function hydrate(route,index,root){
-    var card=$('[data-ds-visual="'+index+'"]',root);
-    if(!card)return;
-    var slotA=$('.ds-visual-card__image--a',card);
-    var slotB=$('.ds-visual-card__image--b',card);
-    var model=MODEL_IMAGES[route.title];
-    if(!model)return;
-    addImage(slotA,model.a,route.title);
-    addImage(slotB,model.b,route.title);
-    if(model.b&&model.b!==model.a)card.classList.add('has-hover-image');
   }
 
   function build(){
@@ -180,9 +145,7 @@
 
     var holder=document.createElement('div');
     holder.innerHTML=markup(routes);
-    var section=holder.firstElementChild;
-    hero.insertAdjacentElement('afterend',section);
-    routes.forEach(function(route,index){hydrate(route,index,section)});
+    hero.insertAdjacentElement('afterend',holder.firstElementChild);
     return true;
   }
 
