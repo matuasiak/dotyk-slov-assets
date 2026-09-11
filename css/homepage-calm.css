@@ -1,0 +1,41 @@
+/* DOTYK SLOV — calm homepage layer v1
+   Presentation only. Uses existing theme tokens. Load after theme.css. */
+body.in-index{background:#F7F5F0!important}
+body.in-index .overall-wrapper{background:#F7F5F0!important}
+
+/* Benefits: quiet information strip instead of another dark section */
+body.in-index #ds-home-discovery .ds-home-trust{background:#F1ECE5!important;color:var(--ds-text,#28231F)!important;border-bottom:1px solid rgba(40,35,31,.08)!important}
+body.in-index #ds-home-discovery .ds-home-trust::before{height:1px;opacity:.55}
+body.in-index #ds-home-discovery .ds-home-trust__item{border-color:rgba(40,35,31,.08)!important}
+body.in-index #ds-home-discovery .ds-home-trust__index{border-color:rgba(40,35,31,.2)!important;color:var(--ds-primary,#4A3E37)!important}
+body.in-index #ds-home-discovery .ds-home-trust__item strong{color:var(--ds-text,#28231F)!important}
+body.in-index #ds-home-discovery .ds-home-trust__item small{color:var(--ds-on-light-muted,rgba(40,35,31,.58))!important}
+body.in-index #ds-home-discovery .ds-home-trust__item::after{display:none}
+
+/* Discovery remains light and visually connected to the page */
+body.in-index #ds-home-discovery{background:#F7F5F0!important}
+body.in-index #ds-home-discovery .ds-home-quicknav{padding-top:30px;padding-bottom:36px}
+body.in-index #ds-home-discovery .ds-home-quicknav__head{margin-bottom:12px}
+
+/* New arrivals: same page surface, product interaction carries the emphasis */
+body.in-index #ds-new-arrivals-gallery{background:#F7F5F0!important;color:var(--ds-text,#28231F)!important;border-top:0!important;border-bottom:1px solid rgba(40,35,31,.08)!important}
+body.in-index #ds-new-arrivals-gallery .ds-circular-new__inner{padding-top:54px;padding-bottom:46px}
+body.in-index #ds-new-arrivals-gallery .ds-circular-new__title{color:var(--ds-text,#28231F)!important}
+body.in-index #ds-new-arrivals-gallery .ds-circular-new__kicker{color:var(--ds-on-light-faint,rgba(40,35,31,.42))!important}
+body.in-index #ds-new-arrivals-gallery .ds-circular-new__sub{color:var(--ds-on-light-muted,rgba(40,35,31,.58))!important}
+body.in-index #ds-new-arrivals-gallery .ds-circular-new__all{color:var(--ds-text,#28231F)!important;border-color:rgba(40,35,31,.14)!important}
+body.in-index #ds-new-arrivals-gallery .ds-circular-new__control{color:var(--ds-text,#28231F)!important;border-color:rgba(40,35,31,.14)!important}
+body.in-index #ds-new-arrivals-gallery .ds-circular-new__hint{color:rgba(40,35,31,.38)!important}
+
+/* Footer should be the main dark anchor at the bottom */
+body.in-index #ds-home-bestsellers+*{scroll-margin-top:80px}
+
+@media(max-width:767px){
+  body.in-index #ds-home-discovery .ds-home-trust__item:nth-child(-n+2){border-bottom-color:rgba(40,35,31,.08)!important}
+  body.in-index #ds-new-arrivals-gallery{background:#F7F5F0!important;color:var(--ds-text,#28231F)!important}
+  body.in-index #ds-new-arrivals-gallery .ds-circular-new__inner{padding-top:38px;padding-bottom:34px}
+  body.in-index #ds-new-arrivals-gallery .ds-circular-new__kicker{color:var(--ds-on-light-faint,rgba(40,35,31,.42))!important}
+  body.in-index #ds-new-arrivals-gallery .ds-circular-new__title{color:var(--ds-text,#28231F)!important}
+  body.in-index #ds-new-arrivals-gallery .ds-circular-new__sub{color:var(--ds-on-light-muted,rgba(40,35,31,.58))!important}
+  body.in-index #ds-new-arrivals-gallery .ds-circular-new__mobile-all{color:var(--ds-text,#28231F)!important;border-color:rgba(40,35,31,.16)!important}
+}
