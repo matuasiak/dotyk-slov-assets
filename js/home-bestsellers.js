@@ -1,4 +1,4 @@
-/* DOTYK SLOV — modular homepage bestsellers v1 */
+/* DOTYK SLOV — modular homepage bestsellers v2 */
 (function(){
   'use strict';
   var ROOT='ds-home-bestsellers';
@@ -9,7 +9,7 @@
   function norm(v){return clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
   function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function abs(v){if(!v)return'';try{return new URL(v,location.origin).href}catch(_){return v}}
-  function ensureCss(){var h='https://matuasiak.github.io/dotyk-slov-assets/css/home-bestsellers.css?v=1';var l=document.querySelector('link[data-ds-best-css]');if(l){l.href=h;return}l=document.createElement('link');l.rel='stylesheet';l.href=h;l.dataset.dsBestCss='1';document.head.appendChild(l)}
+  function ensureCss(){var h='https://matuasiak.github.io/dotyk-slov-assets/css/home-bestsellers.css?v=2';var l=document.querySelector('link[data-ds-best-css]');if(l){l.href=h;return}l=document.createElement('link');l.rel='stylesheet';l.href=h;l.dataset.dsBestCss='1';document.head.appendChild(l)}
   function image(img){if(!img)return'';var a=['data-src','data-lazy-src','data-original','data-lazy','src'];for(var i=0;i<a.length;i++){var v=clean(img.getAttribute(a[i]));if(v&&!/^data:|^blob:/i.test(v)&&!/placeholder|spacer|transparent/i.test(v))return abs(v)}return''}
   function nodes(doc){var out=[];['.products-block .product','.products .product','.product-item','[data-micro-product-id]'].forEach(function(s){$$(s,doc).forEach(function(n){if(out.indexOf(n)<0)out.push(n)})});return out}
   function product(n){var a=$('a.name[href],.name a[href],.p-name a[href],.p-in-in a[href],.product-name a[href],h2 a[href],h3 a[href]',n)||$('a[href]',n);if(!a)return null;var name=clean(($('[data-micro="name"],.name,.p-name,.p-in-in,.product-name,h2,h3',n)||{}).textContent)||clean(a.title)||clean(a.textContent);var price=clean(($('.price-final strong,.price-final,.p-final-price,[data-micro="price"],.price',n)||{}).textContent);var img=image($('img',n));if(!name||!img)return null;return{name:name,price:price,href:abs(a.href),image:img}}
