@@ -1,17 +1,58 @@
-/* DOTYK SLOV — modular homepage bestsellers v1 */
-#ds-home-bestsellers{width:100vw;margin:0 calc(50% - 50vw);background:var(--ds-surface-light,#F5F1EA);color:var(--ds-text,#28231F);font-family:Inter,"Helvetica Neue",Arial,sans-serif}
-#ds-home-bestsellers .ds-best-wrap{width:min(calc(100% - (2 * clamp(20px,3vw,54px))),1460px);margin:0 auto;padding:clamp(52px,6vw,88px) 0}
-#ds-home-bestsellers .ds-best-head{display:flex;justify-content:space-between;align-items:end;gap:28px;margin-bottom:22px}
-#ds-home-bestsellers .ds-best-head span{display:block;margin-bottom:10px;color:var(--ds-on-light-faint,rgba(40,35,31,.4));font-size:9px;font-weight:600;letter-spacing:.16em}
-#ds-home-bestsellers .ds-best-head h2{max-width:660px;margin:0;font-size:clamp(34px,3.7vw,56px);font-weight:300;line-height:.98;letter-spacing:-.05em}
-#ds-home-bestsellers .ds-best-head>a{color:var(--ds-text,#28231F)!important;text-decoration:none!important;font-size:11px;border-bottom:1px solid var(--ds-line-light,rgba(40,35,31,.14));padding-bottom:4px}
-#ds-home-bestsellers .ds-best-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-#ds-home-bestsellers .ds-best-card{display:block;min-width:0;color:var(--ds-text,#28231F)!important;text-decoration:none!important}
-#ds-home-bestsellers .ds-best-card__media{display:block;aspect-ratio:4/5;overflow:hidden;background:#ebe6de}
-#ds-home-bestsellers .ds-best-card__media img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.9);transition:transform .7s cubic-bezier(.22,1,.36,1)}
+/* DOTYK SLOV — modular homepage bestsellers v2
+   One hero bestseller + three compact rows. */
+#ds-home-bestsellers{
+  width:100vw;
+  margin:0 calc(50% - 50vw);
+  background:#F6F5F2;
+  color:#191918;
+  font-family:Inter,"Helvetica Neue",Arial,sans-serif;
+  border-bottom:1px solid rgba(25,25,24,.08);
+}
+#ds-home-bestsellers .ds-best-wrap{width:min(calc(100% - 40px),1460px);margin:0 auto;padding:68px 0 78px}
+#ds-home-bestsellers .ds-best-head{display:flex;justify-content:space-between;align-items:end;gap:28px;margin-bottom:20px}
+#ds-home-bestsellers .ds-best-head span{display:block;margin-bottom:8px;color:#74716C;font-size:8px;font-weight:600;letter-spacing:.15em}
+#ds-home-bestsellers .ds-best-head h2{max-width:580px;margin:0;font-size:clamp(30px,3vw,42px);font-weight:400;line-height:1;letter-spacing:-.045em}
+#ds-home-bestsellers .ds-best-head>a{color:#191918!important;text-decoration:none!important;font-size:10px;border-bottom:1px solid rgba(25,25,24,.22);padding-bottom:3px}
+
+#ds-home-bestsellers .ds-best-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(330px,.6fr);
+  grid-template-rows:repeat(3,minmax(0,1fr));
+  gap:0 28px;
+  align-items:stretch;
+}
+#ds-home-bestsellers .ds-best-card{display:grid;min-width:0;color:#191918!important;text-decoration:none!important}
+#ds-home-bestsellers .ds-best-card:first-child{grid-row:1/4;display:block;padding-right:4px}
+#ds-home-bestsellers .ds-best-card:not(:first-child){grid-column:2;grid-template-columns:138px minmax(0,1fr);gap:16px;align-items:center;padding:12px 0;border-top:1px solid rgba(25,25,24,.09)}
+#ds-home-bestsellers .ds-best-card:last-child{border-bottom:1px solid rgba(25,25,24,.09)}
+#ds-home-bestsellers .ds-best-card__media{display:block;overflow:hidden;background:#EAE7E1}
+#ds-home-bestsellers .ds-best-card:first-child .ds-best-card__media{aspect-ratio:4/5}
+#ds-home-bestsellers .ds-best-card:not(:first-child) .ds-best-card__media{aspect-ratio:4/5}
+#ds-home-bestsellers .ds-best-card__media img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.9) contrast(1.01);transition:transform .7s cubic-bezier(.22,1,.36,1)}
 #ds-home-bestsellers .ds-best-card__meta{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 12px;padding-top:10px}
-#ds-home-bestsellers .ds-best-card__code{grid-column:1/-1;color:var(--ds-on-light-faint,rgba(40,35,31,.38));font-size:7px;letter-spacing:.11em}
-#ds-home-bestsellers .ds-best-card__meta strong{font-size:14px;font-weight:400;line-height:1.18;letter-spacing:-.02em}
-#ds-home-bestsellers .ds-best-card__meta>span:last-child{font-size:11px;color:var(--ds-on-light-muted,rgba(40,35,31,.6));white-space:nowrap}
+#ds-home-bestsellers .ds-best-card:not(:first-child) .ds-best-card__meta{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0;gap:5px}
+#ds-home-bestsellers .ds-best-card__code{grid-column:1/-1;color:#87837E;font-size:7px;letter-spacing:.11em}
+#ds-home-bestsellers .ds-best-card__meta strong{font-size:14px;font-weight:400;line-height:1.2;letter-spacing:-.02em}
+#ds-home-bestsellers .ds-best-card:first-child .ds-best-card__meta strong{font-size:15px}
+#ds-home-bestsellers .ds-best-card__meta>span:last-child{font-size:11px;color:#74716C;white-space:nowrap}
 @media(hover:hover) and (pointer:fine){#ds-home-bestsellers .ds-best-card:hover img{transform:scale(1.025)}}
-@media(max-width:767px){#ds-home-bestsellers .ds-best-wrap{width:calc(100% - 24px);padding:42px 0 46px}#ds-home-bestsellers .ds-best-head{align-items:start;flex-direction:column;gap:12px;margin-bottom:16px}#ds-home-bestsellers .ds-best-head h2{font-size:30px;max-width:300px}#ds-home-bestsellers .ds-best-head>a{font-size:9px}#ds-home-bestsellers .ds-best-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 6px}#ds-home-bestsellers .ds-best-card__meta{grid-template-columns:1fr;gap:3px;padding-top:7px}#ds-home-bestsellers .ds-best-card__code{font-size:6px}#ds-home-bestsellers .ds-best-card__meta strong{font-size:11px}#ds-home-bestsellers .ds-best-card__meta>span:last-child{font-size:9px}}
+
+@media(max-width:900px){
+  #ds-home-bestsellers .ds-best-grid{grid-template-columns:1.2fr .8fr;gap:0 18px}
+  #ds-home-bestsellers .ds-best-card:not(:first-child){grid-template-columns:104px minmax(0,1fr);gap:12px}
+}
+
+@media(max-width:767px){
+  #ds-home-bestsellers .ds-best-wrap{width:calc(100% - 24px);padding:48px 0 54px}
+  #ds-home-bestsellers .ds-best-head{align-items:start;flex-direction:column;gap:10px;margin-bottom:15px}
+  #ds-home-bestsellers .ds-best-head h2{font-size:28px;max-width:300px}
+  #ds-home-bestsellers .ds-best-head>a{font-size:9px}
+  #ds-home-bestsellers .ds-best-grid{display:block}
+  #ds-home-bestsellers .ds-best-card:first-child{padding:0 0 18px}
+  #ds-home-bestsellers .ds-best-card:not(:first-child){display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid rgba(25,25,24,.09)}
+  #ds-home-bestsellers .ds-best-card:last-child{border-bottom:1px solid rgba(25,25,24,.09)}
+  #ds-home-bestsellers .ds-best-card__meta{grid-template-columns:1fr;gap:3px;padding-top:7px}
+  #ds-home-bestsellers .ds-best-card__code{font-size:6px}
+  #ds-home-bestsellers .ds-best-card__meta strong{font-size:11px!important}
+  #ds-home-bestsellers .ds-best-card__meta>span:last-child{font-size:9px}
+}
