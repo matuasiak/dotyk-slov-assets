@@ -1,6 +1,7 @@
-/* DOTYK SLOV — New Arrivals Coverflow v6
+/* DOTYK SLOV — New Arrivals Coverflow v7
    Shoptet-native. Pulls products from Novinky / NEW flags.
-   Desktop = centered coverflow. Mobile = compact centered coverflow with native swipe. */
+   Desktop = centered coverflow. Mobile = compact centered coverflow with native swipe.
+   Navigation loops both directions. */
 (function(){
   'use strict';
 
@@ -206,7 +207,6 @@
     var dragMoved=false;
     var startX=0;
     var autoTimer=null;
-    var autoDirection=1;
     var scrollTimer=null;
 
     function renderDesktop(){
@@ -260,9 +260,8 @@
     }
 
     function go(delta,behavior){
-      var next=Math.max(0,Math.min(cards.length-1,active+delta));
-      if(next===active)return;
-      active=next;
+      if(!cards.length)return;
+      active=(active+delta+cards.length)%cards.length;
       render(behavior||'smooth');
       restartAuto();
     }
@@ -271,9 +270,7 @@
       if(autoTimer)clearInterval(autoTimer);
       if(mobile.matches||cards.length<2||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
       autoTimer=setInterval(function(){
-        if(active>=cards.length-1)autoDirection=-1;
-        if(active<=0)autoDirection=1;
-        active+=autoDirection;
+        active=(active+1)%cards.length;
         render();
       },3600);
     }
