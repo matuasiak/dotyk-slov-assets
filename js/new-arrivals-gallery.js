@@ -1,6 +1,6 @@
-/* DOTYK SLOV — New Arrivals Coverflow v5
+/* DOTYK SLOV — New Arrivals Coverflow v6
    Shoptet-native. Pulls products from Novinky / NEW flags.
-   Desktop = centered coverflow. Mobile = editorial spotlight + compact product list. */
+   Desktop = centered coverflow. Mobile = compact centered coverflow with native swipe. */
 (function(){
   'use strict';
 
@@ -13,7 +13,7 @@
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
   function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function norm(v){return clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
-  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]})}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function absUrl(v){if(!v)return'';try{return new URL(v,location.origin).href}catch(_){return v}}
 
   function validImage(v){
@@ -186,7 +186,7 @@
   }
 
   function ensureStyles(){
-    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=5';
+    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=6';
     var existing=document.querySelector('link[data-ds-new-arrivals-css]');
     if(existing){if(existing.href!==href)existing.href=href;return}
     var link=document.createElement('link');
@@ -200,13 +200,14 @@
     var cards=$$('.ds-circular-product',section);
     if(!stage||!track||!cards.length)return;
 
-    var active=Math.min(1,cards.length-1);
+    var mobile=window.matchMedia('(max-width:767px)');
+    var active=mobile.matches?0:Math.min(1,cards.length-1);
     var drag=false;
     var dragMoved=false;
     var startX=0;
     var autoTimer=null;
     var autoDirection=1;
-    var mobile=window.matchMedia('(max-width:767px)');
+    var scrollTimer=null;
 
     function renderDesktop(){
       var card=cards[active];
@@ -237,24 +238,32 @@
         el.style.opacity='';
         el.style.zIndex='';
         el.style.pointerEvents='';
-        el.classList.remove('is-active');
       });
     }
 
-    function render(){
+    function scrollMobile(behavior){
+      var card=cards[active];
+      if(!card)return;
+      var left=card.offsetLeft-(stage.clientWidth-card.clientWidth)/2;
+      stage.scrollTo({left:Math.max(0,left),behavior:behavior||'smooth'});
+    }
+
+    function render(behavior){
       if(mobile.matches){
         clearDesktopStyles();
+        cards.forEach(function(el,i){el.classList.toggle('is-active',i===active)});
+        if(behavior)scrollMobile(behavior);
       }else{
         stage.scrollLeft=0;
         renderDesktop();
       }
     }
 
-    function go(delta){
+    function go(delta,behavior){
       var next=Math.max(0,Math.min(cards.length-1,active+delta));
       if(next===active)return;
       active=next;
-      render();
+      render(behavior||'smooth');
       restartAuto();
     }
 
@@ -306,14 +315,35 @@
       }
     },{passive:false});
 
+    stage.addEventListener('scroll',function(){
+      if(!mobile.matches)return;
+      if(scrollTimer)clearTimeout(scrollTimer);
+      scrollTimer=setTimeout(function(){
+        var center=stage.scrollLeft+stage.clientWidth/2;
+        var best=0,bestDistance=Infinity;
+        cards.forEach(function(el,i){
+          var c=el.offsetLeft+el.offsetWidth/2;
+          var d=Math.abs(c-center);
+          if(d<bestDistance){bestDistance=d;best=i}
+        });
+        active=best;
+        cards.forEach(function(el,i){el.classList.toggle('is-active',i===active)});
+      },70);
+    },{passive:true});
+
     stage.addEventListener('mouseenter',function(){if(autoTimer)clearInterval(autoTimer)});
     stage.addEventListener('mouseleave',restartAuto);
 
-    if(mobile.addEventListener)mobile.addEventListener('change',function(){render();restartAuto()});
-    else if(mobile.addListener)mobile.addListener(function(){render();restartAuto()});
+    function onModeChange(){
+      active=mobile.matches?0:Math.min(1,cards.length-1);
+      render(mobile.matches?'auto':null);
+      restartAuto();
+    }
+    if(mobile.addEventListener)mobile.addEventListener('change',onModeChange);
+    else if(mobile.addListener)mobile.addListener(onModeChange);
     window.addEventListener('resize',function(){render()},{passive:true});
 
-    requestAnimationFrame(function(){render();restartAuto()});
+    requestAnimationFrame(function(){render(mobile.matches?'auto':null);restartAuto()});
   }
 
   async function build(){
