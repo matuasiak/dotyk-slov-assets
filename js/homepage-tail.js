@@ -93,18 +93,23 @@
   }
 
   function allNavLinks(){
-    return $$('#ds-site-header a[href],#navigation a[href],#ds-home-discovery a[href]');
+    return $$('#ds-site-header a[href],#navigation a[href],#ds-home-discovery a[href],#footer a[href]');
   }
 
-  function bestsellerHref(){
-    var wanted=['bestsellery','best seller','najpredavanejsie','najpredávanejšie','top produkty'];
+  function findTextHref(labels){
     var links=allNavLinks();
     for(var i=0;i<links.length;i++){
       var t=norm(links[i].textContent+' '+(links[i].getAttribute('aria-label')||''));
-      if(wanted.some(function(w){return t===norm(w)||t.indexOf(norm(w))>=0}))return links[i].href;
+      for(var j=0;j<labels.length;j++){
+        var wanted=norm(labels[j]);
+        if(t===wanted||t.indexOf(wanted)>=0)return links[i].href;
+      }
     }
     return'';
   }
+
+  function bestsellerHref(){return findTextHref(['bestsellery','best seller','najpredávanejšie','najpredavanejsie','top produkty'])}
+  function aboutHref(){return findTextHref(['o nás','o nas','náš príbeh','nas pribeh','príbeh značky','pribeh znacky'])}
 
   async function fetchDoc(url){
     if(!url)return null;
@@ -160,12 +165,13 @@
   }
 
   function storyMarkup(){
+    var about=aboutHref();
     return '<section class="ds-brand-story" aria-label="O značke Dotyk Slov">'+
       '<div class="ds-brand-story__copy">'+
-        '<span>DOTYK SLOV / OD 2024</span>'+ 
+        '<span>DOTYK SLOV / BRAND STORY</span>'+ 
         '<h2>nie všetko treba<br>povedať nahlas.</h2>'+ 
-        '<p>Niektoré veci sa ľahšie nosia, než vysvetľujú. Dotyk Slov vznikol pre myšlienky, ktoré ostali v hlave, pre iróniu, ktorú pochopí ten správny človek, a pre dni, keď oblečenie povie presne dosť.</p>'+ 
-        '<a href="/o-nas/">viac o nás →</a>'+ 
+        '<p>Niektoré veci sa ľahšie nosia, než vysvetľujú. Dotyk Slov je pre myšlienky, ktoré ostali v hlave, pre iróniu, ktorú pochopí ten správny človek, a pre dni, keď oblečenie povie presne dosť.</p>'+ 
+        (about?'<a href="'+esc(about)+'">viac o nás →</a>':'')+
       '</div>'+ 
       '<div class="ds-brand-story__media ds-brand-story__media--main"><img src="'+ASSET+'story.jpg" alt="Dotyk Slov" loading="lazy" decoding="async"></div>'+ 
       '<div class="ds-brand-story__media ds-brand-story__media--small"><img src="'+ASSET+'promo2.jpg" alt="Dotyk Slov detail" loading="lazy" decoding="async"></div>'+ 
@@ -191,9 +197,7 @@
     '</section>';
   }
 
-  function markup(data){
-    return '<div id="'+ROOT_ID+'">'+bestMarkup(data)+storyMarkup()+communityMarkup()+newsletterMarkup()+'</div>';
-  }
+  function markup(data){return '<div id="'+ROOT_ID+'">'+bestMarkup(data)+storyMarkup()+communityMarkup()+newsletterMarkup()+'</div>'}
 
   function moveNewsletter(){
     var slot=$('[data-ds-newsletter-slot]');
@@ -201,8 +205,7 @@
     var form=$('#footer .newsletter form,#footer form[action*="newsletter"],#footer form[action*="subscribe"],.newsletter form');
     if(!form||form.closest('#'+ROOT_ID))return false;
     var wrap=form.closest('.newsletter')||form.parentElement;
-    slot.innerHTML='';
-    slot.appendChild(form);
+    slot.innerHTML='';slot.appendChild(form);
     if(wrap&&wrap!==form&&wrap.closest('#footer'))wrap.setAttribute('data-ds-newsletter-moved','1');
     return true;
   }
@@ -221,6 +224,7 @@
   }
 
   function hideNativeBest(){
+    if(!document.body.classList.contains('in-index'))return;
     var headings=$$('.homepage-group-title,h2,h3,h4').filter(function(h){
       if(h.closest('#'+ROOT_ID))return false;
       var t=norm(h.textContent);
@@ -230,9 +234,7 @@
       var p=h.parentElement,depth=0;
       while(p&&p!==document.body&&depth<4){
         if(p.querySelector('.products-block .product,.products .product,.product-item')){
-          p.style.setProperty('display','none','important');
-          p.setAttribute('data-ds-native-best-hidden','1');
-          break;
+          p.style.setProperty('display','none','important');p.setAttribute('data-ds-native-best-hidden','1');break;
         }
         p=p.parentElement;depth++;
       }
@@ -241,22 +243,18 @@
 
   async function build(){
     if(!document.body.classList.contains('in-index'))return true;
-    if($('#'+ROOT_ID)){enhanceFooter();moveNewsletter();return true}
+    if($('#'+ROOT_ID)){moveNewsletter();return true}
     var anchor=$('#ds-new-arrivals-gallery');
     if(!anchor||!anchor.parentNode)return false;
-    ensureStyles();
     var data=await loadBestsellers();
     if($('#'+ROOT_ID))return true;
-    var holder=document.createElement('div');
-    holder.innerHTML=markup(data);
+    var holder=document.createElement('div');holder.innerHTML=markup(data);
     anchor.insertAdjacentElement('afterend',holder.firstElementChild);
-    hideNativeBest();
-    enhanceFooter();
-    moveNewsletter();
-    return true;
+    hideNativeBest();moveNewsletter();return true;
   }
 
   function boot(){
+    ensureStyles();
     var tries=0;
     function run(){
       Promise.resolve(build()).then(function(done){
