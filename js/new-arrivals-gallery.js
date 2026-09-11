@@ -1,6 +1,6 @@
-/* DOTYK SLOV — New Arrivals Arc Gallery v2
+/* DOTYK SLOV — New Arrivals Coverflow v3
    Shoptet-native. Pulls products from Novinky / NEW flags.
-   Desktop = readable 3D arc. Mobile = swipe carousel. */
+   Desktop = centered coverflow. Mobile = native swipe. */
 (function(){
   'use strict';
 
@@ -185,7 +185,7 @@
   }
 
   function ensureStyles(){
-    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=2';
+    var href='https://matuasiak.github.io/dotyk-slov-assets/css/new-arrivals-gallery.css?v=3';
     var existing=document.querySelector('link[data-ds-new-arrivals-css]');
     if(existing){if(existing.href!==href)existing.href=href;return}
     var link=document.createElement('link');
@@ -195,40 +195,48 @@
 
   function initInteraction(section){
     var stage=$('.ds-circular-new__stage',section);
+    var track=$('.ds-circular-new__ring',section);
     var cards=$$('.ds-circular-product',section);
-    if(!stage||!cards.length)return;
+    if(!stage||!track||!cards.length)return;
 
-    var active=0;
+    var active=Math.min(1,cards.length-1);
     var drag=false;
     var dragMoved=false;
     var startX=0;
     var autoTimer=null;
+    var autoDirection=1;
     var mobile=window.matchMedia('(max-width:767px)');
-
-    function wrapDiff(index,current,count){
-      var d=index-current;
-      if(d>count/2)d-=count;
-      if(d<-count/2)d+=count;
-      return d;
-    }
+    var scrollTimer=null;
 
     function renderDesktop(){
-      var width=stage.clientWidth||1200;
-      var step=Math.max(150,Math.min(230,width*.16));
-      cards.forEach(function(card,i){
-        var rel=wrapDiff(i,active,cards.length);
+      var card=cards[active];
+      if(!card)return;
+
+      var target=stage.clientWidth/2-(card.offsetLeft+card.offsetWidth/2);
+      track.style.transform='translate3d('+Math.round(target)+'px,0,0)';
+
+      cards.forEach(function(el,i){
+        var rel=i-active;
         var abs=Math.abs(rel);
-        var visible=abs<=3;
-        var x=rel*step;
-        var y=abs*20;
-        var rotate=rel*-8;
-        var scale=abs===0?1:Math.max(.76,1-abs*.09);
-        var opacity=abs===0?1:(abs===1?.82:(abs===2?.45:.16));
-        card.style.transform='translate(-50%,-50%) translateX('+x+'px) translateY('+y+'px) rotateY('+rotate+'deg) scale('+scale+')';
-        card.style.opacity=visible?String(opacity):'0';
-        card.style.zIndex=String(20-abs);
-        card.style.pointerEvents=abs<=2?'auto':'none';
-        card.classList.toggle('is-active',abs===0);
+        var rotate=rel===0?0:(rel<0?7:-7);
+        var y=abs*11;
+        var scale=abs===0?1:Math.max(.82,1-abs*.075);
+        var opacity=abs===0?1:(abs===1?.78:(abs===2?.42:.16));
+        el.style.transform='translateY('+y+'px) rotateY('+rotate+'deg) scale('+scale+')';
+        el.style.opacity=String(opacity);
+        el.style.zIndex=String(20-abs);
+        el.style.pointerEvents=abs<=2?'auto':'none';
+        el.classList.toggle('is-active',abs===0);
+      });
+    }
+
+    function clearDesktopStyles(){
+      track.style.transform='none';
+      cards.forEach(function(el){
+        el.style.transform='';
+        el.style.opacity='';
+        el.style.zIndex='';
+        el.style.pointerEvents='';
       });
     }
 
@@ -241,10 +249,8 @@
 
     function render(behavior){
       if(mobile.matches){
-        cards.forEach(function(card){
-          card.style.transform='';card.style.opacity='';card.style.zIndex='';card.style.pointerEvents='';card.classList.remove('is-active');
-        });
-        if(cards[active])cards[active].classList.add('is-active');
+        clearDesktopStyles();
+        cards.forEach(function(el,i){el.classList.toggle('is-active',i===active)});
         if(behavior)scrollMobile(behavior);
       }else{
         stage.scrollLeft=0;
@@ -253,15 +259,22 @@
     }
 
     function go(delta,behavior){
-      active=(active+delta+cards.length)%cards.length;
+      var next=Math.max(0,Math.min(cards.length-1,active+delta));
+      if(next===active)return;
+      active=next;
       render(behavior||'smooth');
       restartAuto();
     }
 
     function restartAuto(){
       if(autoTimer)clearInterval(autoTimer);
-      if(mobile.matches||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-      autoTimer=setInterval(function(){active=(active+1)%cards.length;render()},3600);
+      if(mobile.matches||cards.length<2||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+      autoTimer=setInterval(function(){
+        if(active>=cards.length-1)autoDirection=-1;
+        if(active<=0)autoDirection=1;
+        active+=autoDirection;
+        render();
+      },3600);
     }
 
     var prev=$('[data-ds-circular-prev]',section);
@@ -301,6 +314,22 @@
       }
     },{passive:false});
 
+    stage.addEventListener('scroll',function(){
+      if(!mobile.matches)return;
+      if(scrollTimer)clearTimeout(scrollTimer);
+      scrollTimer=setTimeout(function(){
+        var center=stage.scrollLeft+stage.clientWidth/2;
+        var best=0,bestDistance=Infinity;
+        cards.forEach(function(el,i){
+          var c=el.offsetLeft+el.offsetWidth/2;
+          var d=Math.abs(c-center);
+          if(d<bestDistance){bestDistance=d;best=i}
+        });
+        active=best;
+        cards.forEach(function(el,i){el.classList.toggle('is-active',i===active)});
+      },90);
+    },{passive:true});
+
     stage.addEventListener('mouseenter',function(){if(autoTimer)clearInterval(autoTimer)});
     stage.addEventListener('mouseleave',restartAuto);
 
@@ -308,8 +337,7 @@
     else if(mobile.addListener)mobile.addListener(function(){render();restartAuto()});
     window.addEventListener('resize',function(){render()},{passive:true});
 
-    render();
-    restartAuto();
+    requestAnimationFrame(function(){render();restartAuto()});
   }
 
   async function build(){
