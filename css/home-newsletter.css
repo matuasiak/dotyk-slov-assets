@@ -1,32 +1,11 @@
-/* DOTYK SLOV — modular newsletter v2 */
-#ds-home-newsletter{
-  width:100vw;
-  margin:0 calc(50% - 50vw);
-  background:#F6F5F2;
-  color:#191918;
-  font-family:Inter,"Helvetica Neue",Arial,sans-serif;
-  border-top:1px solid rgba(25,25,24,.08);
-}
-#ds-home-newsletter .ds-news-wrap{
-  width:min(calc(100% - 40px),1460px);
-  margin:0 auto;
-  padding:44px 0 50px;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(360px,.8fr);
-  gap:50px;
-  align-items:center;
-}
-#ds-home-newsletter .ds-news-copy>span{display:block;margin-bottom:7px;color:#74716C;font-size:8px;font-weight:600;letter-spacing:.15em}
-#ds-home-newsletter h2{margin:0;color:#191918;font-size:clamp(24px,2.6vw,36px);font-weight:400;line-height:1;letter-spacing:-.04em}
-#ds-home-newsletter .ds-news-copy p{max-width:480px;margin:9px 0 0;color:#74716C;font-size:11px;line-height:1.45}
-#ds-home-newsletter .ds-news-form>p{margin:0;color:#74716C;font-size:10px}
+/* DOTYK SLOV — newsletter v3 */
+#ds-home-newsletter{width:100vw;margin:0 calc(50% - 50vw);background:var(--ds-background,#F4F2ED);color:var(--ds-text,#161614);font-family:Inter,"Helvetica Neue",Arial,sans-serif;border-top:1px solid var(--ds-line-light-soft,rgba(22,22,20,.07))}
+#ds-home-newsletter .ds-news-wrap{width:min(calc(100% - 40px),1480px);margin:0 auto;padding:38px 0 44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.76fr);gap:44px;align-items:center}
+#ds-home-newsletter .ds-news-copy>span{display:block;margin-bottom:6px;color:var(--ds-on-light-faint,rgba(22,22,20,.40));font-size:6px;font-weight:700;letter-spacing:.14em}
+#ds-home-newsletter h2{margin:0;color:var(--ds-text,#161614);font-size:clamp(24px,2.4vw,34px);font-weight:600;line-height:1;letter-spacing:-.04em}
+#ds-home-newsletter .ds-news-copy p{max-width:450px;margin:8px 0 0;color:var(--ds-on-light-muted,rgba(22,22,20,.60));font-size:10px;line-height:1.45}
+#ds-home-newsletter .ds-news-form>p{margin:0;color:var(--ds-on-light-muted,rgba(22,22,20,.60));font-size:9px}
 #ds-home-newsletter form{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:0!important;width:100%!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important}
-#ds-home-newsletter input[type="email"],#ds-home-newsletter input[type="text"]{width:100%!important;min-height:46px!important;padding:0 13px!important;background:#FBFAF7!important;border:1px solid rgba(25,25,24,.14)!important;border-right:0!important;border-radius:0!important;box-shadow:none!important;color:#191918!important;font-size:11px!important}
-#ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{min-height:46px!important;padding:0 16px!important;background:#191918!important;border:1px solid #191918!important;border-radius:0!important;box-shadow:none!important;color:#fff!important;font-size:9px!important;font-weight:500!important;letter-spacing:.04em!important}
-@media(max-width:767px){
-  #ds-home-newsletter .ds-news-wrap{width:calc(100% - 24px);padding:38px 0 42px;grid-template-columns:1fr;gap:22px}
-  #ds-home-newsletter h2{font-size:27px}
-  #ds-home-newsletter .ds-news-copy p{font-size:10px}
-  #ds-home-newsletter form{grid-template-columns:minmax(0,1fr) auto!important}
-  #ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{width:auto!important;padding:0 13px!important}
-}
+#ds-home-newsletter input[type="email"],#ds-home-newsletter input[type="text"]{width:100%!important;min-height:44px!important;padding:0 12px!important;background:var(--ds-surface-light,#FAF9F6)!important;border:1px solid var(--ds-line-light,rgba(22,22,20,.13))!important;border-right:0!important;border-radius:0!important;box-shadow:none!important;color:var(--ds-text,#161614)!important;font-size:10px!important}
+#ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{min-height:44px!important;padding:0 15px!important;background:var(--ds-primary,#11110F)!important;border:1px solid var(--ds-primary,#11110F)!important;border-radius:0!important;box-shadow:none!important;color:var(--ds-on-primary,#F4F2ED)!important;font-size:8px!important;font-weight:700!important;letter-spacing:.05em!important}
+@media(max-width:767px){#ds-home-newsletter .ds-news-wrap{width:calc(100% - 24px);padding:34px 0 38px;grid-template-columns:1fr;gap:18px}#ds-home-newsletter h2{font-size:25px}#ds-home-newsletter .ds-news-copy p{font-size:9px}#ds-home-newsletter form{grid-template-columns:minmax(0,1fr) auto!important}#ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{width:auto!important;padding:0 12px!important}}
