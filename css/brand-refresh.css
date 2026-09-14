@@ -1,30 +1,83 @@
-/* DOTYK SLOV — brand refresh v1
-   Built around the new custom Dotyk Slov wordmark.
-   Load LAST, after theme.css + homepage-wip.css. */
+/* DOTYK SLOV — brand refresh v2
+   New logo system / workwear restraint.
+   LOAD LAST after theme.css + homepage-wip.css. */
 
 :root{
+  /* override the actual canonical theme tokens */
+  --ds-text:#151513;
+  --ds-background:#F2F0EA;
+  --ds-primary:#11110F;
+  --ds-secondary:#D5D0C8;
+  --ds-accent:#D8B7BE;
+  --ds-primary-deep:#0B0B09;
+  --ds-primary-soft:#292824;
+  --ds-surface-light:#F7F5F0;
+  --ds-surface-warm:#E3DFD7;
+  --ds-clay:#75645A;
+  --ds-pebble:#AAA59D;
+
+  --ds-text-rgb:21,21,19;
+  --ds-primary-rgb:17,17,15;
+  --ds-primary-deep-rgb:11,11,9;
+  --ds-primary-soft-rgb:41,40,36;
+  --ds-secondary-rgb:213,208,200;
+  --ds-accent-rgb:216,183,190;
+  --ds-on-primary-rgb:244,242,236;
+
+  --ds-on-primary:#F4F2EC;
+  --ds-on-primary-muted:rgba(244,242,236,.62);
+  --ds-on-primary-faint:rgba(244,242,236,.38);
+  --ds-line-primary:rgba(244,242,236,.14);
+  --ds-line-primary-soft:rgba(244,242,236,.08);
+  --ds-on-light:#151513;
+  --ds-on-light-muted:rgba(21,21,19,.58);
+  --ds-on-light-faint:rgba(21,21,19,.38);
+  --ds-line-light:rgba(21,21,19,.12);
+  --ds-line-light-soft:rgba(21,21,19,.07);
+  --ds-overlay:rgba(11,11,9,.68);
+
   --ds-brand-ink:#11110F;
-  --ds-brand-ink-2:#1A1917;
-  --ds-brand-paper:#F3F1EB;
-  --ds-brand-paper-2:#E9E5DE;
-  --ds-brand-stone:#CFC8BE;
+  --ds-brand-paper:#F2F0EA;
+  --ds-brand-stone:#D5D0C8;
   --ds-brand-brown:#75645A;
   --ds-brand-pink:#D8B7BE;
-  --ds-brand-line:rgba(17,17,15,.12);
-  --ds-brand-line-dark:rgba(243,241,235,.13);
   --ds-brand-logo:url('https://matuasiak.github.io/dotyk-slov-assets/images/dotyk-slov-logo.svg');
+
+  /* compatibility aliases */
+  --ds-black:var(--ds-primary);
+  --ds-black-2:var(--ds-primary-soft);
+  --ds-white:var(--ds-on-primary);
+  --ds-muted:var(--ds-on-primary-muted);
+  --ds-line:var(--ds-line-primary);
+  --ds-pink:var(--ds-accent);
+  --ds-color-dark:var(--ds-primary);
+  --ds-color-dark-rgb:var(--ds-primary-rgb);
+  --ds-color-dark-soft:var(--ds-primary-soft);
+  --ds-color-surface:var(--ds-surface-light);
+  --ds-color-surface-2:var(--ds-surface-warm);
+  --ds-color-canvas:var(--ds-background);
+  --ds-color-ink:var(--ds-text);
 }
 
-html,body{background:var(--ds-brand-paper)!important;color:var(--ds-brand-ink)!important}
+html,body{
+  background:var(--ds-background)!important;
+  color:var(--ds-text)!important;
+  font-family:Inter,"Helvetica Neue",Arial,sans-serif!important;
+}
+body .overall-wrapper{background:var(--ds-background)!important}
 
 /* =========================================================
-   LOGO — NEW CUSTOM WORDMARK
+   LOGO
    ========================================================= */
 .ds-site-logo img{display:none!important}
+.ds-site-logo{
+  min-width:164px!important;
+  color:var(--ds-on-primary)!important;
+}
 .ds-site-logo::before{
   content:"";
   display:block;
-  width:176px;
+  width:164px;
   aspect-ratio:2048/381;
   background:currentColor;
   -webkit-mask:var(--ds-brand-logo) center/contain no-repeat;
@@ -32,146 +85,251 @@ html,body{background:var(--ds-brand-paper)!important;color:var(--ds-brand-ink)!i
 }
 
 /* =========================================================
-   HEADER — QUIET UI, STRONG LOGO
+   HEADER — BLACK, COMPACT, WORKWEAR
    ========================================================= */
 #ds-site-header{
-  --ds-white:var(--ds-brand-paper);
-  --ds-black:var(--ds-brand-ink);
-  --ds-black-2:var(--ds-brand-ink-2);
-  --ds-pink:var(--ds-brand-pink);
-  color:var(--ds-brand-paper)!important;
+  --ds-white:var(--ds-on-primary);
+  --ds-black:var(--ds-primary);
+  --ds-black-2:var(--ds-primary-soft);
+  --ds-pink:var(--ds-accent);
+  color:var(--ds-on-primary)!important;
+  background:var(--ds-primary)!important;
+  box-shadow:none!important;
 }
-#ds-site-header.is-stuck,
-body:not(.in-index) #ds-site-header{background:rgba(17,17,15,.985)!important}
+body.in-index #ds-site-header{background:transparent!important}
+body.in-index #ds-site-header.is-stuck,
+body:not(.in-index) #ds-site-header,
+body:not(.in-index) #ds-site-header.is-stuck{
+  background:rgba(17,17,15,.99)!important;
+}
 .ds-site-announcement{
-  background:var(--ds-brand-ink)!important;
-  font-size:9px!important;
-  letter-spacing:.10em!important;
+  height:25px!important;
+  background:#0B0B09!important;
+  color:rgba(244,242,236,.86)!important;
+  border-bottom:1px solid rgba(244,242,236,.08)!important;
+  font-size:8px!important;
+  font-weight:700!important;
+  letter-spacing:.12em!important;
 }
-.ds-site-announcement span{background:var(--ds-brand-pink)!important;border-radius:50%}
-.ds-site-main{max-width:1480px!important;border-bottom-color:rgba(243,241,235,.12)!important}
-.ds-site-nav{gap:clamp(20px,1.8vw,32px)!important}
+.ds-site-announcement span{width:4px!important;height:4px!important;background:var(--ds-accent)!important;border-radius:0!important}
+.ds-site-main{
+  width:min(calc(100% - 40px),1480px)!important;
+  height:70px!important;
+  gap:clamp(26px,2.6vw,46px)!important;
+  border-bottom:1px solid rgba(244,242,236,.11)!important;
+}
+#ds-site-header.is-stuck .ds-site-main{height:62px!important}
+.ds-site-nav{gap:clamp(18px,1.7vw,28px)!important}
 .ds-site-nav-link{
-  font-size:11px!important;
-  font-weight:600!important;
-  letter-spacing:.025em!important;
-  text-transform:none!important;
+  color:var(--ds-on-primary)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:.02em!important;
 }
-.ds-site-nav-link::after{bottom:16px!important;height:2px!important}
-.ds-site-tools button,.ds-site-tools a{border-radius:0!important}
-.ds-site-tools button:hover,.ds-site-tools a:hover{background:rgba(243,241,235,.08)!important}
-.ds-site-cart b{background:var(--ds-brand-pink)!important;color:var(--ds-brand-ink)!important;border-radius:50%!important}
+.ds-site-nav-link::after{bottom:14px!important;height:2px!important;background:var(--ds-on-primary)!important}
+.ds-site-tools button,.ds-site-tools a{
+  color:var(--ds-on-primary)!important;
+  border-radius:0!important;
+}
+.ds-site-tools button:hover,.ds-site-tools a:hover{background:rgba(244,242,236,.07)!important}
+.ds-site-cart b{background:var(--ds-accent)!important;color:var(--ds-text)!important;border-radius:0!important}
+.ds-site-submenu{background:#11110F!important;border-color:rgba(244,242,236,.1)!important}
+.ds-site-mobile-panel{background:#11110F!important}
 
 /* =========================================================
-   GLOBAL UI — LESS LUXURY, MORE WORKWEAR
+   GLOBAL UI — REMOVE SOFT-LUXURY SIGNALS
    ========================================================= */
-button,a,input,select,textarea{font-family:Inter,"Helvetica Neue",Arial,sans-serif}
-
 .ds-fs-cta,
 .ds-basic-search__chip,
 .ds-cart-cta,
 .ds-cart-qty,
+.ds-cart-upsell,
+.ds-cart-shipping,
 .ds-circular-new__all,
 .ds-circular-new__mobile-all,
-.ds-circular-new__control{
-  border-radius:0!important;
-}
-
-/* cards should feel like image/product blocks, not app cards */
+.ds-circular-new__control,
 .ds-category-card,
 .ds-circular-product__card,
 .ds-circular-product,
 .ds-best-card__media,
-.ds-cart-upsell,
-.ds-cart-shipping{
+.ds-ig-hotspot,
+#ds-home-newsletter input,
+#ds-home-newsletter button{
   border-radius:0!important;
+  box-shadow:none!important;
 }
 
 /* =========================================================
-   HOMEPAGE — NEW LOGO = LOUD BRAND, QUIETER LAYOUT
+   HOMEPAGE CANVAS / RHYTHM
    ========================================================= */
 body.in-index{
-  --hp-bg:var(--ds-brand-paper)!important;
-  --hp-surface:#F8F6F1!important;
-  --hp-ink:var(--ds-brand-ink)!important;
-  --hp-muted:#716C65!important;
-  --hp-line:var(--ds-brand-line)!important;
-  --hp-line-soft:rgba(17,17,15,.065)!important;
-  background:var(--ds-brand-paper)!important;
+  --hp-bg:#F2F0EA!important;
+  --hp-surface:#F7F5F0!important;
+  --hp-ink:#151513!important;
+  --hp-muted:#6D6962!important;
+  --hp-line:rgba(21,21,19,.11)!important;
+  --hp-line-soft:rgba(21,21,19,.065)!important;
+  background:#F2F0EA!important;
 }
-body.in-index .overall-wrapper{background:var(--ds-brand-paper)!important}
+body.in-index .overall-wrapper{background:#F2F0EA!important}
 
-/* Hero: let photography + logo system carry the personality */
-body.in-index #ds-fashion-hero{background:var(--ds-brand-ink)!important}
+/* HERO: one campaign image, one message */
+body.in-index #ds-fashion-hero{
+  height:clamp(560px,70svh,760px)!important;
+  min-height:0!important;
+  margin:0 calc(50% - 50vw)!important;
+  background:#11110F!important;
+}
+body.in-index #ds-fashion-hero .ds-fs-bgword,
+body.in-index #ds-fashion-hero .ds-fs-side,
+body.in-index #ds-fashion-hero .ds-fs-index{display:none!important}
+body.in-index #ds-fashion-hero .ds-fs-image-wrap{
+  inset:0!important;
+  width:100%!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+}
+body.in-index #ds-fashion-hero .ds-fs-image-wrap::before,
+body.in-index #ds-fashion-hero .ds-fs-image-wrap::after{display:none!important}
+body.in-index #ds-fashion-hero .ds-fs-image-wrap img{
+  object-position:center 45%!important;
+  filter:saturate(.82) contrast(1.03) brightness(.82)!important;
+}
+body.in-index #ds-fashion-hero .ds-fs-overlay{
+  background:linear-gradient(180deg,rgba(0,0,0,.08) 18%,rgba(0,0,0,.02) 47%,rgba(0,0,0,.64) 100%)!important;
+}
+body.in-index #ds-fashion-hero .ds-fs-copy{
+  left:max(22px,calc((100vw - 1460px)/2))!important;
+  bottom:46px!important;
+  width:min(500px,55vw)!important;
+}
 body.in-index #ds-fashion-hero .ds-fs-copy h2{
-  font-weight:500!important;
+  max-width:13ch!important;
+  font-size:clamp(34px,3.8vw,54px)!important;
+  font-weight:600!important;
+  line-height:.97!important;
   letter-spacing:-.045em!important;
 }
-body.in-index #ds-fashion-hero .ds-fs-kicker{
-  font-weight:600!important;
-  letter-spacing:.11em!important;
-}
+body.in-index #ds-fashion-hero .ds-fs-kicker{font-size:8px!important;font-weight:700!important;letter-spacing:.13em!important}
+body.in-index #ds-fashion-hero .ds-fs-copy p{font-size:11px!important;color:rgba(244,242,236,.7)!important}
 body.in-index #ds-fashion-hero .ds-fs-cta{
-  background:var(--ds-brand-paper)!important;
-  border-color:var(--ds-brand-paper)!important;
-  color:var(--ds-brand-ink)!important;
+  min-height:38px!important;
+  padding:0 14px!important;
+  background:#F2F0EA!important;
+  border:1px solid #F2F0EA!important;
+  color:#11110F!important;
+  font-size:9px!important;
+  font-weight:800!important;
+}
+body.in-index #ds-fashion-hero .ds-fs-nav{right:max(18px,calc((100vw - 1460px)/2))!important;bottom:38px!important}
+
+/* BENEFITS: utility bar */
+body.in-index #ds-home-discovery{background:#F2F0EA!important;border:0!important}
+body.in-index #ds-home-discovery .ds-home-trust{
+  background:#E7E3DC!important;
+  color:#151513!important;
+  border:0!important;
+  border-bottom:1px solid rgba(21,21,19,.1)!important;
+}
+body.in-index #ds-home-discovery .ds-home-trust::before{display:none!important}
+body.in-index #ds-home-discovery .ds-home-trust__item{
+  min-height:58px!important;
+  padding:10px 16px!important;
+  background:transparent!important;
+  border-color:rgba(21,21,19,.08)!important;
+}
+body.in-index #ds-home-discovery .ds-home-trust__index{border:0!important;border-radius:0!important;color:#6D6962!important;font-size:7px!important}
+body.in-index #ds-home-discovery .ds-home-trust__item strong{color:#151513!important;font-size:10px!important;font-weight:700!important}
+body.in-index #ds-home-discovery .ds-home-trust__item small{color:#6D6962!important;font-size:7px!important}
+body.in-index #ds-home-discovery .ds-home-trust__item::after{display:none!important}
+
+/* CATEGORY NAV: quiet visual index */
+body.in-index #ds-home-discovery .ds-home-quicknav{
+  width:min(calc(100% - 40px),1460px)!important;
+  padding:38px 0 50px!important;
+}
+body.in-index #ds-home-discovery .ds-home-quicknav__head{margin-bottom:14px!important}
+body.in-index #ds-home-discovery .ds-home-quicknav__head>span{font-size:7px!important;font-weight:700!important;color:#77726B!important}
+body.in-index #ds-home-discovery .ds-home-quicknav__head>strong{font-size:18px!important;font-weight:700!important;letter-spacing:-.025em!important}
+body.in-index #ds-home-discovery .ds-home-quicknav__grid{gap:8px!important}
+body.in-index #ds-home-discovery .ds-category-card{
+  flex-basis:clamp(145px,13.4vw,205px)!important;
+  max-width:205px!important;
+  aspect-ratio:3/4!important;
+  background:#D8D3CB!important;
+}
+body.in-index #ds-home-discovery .ds-category-card__label{right:9px!important;bottom:9px!important;left:9px!important}
+body.in-index #ds-home-discovery .ds-category-card__label strong{font-size:13px!important;font-weight:700!important}
+body.in-index #ds-home-discovery .ds-category-card__label>span{width:23px!important;height:23px!important;border-radius:0!important}
+
+/* EDITORIAL: one full width dark/media pause */
+body.in-index #ds-home-discovery .ds-home-editorial{height:clamp(430px,58svh,620px)!important;background:#11110F!important}
+body.in-index #ds-home-discovery .ds-home-editorial__copy{width:min(calc(100% - 40px),1460px)!important;padding:28px 0 34px!important}
+body.in-index #ds-home-discovery .ds-home-editorial__copy h2{font-size:clamp(32px,3.6vw,50px)!important;font-weight:600!important;letter-spacing:-.04em!important}
+body.in-index #ds-home-discovery .ds-home-editorial__copy p{font-size:10px!important}
+
+/* NEW ARRIVALS + BESTSELLERS: SAME SYSTEM, DIFFERENT LAYOUT */
+#ds-new-arrivals-gallery,
+#ds-home-bestsellers{
+  background:#F7F5F0!important;
+  color:#151513!important;
+  border:0!important;
+}
+#ds-new-arrivals-gallery .ds-circular-new__inner,
+#ds-home-bestsellers .ds-best-wrap{width:min(calc(100% - 40px),1460px)!important}
+#ds-new-arrivals-gallery .ds-circular-new__inner{padding-top:54px!important;padding-bottom:58px!important}
+#ds-new-arrivals-gallery .ds-circular-new__title,
+#ds-home-bestsellers .ds-best-head h2{
+  color:#151513!important;
+  font-size:clamp(30px,3.2vw,44px)!important;
   font-weight:700!important;
+  line-height:.98!important;
+  letter-spacing:-.04em!important;
 }
-body.in-index #ds-fashion-hero .ds-fs-cta:hover{background:transparent!important;color:#fff!important}
+#ds-new-arrivals-gallery .ds-circular-new__kicker,
+#ds-home-bestsellers .ds-best-head span{font-size:7px!important;font-weight:700!important;color:#77726B!important}
+#ds-new-arrivals-gallery .ds-circular-new__sub{font-size:11px!important;color:#6D6962!important}
+#ds-new-arrivals-gallery .ds-circular-product__card,
+#ds-home-bestsellers .ds-best-card__media{background:#DEDAD2!important;border:0!important}
+#ds-new-arrivals-gallery .ds-circular-product__badge{background:#D8B7BE!important;color:#151513!important;border-radius:0!important}
+#ds-new-arrivals-gallery .ds-circular-product__name,
+#ds-home-bestsellers .ds-best-card__meta strong{font-weight:700!important}
 
-/* trust strip = utility, not a statement */
-body.in-index #ds-home-discovery .ds-home-trust{background:#EDEAE4!important}
-body.in-index #ds-home-discovery .ds-home-trust__item strong{font-weight:600!important}
-
-/* category index */
-body.in-index #ds-home-discovery .ds-home-quicknav__head>strong{
-  font-weight:600!important;
-  letter-spacing:-.035em!important;
+/* UGC: visual evidence, not another marketing panel */
+#ds-home-instagram{
+  background:#E4E0D8!important;
+  color:#151513!important;
+  border:0!important;
 }
-body.in-index #ds-home-discovery .ds-category-card{background:#DDD8D0!important}
-body.in-index #ds-home-discovery .ds-category-card__label strong{font-weight:700!important}
-body.in-index #ds-home-discovery .ds-category-card__label>span{border-radius:0!important}
-
-/* editorial separator */
-body.in-index #ds-home-discovery .ds-home-editorial__copy h2{
-  font-weight:500!important;
-  letter-spacing:-.045em!important;
-}
-
-/* New arrivals */
-#ds-new-arrivals-gallery{background:#F8F6F1!important;border-color:var(--ds-brand-line)!important}
-#ds-new-arrivals-gallery .ds-circular-new__title{font-weight:600!important;letter-spacing:-.045em!important}
-#ds-new-arrivals-gallery .ds-circular-product__badge{border-radius:0!important;background:var(--ds-brand-pink)!important}
-#ds-new-arrivals-gallery .ds-circular-product__arrow{border-radius:0!important}
-#ds-new-arrivals-gallery .ds-circular-product__name{font-weight:600!important}
-
-/* Bestsellers */
-#ds-home-bestsellers{background:var(--ds-brand-paper)!important}
-#ds-home-bestsellers .ds-best-head h2{font-weight:600!important;letter-spacing:-.045em!important}
-#ds-home-bestsellers .ds-best-card__meta strong{font-weight:600!important}
-
-/* UGC */
-#ds-home-instagram{background:#E9E5DE!important}
-#ds-home-instagram .ds-ig-head h2{font-weight:600!important;letter-spacing:-.045em!important}
+#ds-home-instagram .ds-ig-head h2{font-size:clamp(30px,3.2vw,44px)!important;font-weight:700!important;letter-spacing:-.04em!important}
 #ds-home-instagram .ds-ig-hotspot{border-radius:0!important;box-shadow:none!important}
 
-/* Newsletter */
-#ds-home-newsletter{background:#F8F6F1!important;border-color:var(--ds-brand-line)!important}
-#ds-home-newsletter h2{font-weight:600!important;letter-spacing:-.045em!important}
-#ds-home-newsletter input{border-radius:0!important}
-#ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{
-  background:var(--ds-brand-ink)!important;
-  border-color:var(--ds-brand-ink)!important;
-  border-radius:0!important;
-  font-weight:700!important;
+/* NEWSLETTER: quiet strip before footer */
+#ds-home-newsletter{
+  background:#F2F0EA!important;
+  color:#151513!important;
+  border-top:1px solid rgba(21,21,19,.1)!important;
 }
+#ds-home-newsletter .ds-news-wrap{padding-top:48px!important;padding-bottom:52px!important}
+#ds-home-newsletter h2{font-size:clamp(28px,3vw,40px)!important;font-weight:700!important;letter-spacing:-.035em!important}
+#ds-home-newsletter input{background:#F7F5F0!important;border-color:rgba(21,21,19,.16)!important}
+#ds-home-newsletter button,#ds-home-newsletter input[type="submit"]{background:#11110F!important;border-color:#11110F!important;color:#F4F2EC!important;font-weight:800!important}
 
-/* Search + cart share the same stronger brand language */
-#ds-basic-search,#ds-cart-drawer,.ds-cart-footer{background:var(--ds-brand-ink)!important}
+/* SEARCH + CART */
+#ds-basic-search,#ds-cart-drawer,.ds-cart-footer{background:#11110F!important;color:#F4F2EC!important}
 .ds-basic-search__chip,.ds-cart-upsell__action{border-radius:0!important}
 
 @media(max-width:767px){
-  .ds-site-logo::before{width:128px}
-  .ds-site-main{width:calc(100% - 24px)!important}
-  body.in-index #ds-fashion-hero .ds-fs-copy h2{font-weight:600!important}
+  .ds-site-logo{min-width:118px!important}
+  .ds-site-logo::before{width:118px!important}
+  .ds-site-main{width:calc(100% - 22px)!important;height:58px!important}
+  body.in-index #ds-fashion-hero{height:66svh!important;min-height:500px!important;max-height:680px!important}
+  body.in-index #ds-fashion-hero .ds-fs-copy{right:14px!important;bottom:62px!important;left:14px!important;width:auto!important}
+  body.in-index #ds-fashion-hero .ds-fs-copy h2{font-size:clamp(30px,9.2vw,40px)!important}
+  body.in-index #ds-home-discovery .ds-home-quicknav{width:calc(100% - 18px)!important;padding:28px 0 34px!important}
+  body.in-index #ds-home-discovery .ds-home-quicknav__head>strong{font-size:17px!important}
+  body.in-index #ds-home-discovery .ds-category-card{max-width:none!important;flex-basis:auto!important}
+  body.in-index #ds-home-discovery .ds-home-editorial{height:68svh!important;min-height:450px!important;max-height:600px!important}
+  #ds-new-arrivals-gallery .ds-circular-new__inner,#ds-home-bestsellers .ds-best-wrap{width:calc(100% - 22px)!important}
+  #ds-new-arrivals-gallery .ds-circular-new__title,#ds-home-bestsellers .ds-best-head h2,#ds-home-instagram .ds-ig-head h2{font-size:28px!important}
 }
