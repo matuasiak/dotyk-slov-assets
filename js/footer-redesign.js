@@ -1,4 +1,4 @@
-/* DOTYK SLOV — footer redesign v6
+/* DOTYK SLOV — footer redesign v7
    Uses the current logo configured in Shoptet. */
 (function(){
   'use strict';
@@ -8,7 +8,7 @@
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
   function clean(v){return (v||'').replace(/\s+/g,' ').trim()}
   function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-  function ensureCss(){var h='https://matuasiak.github.io/dotyk-slov-assets/css/footer-redesign.css?v=6';var l=document.querySelector('link[data-ds-footer-css]');if(l){l.href=h;return}l=document.createElement('link');l.rel='stylesheet';l.href=h;l.setAttribute('data-ds-footer-css','1');document.head.appendChild(l)}
+  function ensureCss(){var h='https://matuasiak.github.io/dotyk-slov-assets/css/footer-redesign.css?v=7';var l=document.querySelector('link[data-ds-footer-css]');if(l){l.href=h;return}l=document.createElement('link');l.rel='stylesheet';l.href=h;l.setAttribute('data-ds-footer-css','1');document.head.appendChild(l)}
   function uniq(list){var seen={},out=[];list.forEach(function(a){if(!a||!a.href)return;var t=clean(a.textContent)||clean(a.getAttribute('aria-label'));if(!t)return;var k=a.href+'|'+t.toLowerCase();if(seen[k])return;seen[k]=1;out.push({href:a.href,text:t,target:a.target||''})});return out}
   function groupBox(title,footer){var n=title.parentElement,d=0;while(n&&n!==footer&&d<4){var c=n.querySelectorAll('a[href]').length;if(c>0&&c<=18)return n;n=n.parentElement;d++}return title.parentElement}
   function groups(footer){var out=[],seen={};$$('h2,h3,h4,.footer-title,.footer-header,.footer-heading,.custom-footer__title',footer).forEach(function(h){if(h.closest('.ds-footer-v6__shell'))return;var name=clean(h.textContent);if(!name)return;var box=groupBox(h,footer);if(!box)return;var links=uniq($$('a[href]',box)).filter(function(x){return !/^mailto:|^tel:/i.test(x.href)&&!/instagram\.com|facebook\.com|tiktok\.com|youtube\.com/i.test(x.href)});if(!links.length)return;var k=name.toLowerCase();if(seen[k])return;seen[k]=1;out.push({title:name,links:links.slice(0,10)})});if(out.length<2){var all=uniq($$('a[href]',footer)).filter(function(x){return !/^mailto:|^tel:/i.test(x.href)&&!/instagram\.com|facebook\.com|tiktok\.com|youtube\.com/i.test(x.href)&&x.text.length<55});out=[];var size=Math.max(4,Math.ceil(all.length/3));for(var i=0;i<all.length&&out.length<3;i+=size)out.push({title:out.length===0?'Nakupovanie':out.length===1?'Informácie':'Pomoc',links:all.slice(i,i+size)})}return out.slice(0,4)}
