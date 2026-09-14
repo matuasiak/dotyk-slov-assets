@@ -1,4 +1,4 @@
-/* DOTYK SLOV — header v12 / new logo system */
+/* DOTYK SLOV — header v13 / native Shoptet logo */
 :root{
   --ds-max:1480px;
   --ds-gutter:clamp(18px,2.4vw,42px);
@@ -39,12 +39,16 @@ body:not(.in-index) #ds-site-header{position:sticky;top:0;background:var(--ds-pr
 #ds-site-header.is-stuck .ds-site-main{height:60px;border-bottom:0}
 
 .ds-site-logo{display:flex;align-items:center;color:var(--ds-on-primary,#F4F2ED)!important;text-decoration:none!important;line-height:0}
-.ds-site-logo img{display:none!important}
-.ds-site-logo::before{
-  content:"";display:block;width:176px;aspect-ratio:2048/381;background:currentColor;
-  -webkit-mask:url('https://matuasiak.github.io/dotyk-slov-assets/images/dotyk-slov-logo.svg') center/contain no-repeat;
-  mask:url('https://matuasiak.github.io/dotyk-slov-assets/images/dotyk-slov-logo.svg') center/contain no-repeat;
+.ds-site-logo img{
+  display:block!important;
+  width:auto!important;
+  max-width:176px!important;
+  max-height:46px!important;
+  object-fit:contain!important;
+  object-position:left center!important;
+  filter:none!important;
 }
+.ds-site-logo::before{display:none!important;content:none!important}
 
 .ds-site-nav{display:flex;min-width:0;height:100%;align-items:stretch;gap:clamp(18px,1.7vw,30px);overflow:visible}
 .ds-site-nav-item{position:static;display:flex;height:100%;align-items:stretch}
@@ -105,7 +109,8 @@ body.ds-wishlist-open{overflow:hidden!important}body.ds-wishlist-open #ds-wishli
   #ds-site-header.is-stuck .ds-site-main{height:54px}
   .ds-site-mobile-menu{display:grid;width:34px;height:34px;padding:0;place-items:center;border:0;background:transparent;color:var(--ds-on-primary,#F4F2ED)}
   .ds-site-mobile-menu svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6}
-  .ds-site-logo{justify-content:center}.ds-site-logo::before{width:124px}
+  .ds-site-logo{justify-content:center}
+  .ds-site-logo img{max-width:124px!important;max-height:36px!important;object-position:center!important}
   .ds-site-nav,.ds-site-wishlist,.ds-site-account,.ds-site-search-open span{display:none!important}
   .ds-site-tools{gap:0}.ds-site-tools button{width:34px;height:34px}.ds-site-tools svg{width:16px;height:16px}
   .ds-site-search-open{display:grid!important;width:34px!important;padding:0!important}
