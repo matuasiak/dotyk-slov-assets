@@ -1,5 +1,6 @@
 {
   "name": "dotyk-slov-shoptet-theme",
+  "description": "Dotyk Slov custom Shoptet theme development workspace",
   "private": true,
   "version": "2.0.0",
   "type": "module",
