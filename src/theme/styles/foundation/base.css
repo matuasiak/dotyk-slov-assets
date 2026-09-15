@@ -1,0 +1,37 @@
+html,
+body {
+  margin: 0;
+  max-width: 100%;
+  background: var(--ds-background);
+  color: var(--ds-text);
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+picture,
+video,
+svg {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+body.ds-theme-v2 .overall-wrapper {
+  background: var(--ds-background);
+}
+
+body.ds-theme-v2 :focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 3px;
+}
