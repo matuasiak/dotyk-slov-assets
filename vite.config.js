@@ -1,8 +1,23 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 
+const legacyStyleGuard = {
+  name: 'dotyk-disable-legacy-style-loaders',
+  transform(code, id) {
+    if (!id.includes('/js/')) return null;
+    if (!code.includes('function ensureCss') && !code.includes('function ensureStyles')) return null;
+
+    const transformed = code
+      .replace(/function\s+ensureCss\(\)\s*\{/g, 'function ensureCss(){if(window.DS_BUNDLED_THEME)return;')
+      .replace(/function\s+ensureStyles\(\)\s*\{/g, 'function ensureStyles(){if(window.DS_BUNDLED_THEME)return;');
+
+    return { code: transformed, map: null };
+  }
+};
+
 export default defineConfig({
   base: './',
+  plugins: [legacyStyleGuard],
   build: {
     outDir: 'dist',
     emptyOutDir: true,
