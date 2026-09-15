@@ -12,8 +12,11 @@
     "legacy:check": "node tools/check.mjs",
     "legacy:verify": "npm run legacy:build && npm run legacy:check"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "less": "^4.4.0",
-    "vite": "^7.1.0"
+    "vite": "^6.1.0"
   }
 }
