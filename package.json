@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "deploy:includes": "node tools/deploy-template-includes.mjs",
     "legacy:setup": "node tools/setup-upstream.mjs",
     "legacy:build": "node tools/build.mjs",
     "legacy:check": "node tools/check.mjs",
