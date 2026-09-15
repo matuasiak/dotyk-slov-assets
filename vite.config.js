@@ -40,6 +40,11 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 5173,
     strictPort: true,
-    cors: true
+    cors: {
+      origin: ['https://www.dotykslov.sk', 'https://dotykslov.sk']
+    },
+    headers: {
+      'Access-Control-Allow-Private-Network': 'true'
+    }
   }
 });
