@@ -1,0 +1,13 @@
+/* Temporary bridge: existing components are bundled into one CSS file.
+   Migrate these imports one by one into src/theme/components and src/theme/pages. */
+@import '../../../css/header.css';
+@import '../../../css/banners.css';
+@import '../../../css/search-basic.css';
+@import '../../../css/cart-drawer.css';
+@import '../../../css/homepage-discovery.css';
+@import '../../../css/new-arrivals-gallery.css';
+@import '../../../css/home-bestsellers.css';
+@import '../../../css/home-instagram.css';
+@import '../../../css/home-transitions.css';
+@import '../../../css/home-newsletter.css';
+@import '../../../css/footer-redesign.css';

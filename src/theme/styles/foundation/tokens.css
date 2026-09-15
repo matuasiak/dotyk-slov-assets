@@ -1,0 +1,47 @@
+:root {
+  --ds-text: #161614;
+  --ds-background: #F4F2ED;
+  --ds-primary: #11110F;
+  --ds-secondary: #D3CEC5;
+  --ds-accent: #D8B7BE;
+
+  --ds-primary-deep: #0A0A09;
+  --ds-primary-soft: #24231F;
+  --ds-surface-light: #FAF9F6;
+  --ds-surface-warm: #E8E4DD;
+  --ds-clay: #786B61;
+  --ds-pebble: #AAA59D;
+
+  --ds-text-rgb: 22, 22, 20;
+  --ds-primary-rgb: 17, 17, 15;
+  --ds-on-primary: #F4F2ED;
+  --ds-on-primary-muted: rgba(244, 242, 237, .64);
+  --ds-on-primary-faint: rgba(244, 242, 237, .40);
+  --ds-line-primary: rgba(244, 242, 237, .14);
+  --ds-line-primary-soft: rgba(244, 242, 237, .08);
+  --ds-on-light: var(--ds-text);
+  --ds-on-light-muted: rgba(22, 22, 20, .60);
+  --ds-on-light-faint: rgba(22, 22, 20, .40);
+  --ds-line-light: rgba(22, 22, 20, .13);
+  --ds-line-light-soft: rgba(22, 22, 20, .07);
+  --ds-overlay: rgba(10, 10, 9, .66);
+
+  --ds-max: 1480px;
+  --ds-gutter: clamp(18px, 2.4vw, 42px);
+  --ds-section-y: clamp(64px, 7vw, 104px);
+
+  /* compatibility aliases while legacy components are migrated */
+  --ds-color-text: var(--ds-text);
+  --ds-color-background: var(--ds-background);
+  --ds-color-primary: var(--ds-primary);
+  --ds-color-secondary: var(--ds-secondary);
+  --ds-color-accent: var(--ds-accent);
+  --ds-color-surface: var(--ds-surface-light);
+  --ds-color-surface-2: var(--ds-surface-warm);
+  --ds-black: var(--ds-primary);
+  --ds-black-2: var(--ds-primary-soft);
+  --ds-white: var(--ds-on-primary);
+  --ds-muted: var(--ds-on-primary-muted);
+  --ds-line: var(--ds-line-primary);
+  --ds-pink: var(--ds-accent);
+}

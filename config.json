@@ -1,0 +1,7 @@
+{
+  "defaultUrl": "https://www.dotykslov.sk/",
+  "sourceFolder": "./src",
+  "outputFolder": "./dist",
+  "removeHeaderIncludes": ["dotyk-slov-assets"],
+  "removeFooterIncludes": ["dotyk-slov-assets"]
+}
