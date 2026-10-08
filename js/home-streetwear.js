@@ -34,7 +34,7 @@ function run(){
   function logo(){
     var mark=one('#ds-site-header .ds-site-logo img');
     if(mark && !mark.getAttribute('data-ds-oval')){
-      mark.src=ASSET+'dotyk-slov-oval.svg';
+      mark.src=ASSET+'dotyk-slov-logo.svg';
       mark.alt='Dotyk Slov';
       mark.setAttribute('data-ds-oval','1');
     }
