@@ -34,7 +34,7 @@ function run(){
   function logo(){
     var mark=one('#ds-site-header .ds-site-logo img');
     if(mark && !mark.getAttribute('data-ds-oval')){
-      mark.src=ASSET+'dotyk-slov-logo.svg';
+      // Keep the logo configured in Shoptet; do not replace it with the old repository mark.
       mark.alt='Dotyk Slov';
       mark.setAttribute('data-ds-oval','1');
     }
