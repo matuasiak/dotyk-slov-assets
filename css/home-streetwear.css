@@ -1,0 +1,379 @@
+/* DOTYK SLOV / V4 — quiet streetwear, based on the original campaign.
+   Clean stylesheet. No inherited V1/V2/V3 patches.
+   Everything visual is homepage-scoped. Product and checkout pages stay unchanged. */
+:root{
+  --sw-ink:#252e37;
+  --sw-dark:#212a33;
+  --sw-panel:#2d3740;
+  --sw-paper:#eae7e0;
+  --sw-cream:#f3efe7;
+  --sw-muted:#aab0b1;
+  --sw-rule:rgba(238,234,225,.16);
+  --sw-gutter:clamp(18px,4vw,54px);
+  --sw-width:1300px;
+}
+body.in-index.ds-streetwear-ready,
+body.in-index.ds-streetwear-ready .overall-wrapper{
+  background:var(--sw-ink)!important;color:var(--sw-cream)!important;
+}
+body.in-index.ds-streetwear-ready .overall-wrapper{overflow-x:clip}
+body.in-index.ds-streetwear-ready #content-wrapper{
+  display:block!important;
+  height:0!important;min-height:0!important;
+  max-height:0!important;overflow:hidden!important;
+  padding:0!important;margin:0!important;border:0!important;
+}
+body.in-index.ds-streetwear-ready #content-wrapper .products,
+body.in-index.ds-streetwear-ready #content-wrapper .homepage-group-title,
+body.in-index.ds-streetwear-ready .latest-contribution-box{
+  display:none!important;
+}
+/* Preserve native header, search and cart interactions. Only colours are restyled. */
+body.in-index.ds-streetwear-ready #ds-site-header{
+  background:var(--sw-dark)!important;color:var(--sw-cream)!important;
+  position:sticky!important;top:0!important;z-index:1000!important;
+}
+body.in-index.ds-streetwear-ready #ds-site-header .ds-site-announcement{
+  background:var(--sw-dark)!important;color:#eeeae2!important;
+  border-color:var(--sw-rule)!important;
+}
+body.in-index.ds-streetwear-ready #ds-site-header .ds-site-main{
+  border-color:var(--sw-rule)!important;box-shadow:none!important;
+}
+body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo img{
+  display:block!important;max-width:160px!important;width:auto!important;
+  max-height:58px!important;height:auto!important;
+  filter:brightness(0) invert(1)!important;
+}
+body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo::after{display:none!important;content:none!important}
+body.in-index.ds-streetwear-ready #ds-site-header .ds-site-nav-link{
+  color:var(--sw-cream)!important;font-size:12px!important;font-weight:550!important;
+}
+/* Independent full-width homepage, placed directly before Shoptet content wrapper. */
+body.in-index.ds-streetwear-ready #ds-streetwear{
+  display:block!important;position:relative!important;
+  width:100%!important;max-width:100%!important;min-width:0!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+  background:var(--sw-ink)!important;color:var(--sw-cream)!important;
+  font-family:Mulish,Arial,sans-serif!important;
+  isolation:isolate;
+}
+#ds-streetwear *,#ds-streetwear *::before,#ds-streetwear *::after{box-sizing:border-box}
+#ds-streetwear a{text-decoration:none;color:inherit}
+#ds-streetwear img{max-width:100%;display:block}
+#ds-streetwear .ds-sw-inner{
+  width:min(calc(100% - 2 * var(--sw-gutter)),var(--sw-width))!important;
+  margin-inline:auto!important;
+}
+#ds-streetwear h1,#ds-streetwear h2,#ds-streetwear h3,#ds-streetwear p{margin:0}
+#ds-streetwear .ds-sw-eyebrow{
+  display:block;text-transform:uppercase;letter-spacing:.16em;line-height:1.6;
+  font-size:10px!important;font-weight:650!important;color:var(--sw-muted)!important;
+}
+#ds-streetwear .ds-sw-pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:18px;min-height:45px;padding:0 25px;
+  border:1px solid var(--sw-paper);border-radius:99px;
+  background:var(--sw-paper);color:var(--sw-dark)!important;
+  font-size:11px;font-weight:700;letter-spacing:.04em;
+  white-space:nowrap;box-shadow:none!important;transition:background .2s,color .2s;
+}
+#ds-streetwear .ds-sw-pill:hover{background:transparent;color:var(--sw-paper)!important}
+#ds-streetwear .ds-sw-section-link{
+  color:inherit;border:0;font-size:12px;font-weight:600;letter-spacing:.01em;
+  white-space:nowrap;
+}
+/* HERO: exact uploaded campaign takes priority. No unrelated clothing stock fallback. */
+#ds-streetwear .ds-sw-hero{
+  position:relative;display:block;width:100%;overflow:hidden;
+  background:var(--sw-panel);
+}
+#ds-streetwear .ds-sw-hero--fallback{
+  min-height:clamp(420px,34vw,590px);
+  background:#303b45;
+}
+#ds-streetwear .ds-sw-hero--fallback::before{
+  content:"DOTYK SLOV®";position:absolute;right:7%;top:18%;
+  color:rgba(236,232,225,.10);font-family:Impact,"Arial Narrow",Arial,sans-serif;
+  font-size:clamp(70px,11vw,180px);letter-spacing:-.03em;line-height:.8;
+  transform:rotate(-7deg);pointer-events:none;
+}
+#ds-streetwear .ds-sw-hero__media{position:absolute;inset:0;overflow:hidden}
+#ds-streetwear .ds-sw-hero__media img{
+  width:100%;height:100%;object-fit:cover;object-position:center;
+}
+#ds-streetwear .ds-sw-hero--native{
+  aspect-ratio:1864 / 446;
+  min-height:0;
+}
+#ds-streetwear .ds-sw-hero__mobile-copy{
+  display:none;
+}
+#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy{
+  display:block;position:relative;z-index:2;
+  padding:clamp(92px,9vw,150px) var(--sw-gutter) 115px;
+  width:min(100%,var(--sw-width));margin-inline:auto;
+}
+#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy span{
+  display:block;color:#e9e6df;font-size:11px;letter-spacing:.14em;font-weight:650;
+  margin-bottom:23px;
+}
+#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy h1{
+  font-family:Impact,"Arial Narrow",Arial,sans-serif!important;
+  font-size:clamp(65px,8.2vw,122px)!important;
+  color:var(--sw-cream)!important;font-weight:850!important;
+  line-height:.92!important;letter-spacing:0!important;
+  max-width:940px;overflow-wrap:normal;
+}
+#ds-streetwear .ds-sw-hero__mobile-copy h1 em{font-style:italic}
+#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy p{
+  color:#d7d9d5!important;font-size:15px!important;
+  line-height:1.6;margin-top:22px;max-width:35ch;
+}
+#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__action{
+  position:absolute;bottom:42px;left:max(var(--sw-gutter),calc((100% - var(--sw-width))/2));
+  transform:none;z-index:4;
+}
+#ds-streetwear .ds-sw-hero--native .ds-sw-hero__action{
+  position:absolute;z-index:4;right:var(--sw-gutter);bottom:22px;left:auto;transform:none;
+}
+/* Minimal category navigation. Photos are true Shoptet product images. */
+#ds-streetwear .ds-sw-categories{padding-top:75px;padding-bottom:94px}
+#ds-streetwear .ds-sw-categories__heading{
+  display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:25px;
+}
+#ds-streetwear .ds-sw-categories__heading p{
+  color:#bbbfc0;font-size:13px;letter-spacing:.01em;
+}
+#ds-streetwear .ds-sw-category-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;
+}
+#ds-streetwear .ds-sw-category{
+  position:relative;display:flex;flex-direction:column;min-width:0;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  min-height:0;overflow:visible;isolation:isolate;
+}
+#ds-streetwear .ds-sw-category img{
+  display:block!important;position:relative!important;inset:auto!important;
+  width:100%!important;height:auto!important;aspect-ratio:5/4!important;
+  background:#dcdad4;object-fit:contain!important;
+  filter:saturate(.75) contrast(.97)!important;
+  transition:filter .2s ease;
+}
+#ds-streetwear .ds-sw-category:hover img{filter:saturate(1) contrast(1)!important;transform:none!important}
+#ds-streetwear .ds-sw-category__shade{display:none}
+#ds-streetwear .ds-sw-category__number{display:none}
+#ds-streetwear .ds-sw-category__name{
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative!important;inset:auto!important;
+  margin-top:15px;padding:0!important;line-height:1.3;
+  font-family:Mulish,Arial,sans-serif!important;
+  font-size:16px!important;font-weight:650!important;letter-spacing:.02em;
+  color:var(--sw-cream)!important;
+}
+#ds-streetwear .ds-sw-category__name i{font-size:20px;font-style:normal;font-weight:400}
+#ds-streetwear .ds-sw-trust,#ds-streetwear .ds-sw-moods,#ds-streetwear .ds-sw-community{display:none!important}
+/* One deliberate light editorial pause for the merchandise — not scattered white cards. */
+#ds-streetwear .ds-sw-products{
+  background:#ece9e3!important;color:#20282f!important;
+  padding:100px 0 108px!important;
+}
+#ds-streetwear .ds-sw-heading{
+  display:flex;align-items:end;justify-content:space-between;gap:26px;
+  margin-bottom:24px!important;
+}
+#ds-streetwear .ds-sw-products .ds-sw-eyebrow{
+  color:#6c7173!important;
+}
+#ds-streetwear .ds-sw-products .ds-sw-heading h2{
+  font-family:Mulish,Arial,sans-serif!important;
+  color:#20282f!important;font-weight:350!important;
+  font-size:clamp(38px,4vw,61px)!important;
+  letter-spacing:-.045em!important;line-height:1.12!important;
+  margin:11px 0 0!important;
+}
+#ds-streetwear .ds-sw-products .ds-sw-section-link{color:#303b43!important}
+#ds-streetwear .ds-sw-products .ds-sw-underheading{
+  font-size:14px;color:#747976;line-height:1.6;margin:0 0 32px!important;
+}
+#ds-streetwear .ds-sw-products__scroll{
+  display:grid;grid-auto-flow:column;
+  grid-auto-columns:calc((100% - 54px)/4);
+  gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:thin;scrollbar-color:#acada9 transparent;
+  padding-bottom:14px;
+}
+#ds-streetwear .ds-sw-product{
+  display:flex;flex-direction:column;scroll-snap-align:start;
+  min-width:0;color:#20282f!important;
+}
+#ds-streetwear .ds-sw-product__photo{
+  display:block;position:relative;aspect-ratio:4/4.6;
+  border:0!important;border-radius:0!important;background:#dedcd6!important;overflow:hidden;
+}
+#ds-streetwear .ds-sw-product__photo img{
+  width:100%;height:100%;object-fit:contain;
+  background:#dedcd6;filter:saturate(.92);
+  transition:transform .3s;
+}
+#ds-streetwear .ds-sw-product:hover .ds-sw-product__photo img{transform:scale(1.015)}
+#ds-streetwear .ds-sw-product__photo>b{display:none!important}
+#ds-streetwear .ds-sw-product__name{
+  color:#20282f!important;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  overflow:hidden;font-size:13px;font-weight:600;line-height:1.52;
+  min-height:0!important;padding:15px 0 0!important;max-height:3.1em;
+}
+#ds-streetwear .ds-sw-product__price{
+  color:#34393b!important;font-size:13px;
+  font-weight:650;padding-top:9px!important;
+}
+/* Single considered manifesto instead of another loud promo card. */
+#ds-streetwear .ds-sw-editorial{
+  display:block!important;min-height:0!important;
+  background:var(--sw-ink)!important;
+  border:0!important;padding:108px 0 120px;
+}
+#ds-streetwear .ds-sw-editorial__inner{
+  display:grid;grid-template-columns:1fr 2.25fr;align-items:start;gap:32px;
+}
+#ds-streetwear .ds-sw-editorial__copy{
+  display:block!important;padding:0!important;margin:0!important;max-width:950px;
+}
+#ds-streetwear .ds-sw-editorial__copy h2{
+  font-family:Mulish,Arial,sans-serif!important;
+  font-weight:350!important;font-style:normal!important;
+  font-size:clamp(44px,5.3vw,81px)!important;
+  line-height:1.13!important;letter-spacing:-.055em!important;
+  color:var(--sw-cream)!important;margin:0 0 27px!important;
+}
+#ds-streetwear .ds-sw-editorial__copy h2 em{font-style:normal!important}
+#ds-streetwear .ds-sw-editorial__copy p{
+  color:#b8bdbe;font-size:15px!important;line-height:1.75;max-width:42ch;margin:0!important;
+}
+/* Newsletter remains a real Shoptet form, not a fake sign-up action. */
+#ds-streetwear .ds-sw-newsletter{
+  border-top:1px solid var(--sw-rule)!important;background:var(--sw-ink)!important;
+  color:var(--sw-cream)!important;padding:65px 0 86px!important;
+}
+#ds-streetwear .ds-sw-newsletter__inner{
+  width:min(calc(100% - 2 * var(--sw-gutter)),var(--sw-width));
+  margin-inline:auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;
+}
+#ds-streetwear .ds-sw-newsletter h2{
+  font-family:Mulish,Arial,sans-serif!important;
+  color:var(--sw-cream)!important;font-size:clamp(36px,4vw,50px)!important;
+  font-weight:350!important;letter-spacing:-.04em;line-height:1.2;margin:7px 0 12px!important;
+}
+#ds-streetwear .ds-sw-newsletter p{color:#b8bdbe!important;font-size:13px;line-height:1.6}
+#ds-streetwear .ds-sw-newsletter__slot form{
+  display:flex!important;align-items:center;gap:8px;width:100%;flex-wrap:wrap;
+}
+#ds-streetwear .ds-sw-newsletter__slot input[type=email]{
+  width:100%;height:46px;border:1px solid #aaaeb0!important;
+  border-radius:99px!important;background:var(--sw-cream)!important;color:#20282f!important;
+  padding:0 18px!important;
+}
+#ds-streetwear .ds-sw-newsletter__slot button{
+  height:46px;border-radius:99px!important;background:#dedbd3!important;
+  color:#20282f!important;padding:0 26px!important;border:0!important;
+}
+body.in-index.ds-streetwear-ready #footer,
+body.in-index.ds-streetwear-ready #footer.ds-footer-v6,
+body.in-index.ds-streetwear-ready #footer.ds-footer-v6 .ds-footer-v6__shell{
+  background:var(--sw-dark)!important;color:var(--sw-cream)!important;
+}
+body.in-index.ds-streetwear-ready #footer.ds-footer-v6 .ds-footer-v6__top,
+body.in-index.ds-streetwear-ready #footer.ds-footer-v6 .ds-footer-v6__middle{
+  border-color:var(--sw-rule)!important;
+}
+@media(max-width:1100px) and (min-width:768px){
+ #ds-streetwear .ds-sw-products__scroll{grid-auto-columns:calc((100% - 36px)/3)}
+ #ds-streetwear .ds-sw-category-grid{gap:13px}
+}
+@media(max-width:767px){
+ :root{--sw-gutter:18px}
+ body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo img{
+   max-width:122px!important;max-height:42px!important;
+ }
+ #ds-streetwear .ds-sw-hero--native,
+ #ds-streetwear .ds-sw-hero--fallback{
+   display:flex;flex-direction:column;aspect-ratio:auto;min-height:0!important;
+ }
+ #ds-streetwear .ds-sw-hero--fallback::before{font-size:65px;right:-7%;top:12%}
+ #ds-streetwear .ds-sw-hero--native .ds-sw-hero__media{
+   position:relative;width:100%;height:205px;flex:0 0 205px;
+ }
+ #ds-streetwear .ds-sw-hero--native .ds-sw-hero__media img{
+   object-position:14% center;
+ }
+ #ds-streetwear .ds-sw-hero__mobile-copy,
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy{
+   display:block;position:relative;inset:auto;order:2;
+   width:100%;margin:0;padding:35px var(--sw-gutter) 0;
+ }
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy{
+   padding-top:70px;
+ }
+ #ds-streetwear .ds-sw-hero__mobile-copy span{
+   display:block;font-size:10px;color:#b6bec0;letter-spacing:.12em;margin-bottom:16px;
+ }
+ #ds-streetwear .ds-sw-hero__mobile-copy h1,
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy h1{
+   color:var(--sw-cream)!important;font-size:clamp(45px,12vw,65px)!important;
+   font-family:Impact,"Arial Narrow",Arial,sans-serif!important;
+   line-height:.95!important;font-weight:800!important;
+   margin:0 0 15px;max-width:none!important;
+ }
+ #ds-streetwear .ds-sw-hero__mobile-copy p,
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy p{
+   margin:0!important;font-size:13px!important;color:#c6cac8!important;
+ }
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__action,
+ #ds-streetwear .ds-sw-hero--native .ds-sw-hero__action{
+   order:3;position:relative;inset:auto;align-self:flex-start;
+   margin:23px var(--sw-gutter) 40px!important;transform:none;
+ }
+ #ds-streetwear .ds-sw-categories{padding-top:49px;padding-bottom:60px}
+ #ds-streetwear .ds-sw-categories__heading{margin-bottom:19px}
+ #ds-streetwear .ds-sw-categories__heading p{display:none}
+ #ds-streetwear .ds-sw-category-grid{
+   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px;
+   overflow:visible!important;margin:0!important;padding:0!important;
+ }
+ #ds-streetwear .ds-sw-category{height:auto;min-height:0}
+ #ds-streetwear .ds-sw-category:last-child:nth-child(odd){grid-column:1 / -1}
+ #ds-streetwear .ds-sw-category img{aspect-ratio:4/4}
+ #ds-streetwear .ds-sw-category:last-child:nth-child(odd) img{aspect-ratio:2.3/1}
+ #ds-streetwear .ds-sw-category__name{
+   font-size:13px!important;margin-top:10px;padding:0!important;
+ }
+ #ds-streetwear .ds-sw-products{padding:66px 0 75px!important}
+ #ds-streetwear .ds-sw-heading{align-items:start}
+ #ds-streetwear .ds-sw-products .ds-sw-heading h2{
+   font-size:clamp(32px,8.5vw,43px)!important;
+ }
+ #ds-streetwear .ds-sw-products .ds-sw-section-link{font-size:10px}
+ #ds-streetwear .ds-sw-products .ds-sw-underheading{font-size:12px;margin-bottom:23px!important}
+ #ds-streetwear .ds-sw-products__scroll{
+   display:flex;gap:12px;margin-right:calc(-1*var(--sw-gutter));
+   padding-right:var(--sw-gutter);overflow-x:auto;min-height:0;
+ }
+ #ds-streetwear .ds-sw-product{flex:0 0 min(66%,270px)}
+ #ds-streetwear .ds-sw-editorial{padding:76px 0 84px}
+ #ds-streetwear .ds-sw-editorial__inner{display:block}
+ #ds-streetwear .ds-sw-editorial__copy{margin-top:22px!important}
+ #ds-streetwear .ds-sw-editorial__copy h2{
+   font-size:clamp(39px,10vw,57px)!important;line-height:1.12!important;
+ }
+ #ds-streetwear .ds-sw-editorial__copy p{font-size:13px!important}
+ #ds-streetwear .ds-sw-newsletter{padding:42px 0 60px!important}
+ #ds-streetwear .ds-sw-newsletter__inner{display:block}
+ #ds-streetwear .ds-sw-newsletter h2{font-size:39px!important}
+ #ds-streetwear .ds-sw-newsletter__slot{margin-top:24px}
+ #ds-streetwear .ds-sw-newsletter__slot form{max-width:100%}
+}
+/* Honor reduced-motion preferences. */
+@media(prefers-reduced-motion:reduce){
+ #ds-streetwear *{transition:none!important;scroll-behavior:auto!important}
+}
