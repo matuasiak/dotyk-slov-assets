@@ -240,7 +240,9 @@ function run(){
   var root=document.createElement('div');
   root.id='ds-streetwear';
   root.innerHTML=hero()+
-    (categories.length?'<section class="ds-sw-categories ds-sw-inner" aria-label="Nakupovať podľa kategórie"><div class="ds-sw-category-grid">'+categories.map(categoryCard).join('')+'</div></section>':'')+
+    (categories.length?'<section class="ds-sw-categories ds-sw-inner" aria-label="Nakupovať podľa kategórie">'+
+      '<div class="ds-sw-categories__heading"><span class="ds-sw-eyebrow">NÁJDI SI TO SVOJE / 01</span><p>Jednoduché veci. Niekedy veľa hovoria.</p></div>'+
+      '<div class="ds-sw-category-grid">'+categories.map(categoryCard).join('')+'</div></section>':'')+
     products()+editorial()+newsletter();
   anchorPoint.parentNode.insertBefore(root,anchorPoint);
   document.body.classList.add('ds-streetwear-ready');
