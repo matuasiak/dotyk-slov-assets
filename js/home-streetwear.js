@@ -34,7 +34,6 @@ function run(){
   function logo(){
     var mark=one('#ds-site-header .ds-site-logo img');
     if(mark && !mark.getAttribute('data-ds-oval')){
-      // Keep the logo configured in Shoptet; do not replace it with the old repository mark.
       mark.alt='Dotyk Slov';
       mark.setAttribute('data-ds-oval','1');
     }
@@ -45,21 +44,19 @@ function run(){
     watcher.observe(document.documentElement,{childList:true,subtree:true});
     setTimeout(function(){watcher.disconnect()},7000);
   }
+  /* Do not pick the active native carousel slide: it changes randomly.
+     Only use a campaign image that is explicitly marked Oblecenie s nazorom.
+     Until the custom campaign is uploaded, the stable neutral hero is used. */
   var originalBanner=one('.banners-row');
   var heroSource='';
-  if(originalBanner){
-    var imgs=all('img',originalBanner);
-    for(var i=0;i<imgs.length;i++){
-      var candidate=imgSrc(imgs[i]);
-      if(!candidate)continue;
-      var w=parseInt(imgs[i].getAttribute('width'),10)||imgs[i].naturalWidth||0;
-      var h=parseInt(imgs[i].getAttribute('height'),10)||imgs[i].naturalHeight||0;
-      if(!heroSource)heroSource=candidate;
-      if(w && h && w/h>2.3){heroSource=candidate;break}
-    }
-  }
-  var configuredBanner=!!heroSource;
+  var originalCampaign=all('.banners-row img').find(function(img){
+    var text=norm((img.alt||'')+' '+(img.getAttribute('src')||'')+' '+(img.getAttribute('data-src')||''));
+    return /oblecenie.s.nazorom|dotyk.streetwear|streetwear.campaign/.test(text);
+  });
+  if(originalCampaign)heroSource=imgSrc(originalCampaign);
   if(!heroSource)heroSource=ASSET+'hero.jpg';
+  var configuredBanner=!!originalCampaign;
+  document.documentElement.classList.toggle('ds-sw-awaiting-campaign',!configuredBanner);
 
   function links(){
     var n=all('#ds-site-header .ds-site-nav-link[href],#navigation .menu-level-1 > li > a[href],#ds-site-header .ds-site-submenu a[href]');
@@ -94,9 +91,27 @@ function run(){
     {label:'DOPLNKY',href:hrefAcc,image:'category-accessories.jpg',code:'03'},
     {label:'KOLEKCIE',href:hrefAll||hrefNew,image:'promo2.jpg',code:'04'}
   ].filter(function(c){return !!c.href});
+  function categoryImage(c){
+    /* Use real Shoptet product photos, not generic fashion stock. */
+    var queries={
+      'TRIČKÁ':/tričko|tri[ck]ko|crop top/i,
+      'MIKINY':/mikina|hoodie/i,
+      'DOPLNKY':/taška|taska|šiltovka|siltovka|hrnček|hrncek/i
+    };
+    var rx=queries[c.label];
+    if(rx){
+      var nodes=all('.products-block .product,.products .product');
+      var matching=nodes.find(function(node){
+        var title=one('[data-micro="name"]',node);
+        return title&&rx.test(clean(title.textContent))&&one('img',node);
+      });
+      if(matching){var photo=imgSrc(one('img',matching));if(photo)return photo;}
+    }
+    return ASSET+c.image;
+  }
   function categoryCard(c){
     return '<a class="ds-sw-category" href="'+escapeHTML(c.href)+'">'+
-      '<img src="'+ASSET+c.image+'" alt="" loading="lazy" decoding="async">'+
+      '<img src="'+escapeHTML(categoryImage(c))+'" alt="" loading="lazy" decoding="async">'+
       '<span class="ds-sw-category__shade"></span><span class="ds-sw-category__number">'+c.code+' / DS</span>'+
       '<span class="ds-sw-category__name">'+c.label+' <i aria-hidden="true">↗</i></span></a>';
   }
@@ -123,7 +138,8 @@ function run(){
     if(!a)a=one('a[href] img',el);
     if(a && a.tagName==='IMG')a=a.closest('a[href]');
     if(!a)return null;
-    var name=clean((one('[data-micro="name"],.name,.p-name,.p-in-in,.product-name,h2,h3',el)||{}).textContent)||clean(a.getAttribute('title'))||clean(a.textContent);
+    var titleNode=one('[data-micro="name"]',el)||one('a.name,.p-name a,.product-name a,h2 a,h3 a',el);
+    var name=clean(titleNode&&titleNode.textContent)||clean(a.getAttribute('title'))||clean(a.textContent);
     var price=clean((one('.price-final strong,.price-final,.p-final-price,[data-micro="price"],.price',el)||{}).textContent);
     var photo=imgSrc(one('img',el));
     var url=ownLink(a.href);
