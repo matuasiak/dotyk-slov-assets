@@ -1,572 +1,379 @@
-/* DOTYK SLOV / STREETWEAR HOMEPAGE — October 2026
-   Dark editorial, subtle grain, independent mobile composition.
-   Only homepage is restyled; checkout and product pages remain native. */
-:root {
- --sw-ink:#111619;
- --sw-ink-deep:#0d1114;
- --sw-slate:#222b32;
- --sw-paper:#f0ede5;
- --sw-stone:#d2cdc3;
- --sw-muted:#aaafb2;
- --sw-line:rgba(240,237,229,.19);
- --sw-gutter:clamp(18px,3vw,46px);
- --sw-width:1450px;
-}
-body.in-index.ds-streetwear-ready,
-body.in-index.ds-streetwear-ready .overall-wrapper,
-body.in-index.ds-streetwear-ready .content-wrapper,
-body.in-index.ds-streetwear-ready #content {
- background:var(--sw-ink)!important;color:var(--sw-paper)!important;
-}
-body.in-index.ds-streetwear-ready .overall-wrapper{overflow:clip}
-body.in-index.ds-streetwear-ready #ds-site-header {
- position:relative!important;top:auto!important;left:auto!important;right:auto!important;
- color:var(--sw-paper)!important;background:var(--sw-ink-deep)!important;
-}
-body.in-index.ds-streetwear-ready #ds-site-header.is-stuck {position:sticky!important;top:0!important}
-body.in-index.ds-streetwear-ready #ds-site-header .ds-site-announcement{background:#090d0f!important}
-body.in-index.ds-streetwear-ready #ds-site-header .ds-site-main{border-color:var(--sw-line)!important}
-body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo img{
- width:155px!important;max-width:155px!important;max-height:54px!important;
- height:auto!important;filter:brightness(0) invert(1)!important;
-}
-body.in-index.ds-streetwear-ready .content-wrapper,
-body.in-index.ds-streetwear-ready #content {width:100%!important;max-width:none!important;padding:0!important;margin:0!important}
-body.in-index.ds-streetwear-ready .banners-row,
-body.in-index.ds-streetwear-ready #ds-fashion-hero,
-body.in-index.ds-streetwear-ready #ds-home-discovery,
-body.in-index.ds-streetwear-ready #ds-home-tail,
-body.in-index.ds-streetwear-ready #ds-new-arrivals-gallery,
-body.in-index.ds-streetwear-ready #ds-home-bestsellers,
-body.in-index.ds-streetwear-ready #ds-home-instagram,
-body.in-index.ds-streetwear-ready #ds-home-newsletter,
-body.in-index.ds-streetwear-ready #ds-home-brand-story,
-body.in-index.ds-streetwear-ready #ds-home-transitions,
-body.in-index.ds-streetwear-ready #ds-homepage-categories,
-body.in-index.ds-streetwear-products-ready #content .products-block,
-body.in-index.ds-streetwear-products-ready #content .products{
- display:none!important;
-}
-#ds-streetwear {
- position:relative;width:100%;max-width:100vw;overflow:hidden;
- color:var(--sw-paper);background:var(--sw-ink);
- font-family:Inter,"Arial Narrow",Arial,sans-serif;
-}
-#ds-streetwear *,
-#ds-streetwear *::before,
-#ds-streetwear *::after{box-sizing:border-box}
-#ds-streetwear a{color:inherit;text-decoration:none}
-#ds-streetwear img{display:block;max-width:100%}
-#ds-streetwear .ds-sw-inner{width:min(calc(100% - 2 * var(--sw-gutter)),var(--sw-width));margin-inline:auto}
-#ds-streetwear .ds-sw-eyebrow{display:block;color:var(--sw-stone);font-size:10px;font-weight:700;letter-spacing:.13em;line-height:1.3;text-transform:uppercase}
-#ds-streetwear h1,#ds-streetwear h2,#ds-streetwear h3,#ds-streetwear p{margin-top:0}
-#ds-streetwear .ds-sw-pill {
- display:inline-flex;align-items:center;justify-content:center;gap:20px;
- min-height:46px;padding:0 25px;background:var(--sw-paper);color:#111619!important;
- border:1px solid var(--sw-paper);border-radius:60px;font-size:11px;font-weight:750;letter-spacing:.07em;
- white-space:nowrap;transition:background .2s,color .2s;
-}
-#ds-streetwear .ds-sw-pill:hover{background:transparent;color:var(--sw-paper)!important}
-#ds-streetwear .ds-sw-section-link{display:inline-flex;align-items:center;border-bottom:1px solid var(--sw-line);padding:8px 0;font-size:11px;font-weight:700;letter-spacing:.07em;white-space:nowrap}
-
-/* The original user-supplied wide Shoptet banner is read from native .banners-row. */
-.ds-sw-hero{position:relative;min-height:clamp(280px,24vw,530px);background:#212a30;overflow:hidden}
-.ds-sw-hero__media{position:relative;width:100%;overflow:hidden}
-.ds-sw-hero__media img{display:block;width:100%;height:auto;aspect-ratio:4.18;object-fit:cover;object-position:center}
-.ds-sw-hero__mobile-copy{display:none}
-.ds-sw-hero__action{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:2}
-.ds-sw-hero--fallback .ds-sw-hero__mobile-copy{
- position:absolute;display:block;z-index:1;top:28%;left:6%;color:#fff;
-}
-.ds-sw-hero--fallback .ds-sw-hero__mobile-copy h1{font-size:clamp(38px,6vw,95px);font-stretch:condensed;font-weight:900;line-height:.93}
-.ds-sw-hero--fallback .ds-sw-hero__mobile-copy em{font-style:italic}
-.ds-sw-hero--fallback .ds-sw-hero__mobile-copy p{font-size:15px}
-
-/* Main categories: genuinely large editorial blocks, not a dashboard */
-.ds-sw-categories{padding-top:28px;padding-bottom:28px}
-.ds-sw-category-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.ds-sw-category{position:relative;min-height:220px;overflow:hidden;background:#30383d;isolation:isolate;border:1px solid var(--sw-line);border-radius:8px}
-.ds-sw-category>img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;filter:grayscale(.4) brightness(.64);transition:transform .5s}
-.ds-sw-category:hover>img{transform:scale(1.05)}
-.ds-sw-category__shade{position:absolute;inset:0;background:rgba(0,0,0,.17)}
-.ds-sw-category__number{position:absolute;top:17px;left:18px;color:rgba(255,255,255,.72);font-size:10px;letter-spacing:.12em}
-.ds-sw-category__name{position:absolute;bottom:18px;left:18px;right:18px;display:flex;align-items:end;justify-content:space-between;font-weight:900;font-stretch:condensed;font-size:clamp(21px,2vw,35px);line-height:.98}
-.ds-sw-category__name i{font-weight:400;font-style:normal;font-size:24px}
-.ds-sw-trust{display:flex;gap:20px;justify-content:center;align-items:center;padding:23px 22px;border-top:1px solid var(--sw-line);border-bottom:1px solid var(--sw-line);color:var(--sw-stone);font-size:11px;letter-spacing:.04em}
-.ds-sw-trust>span{display:flex;gap:11px;align-items:center}
-.ds-sw-trust>span+span{border-left:1px solid var(--sw-line);padding-left:30px}
-.ds-sw-trust i{font-size:19px;font-style:normal;color:var(--sw-paper)}
-
-/* Product gallery: prices and photos originate from real Shoptet page. */
-.ds-sw-products{padding-top:72px;padding-bottom:90px}
-.ds-sw-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:20px}
-.ds-sw-heading h2{font-weight:900;font-stretch:condensed;letter-spacing:-.035em;font-size:clamp(34px,4.2vw,66px);line-height:.98;margin:8px 0 0}
-.ds-sw-underheading{color:var(--sw-muted);max-width:56ch;font-size:13px;line-height:1.5;margin-bottom:22px}
-.ds-sw-products__scroll{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 4 * 12px)/5);gap:12px;min-height:170px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#505a60 transparent;padding-bottom:18px}
-.ds-sw-product{display:flex;flex-direction:column;min-width:0;scroll-snap-align:start}
-.ds-sw-product__photo{display:block;position:relative;overflow:hidden;background:#30383d;border:1px solid var(--sw-line);border-radius:8px;aspect-ratio:4/5}
-.ds-sw-product__photo>img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
-.ds-sw-product:hover .ds-sw-product__photo img{transform:scale(1.045)}
-.ds-sw-product__photo>b{position:absolute;top:10px;left:10px;padding:5px 7px;background:#efeadd;color:#172028;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.06em}
-.ds-sw-product__name{font-size:13px;font-weight:650;line-height:1.35;padding-top:12px;min-height:42px}
-.ds-sw-product__price{font-size:12px;color:var(--sw-stone);padding-top:3px;font-variant-numeric:tabular-nums}
-
-/* Editorial block */
-.ds-sw-editorial{display:grid;grid-template-columns:42% 58%;min-height:530px;border-top:1px solid var(--sw-line);border-bottom:1px solid var(--sw-line);background:#1c2429}
-.ds-sw-editorial__copy{padding:clamp(36px,6vw,90px);display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
-.ds-sw-editorial__copy h2{font-size:clamp(42px,4.9vw,83px);font-weight:900;font-stretch:condensed;letter-spacing:-.045em;line-height:.93;margin:28px 0 20px}
-.ds-sw-editorial__copy h2 em{font-style:italic}
-.ds-sw-editorial__copy p{color:#c5c6c4;max-width:35ch;font-size:14px;line-height:1.6;margin-bottom:28px}
-.ds-sw-editorial__photo{min-height:480px;overflow:hidden}
-.ds-sw-editorial__photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(.25) contrast(1.06) brightness(.83)}
-
-/* Mood: deliberately sparse, high-contrast */
-.ds-sw-moods{padding-top:80px;padding-bottom:82px}
-.ds-sw-moods__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.ds-sw-moods__grid a{min-height:165px;display:flex;flex-direction:column;justify-content:space-between;padding:16px;background:#222b30;border:1px solid var(--sw-line);border-radius:7px;transition:background .2s}
-.ds-sw-moods__grid a:hover{background:#2b3840}
-.ds-sw-moods__grid span{font-size:10px;color:#a1acb3}
-.ds-sw-moods__grid strong{font-size:clamp(20px,2.2vw,33px);font-weight:850;line-height:1.05;letter-spacing:-.015em}
-.ds-sw-moods__grid b{align-self:end;font-weight:400;font-size:19px}
-
-/* Community gallery */
-.ds-sw-community{padding-bottom:100px}
-.ds-sw-community__scroll{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.ds-sw-community__scroll>a{overflow:hidden;aspect-ratio:4/4.2;border-radius:7px;background:#222b30}
-.ds-sw-community__scroll img{width:100%;height:100%;object-fit:cover;filter:saturate(.68);transition:transform .45s}
-.ds-sw-community__scroll a:hover img{transform:scale(1.035)}
-
-/* Newsletter uses real Shoptet form moved out of footer, never fake subscription. */
-.ds-sw-newsletter{background:var(--sw-paper);color:var(--sw-ink);padding:42px 0}
-.ds-sw-newsletter__inner{width:min(calc(100% - 2*var(--sw-gutter)),var(--sw-width));margin-inline:auto;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
-.ds-sw-newsletter h2{font-size:clamp(33px,3.8vw,56px);font-weight:900;margin:7px 0 8px;line-height:1}
-.ds-sw-newsletter p{color:#61615d;font-size:13px;margin:0}
-.ds-sw-newsletter .ds-sw-eyebrow{color:#575956!important}
-.ds-sw-newsletter__slot{display:flex;justify-content:flex-end;min-width:0}
-.ds-sw-newsletter__slot form{display:flex;width:min(100%,570px);gap:8px;align-items:center}
-.ds-sw-newsletter__slot input[type=email],.ds-sw-newsletter__slot input[type=text]{height:44px;width:100%;min-width:0;border:1px solid #9b9b95!important;border-radius:100px!important;background:#fff!important;padding:0 18px!important;color:#171a1c!important}
-.ds-sw-newsletter__slot button,.ds-sw-newsletter__slot input[type=submit]{height:44px!important;padding:0 20px!important;background:#111619!important;color:#fff!important;border-radius:100px!important;border:0!important;white-space:nowrap}
-.ds-sw-newsletter__slot>a{color:#111619!important;text-decoration:underline!important}
-
-/* Site-wide footer is still Shoptet native and keeps its functional links. */
-body.in-index.ds-streetwear-ready #footer{background:#101519!important;color:var(--sw-paper)!important;border-top:1px solid var(--sw-line)}
-body.in-index.ds-streetwear-ready #footer a,
-body.in-index.ds-streetwear-ready #footer h3,
-body.in-index.ds-streetwear-ready #footer h4{color:var(--sw-paper)!important}
-body.in-index.ds-streetwear-ready #footer p,
-body.in-index.ds-streetwear-ready #footer li{color:#b9c0c2!important}
-
-@media(max-width:1100px){
- .ds-sw-category{min-height:185px}
- .ds-sw-products__scroll{grid-auto-columns:calc((100% - 3 * 12px)/4)}
- .ds-sw-editorial{grid-template-columns:46% 54%}
- .ds-sw-moods__grid a{min-height:140px}
-}
-@media(max-width:767px){
- :root{--sw-gutter:17px}
- body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo img{width:132px!important;max-width:132px!important;max-height:42px!important}
- #ds-streetwear .ds-sw-eyebrow{font-size:9px}
- .ds-sw-hero{height:auto;min-height:0;background:#1b242b}
- .ds-sw-hero__media{height:455px;position:relative}
- .ds-sw-hero__media::after{content:'';position:absolute;inset:55% 0 0;background:rgba(12,16,18,.52);pointer-events:none}
- .ds-sw-hero__media img{height:100%;width:100%;aspect-ratio:auto;object-fit:cover;object-position:8% center}
- .ds-sw-hero__mobile-copy,.ds-sw-hero--fallback .ds-sw-hero__mobile-copy{
-    display:block;position:absolute;z-index:1;left:22px;right:20px;top:auto;bottom:84px;color:var(--sw-paper)
- }
- .ds-sw-hero__mobile-copy span{display:block;margin-bottom:10px;font-size:9px;font-weight:700;letter-spacing:.15em}
- .ds-sw-hero__mobile-copy h1,.ds-sw-hero--fallback .ds-sw-hero__mobile-copy h1{
-    font-weight:950;font-size:clamp(42px,12vw,62px);line-height:.88;letter-spacing:-.035em;margin-bottom:9px;max-width:9ch
- }
- .ds-sw-hero__mobile-copy em{font-style:italic}
- .ds-sw-hero__mobile-copy p{font-size:12px!important;color:#d9d9d4}
- .ds-sw-hero__action{bottom:20px;left:22px;transform:none;right:auto}
- #ds-streetwear .ds-sw-pill{min-height:42px;padding:0 17px;font-size:10px}
- .ds-sw-categories{padding-top:18px;padding-bottom:18px}
- .ds-sw-category-grid{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-right:calc(-1 * var(--sw-gutter));padding-right:var(--sw-gutter)}
- .ds-sw-category-grid::-webkit-scrollbar{display:none}
- .ds-sw-category{flex:0 0 67%;height:194px;min-height:0;scroll-snap-align:start}
- .ds-sw-category__name{font-size:30px}
- .ds-sw-trust{justify-content:flex-start;overflow-x:auto;gap:20px;padding:18px 17px;scrollbar-width:none;white-space:nowrap;font-size:10px}
- .ds-sw-trust>span{flex:none}
- .ds-sw-trust>span+span{padding-left:20px}
- .ds-sw-products{padding-top:53px;padding-bottom:50px}
- .ds-sw-heading{align-items:start}
- .ds-sw-heading h2{font-size:clamp(33px,9vw,47px)}
- .ds-sw-heading .ds-sw-section-link{font-size:9px}
- .ds-sw-underheading{font-size:12px;max-width:35ch}
- .ds-sw-products__scroll{display:flex;gap:11px;margin-right:calc(-1 * var(--sw-gutter));padding-right:var(--sw-gutter);min-height:120px}
- .ds-sw-product{flex:0 0 min(71%,280px)}
- .ds-sw-product__name{font-size:12px;min-height:0}
- .ds-sw-editorial{display:flex;flex-direction:column}
- .ds-sw-editorial__copy{padding:52px 18px 40px;min-height:365px}
- .ds-sw-editorial__copy h2{font-size:clamp(42px,11vw,61px);margin-top:20px}
- .ds-sw-editorial__copy p{font-size:13px;max-width:38ch}
- .ds-sw-editorial__photo{min-height:0;height:315px}
- .ds-sw-editorial__photo img{object-position:center 38%}
- .ds-sw-moods{padding-top:58px;padding-bottom:55px}
- .ds-sw-moods__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- .ds-sw-moods__grid a{min-height:160px;padding:13px}
- .ds-sw-moods__grid strong{font-size:clamp(20px,6vw,28px)}
- .ds-sw-community{padding-bottom:60px}
- .ds-sw-community__scroll{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-right:calc(-1 * var(--sw-gutter));padding-right:var(--sw-gutter)}
- .ds-sw-community__scroll>a{flex:0 0 56%;aspect-ratio:4/4.5;scroll-snap-align:start}
- .ds-sw-newsletter{padding:36px 0 42px}
- .ds-sw-newsletter__inner{display:block}
- .ds-sw-newsletter h2{font-size:40px}
- .ds-sw-newsletter__slot{margin-top:23px;display:block}
- .ds-sw-newsletter__slot form{max-width:none;width:100%}
- .ds-sw-newsletter__slot input[type=email]{min-width:0}
- .ds-sw-newsletter__slot button{font-size:10px!important}
-}
-@media(max-width:350px){
- .ds-sw-hero__media{height:420px}
- .ds-sw-category{flex-basis:78%}
- .ds-sw-product{flex-basis:78%}
- .ds-sw-moods__grid strong{font-size:19px}
-}
-@media(prefers-reduced-motion:reduce){
- #ds-streetwear *{scroll-behavior:auto!important;transition:none!important}
-}
-
-
-
-/* ==============================================================
-   V3 — ONE VISUAL LANGUAGE: INK / BLUE-GREY / PAPER
-   Inspired by the user's actual textured "OBLECENIE S NAZOROM" banner.
-   Reduced visual noise, matching surfaces, original Shoptet logo.
-   ============================================================== */
+/* DOTYK SLOV / V4 — quiet streetwear, based on the original campaign.
+   Clean stylesheet. No inherited V1/V2/V3 patches.
+   Everything visual is homepage-scoped. Product and checkout pages stay unchanged. */
 :root{
- --sw-ink:#25303a;
- --sw-ink-deep:#222c35;
- --sw-slate:#303b45;
- --sw-paper:#ede9e1;
- --sw-stone:#bfc3c2;
- --sw-muted:#b3b8b8;
- --sw-line:rgba(237,233,225,.13);
- --sw-gutter:clamp(18px,3.3vw,52px);
- --sw-width:1330px;
+  --sw-ink:#252e37;
+  --sw-dark:#212a33;
+  --sw-panel:#2d3740;
+  --sw-paper:#eae7e0;
+  --sw-cream:#f3efe7;
+  --sw-muted:#aab0b1;
+  --sw-rule:rgba(238,234,225,.16);
+  --sw-gutter:clamp(18px,4vw,54px);
+  --sw-width:1300px;
 }
 body.in-index.ds-streetwear-ready,
-body.in-index.ds-streetwear-ready .overall-wrapper,
-body.in-index.ds-streetwear-ready #content,
-body.in-index.ds-streetwear-ready .content-wrapper{
- background-color:#25303a!important;
- color:#ede9e1!important;
+body.in-index.ds-streetwear-ready .overall-wrapper{
+  background:var(--sw-ink)!important;color:var(--sw-cream)!important;
 }
-body.in-index.ds-streetwear-ready .latest-contribution-box,
-body.in-index.ds-streetwear-ready .homepage-group-title,
-body.in-index.ds-streetwear-ready #products-27{display:none!important}
-body.in-index.ds-streetwear-ready #ds-streetwear{
- width:100vw!important;max-width:none!important;
- margin-inline:calc(50% - 50vw)!important;
- position:relative!important;
- background:#25303a!important;
- color:#ede9e1!important;
- font-family:"Mulish",Arial,sans-serif!important;
+body.in-index.ds-streetwear-ready .overall-wrapper{overflow-x:clip}
+body.in-index.ds-streetwear-ready #content-wrapper{
+  display:block!important;
+  height:0!important;min-height:0!important;
+  max-height:0!important;overflow:hidden!important;
+  padding:0!important;margin:0!important;border:0!important;
 }
+body.in-index.ds-streetwear-ready #content-wrapper .products,
+body.in-index.ds-streetwear-ready #content-wrapper .homepage-group-title,
+body.in-index.ds-streetwear-ready .latest-contribution-box{
+  display:none!important;
+}
+/* Preserve native header, search and cart interactions. Only colours are restyled. */
 body.in-index.ds-streetwear-ready #ds-site-header{
- background-color:#222c35!important;color:#ede9e1!important;
+  background:var(--sw-dark)!important;color:var(--sw-cream)!important;
+  position:sticky!important;top:0!important;z-index:1000!important;
 }
 body.in-index.ds-streetwear-ready #ds-site-header .ds-site-announcement{
- background-color:#1f2932!important;border:0!important;
- color:#ddd9d2!important;
+  background:var(--sw-dark)!important;color:#eeeae2!important;
+  border-color:var(--sw-rule)!important;
 }
-body.in-index.ds-streetwear-ready #ds-site-header .ds-site-main{border-color:rgba(237,233,225,.1)!important}
-body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo{display:flex!important;align-items:center!important}
+body.in-index.ds-streetwear-ready #ds-site-header .ds-site-main{
+  border-color:var(--sw-rule)!important;box-shadow:none!important;
+}
 body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo img{
- display:block!important;width:auto!important;max-width:168px!important;
- max-height:60px!important;height:auto!important;
- filter:brightness(0) invert(1)!important;
+  display:block!important;max-width:160px!important;width:auto!important;
+  max-height:58px!important;height:auto!important;
+  filter:brightness(0) invert(1)!important;
 }
-body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo::after{content:none!important;display:none!important}
+body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo::after{display:none!important;content:none!important}
 body.in-index.ds-streetwear-ready #ds-site-header .ds-site-nav-link{
- color:#e8e6e0!important;font-weight:500!important;font-size:12px!important;
+  color:var(--sw-cream)!important;font-size:12px!important;font-weight:550!important;
 }
+/* Independent full-width homepage, placed directly before Shoptet content wrapper. */
+body.in-index.ds-streetwear-ready #ds-streetwear{
+  display:block!important;position:relative!important;
+  width:100%!important;max-width:100%!important;min-width:0!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+  background:var(--sw-ink)!important;color:var(--sw-cream)!important;
+  font-family:Mulish,Arial,sans-serif!important;
+  isolation:isolate;
+}
+#ds-streetwear *,#ds-streetwear *::before,#ds-streetwear *::after{box-sizing:border-box}
+#ds-streetwear a{text-decoration:none;color:inherit}
+#ds-streetwear img{max-width:100%;display:block}
+#ds-streetwear .ds-sw-inner{
+  width:min(calc(100% - 2 * var(--sw-gutter)),var(--sw-width))!important;
+  margin-inline:auto!important;
+}
+#ds-streetwear h1,#ds-streetwear h2,#ds-streetwear h3,#ds-streetwear p{margin:0}
 #ds-streetwear .ds-sw-eyebrow{
- font-family:"Mulish",Arial,sans-serif!important;font-size:10px!important;
- font-weight:600!important;letter-spacing:.14em!important;color:#b7bdc0!important;
+  display:block;text-transform:uppercase;letter-spacing:.16em;line-height:1.6;
+  font-size:10px!important;font-weight:650!important;color:var(--sw-muted)!important;
 }
 #ds-streetwear .ds-sw-pill{
- background:#e9e5dc!important;border:1px solid #e9e5dc!important;
- border-radius:30px!important;box-shadow:none!important;
- color:#232b31!important;font-size:11px!important;font-weight:650!important;
- min-height:43px;padding:0 25px!important;letter-spacing:.045em;
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:18px;min-height:45px;padding:0 25px;
+  border:1px solid var(--sw-paper);border-radius:99px;
+  background:var(--sw-paper);color:var(--sw-dark)!important;
+  font-size:11px;font-weight:700;letter-spacing:.04em;
+  white-space:nowrap;box-shadow:none!important;transition:background .2s,color .2s;
 }
-#ds-streetwear .ds-sw-pill:hover{background:transparent!important;color:#e9e5dc!important}
+#ds-streetwear .ds-sw-pill:hover{background:transparent;color:var(--sw-paper)!important}
 #ds-streetwear .ds-sw-section-link{
- border:0!important;color:#dad8d2!important;
- font-weight:600!important;font-size:11px!important;letter-spacing:.02em!important;
+  color:inherit;border:0;font-size:12px;font-weight:600;letter-spacing:.01em;
+  white-space:nowrap;
 }
+/* HERO: exact uploaded campaign takes priority. No unrelated clothing stock fallback. */
 #ds-streetwear .ds-sw-hero{
- isolation:isolate!important;background:#303c48!important;overflow:hidden!important;
+  position:relative;display:block;width:100%;overflow:hidden;
+  background:var(--sw-panel);
 }
-#ds-streetwear .ds-sw-hero--fallback{min-height:clamp(370px,34vw,540px)!important}
-#ds-streetwear .ds-sw-hero--native{
- aspect-ratio:1864 / 446!important;min-height:0!important;
+#ds-streetwear .ds-sw-hero--fallback{
+  min-height:clamp(420px,34vw,590px);
+  background:#303b45;
 }
-#ds-streetwear .ds-sw-hero__media{
- position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+#ds-streetwear .ds-sw-hero--fallback::before{
+  content:"DOTYK SLOV®";position:absolute;right:7%;top:18%;
+  color:rgba(236,232,225,.10);font-family:Impact,"Arial Narrow",Arial,sans-serif;
+  font-size:clamp(70px,11vw,180px);letter-spacing:-.03em;line-height:.8;
+  transform:rotate(-7deg);pointer-events:none;
 }
+#ds-streetwear .ds-sw-hero__media{position:absolute;inset:0;overflow:hidden}
 #ds-streetwear .ds-sw-hero__media img{
- display:block!important;width:100%!important;height:100%!important;aspect-ratio:auto!important;
- object-fit:cover!important;object-position:center!important;
+  width:100%;height:100%;object-fit:cover;object-position:center;
 }
-#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__media img{
- filter:grayscale(.42) saturate(.5) brightness(.52)!important;
+#ds-streetwear .ds-sw-hero--native{
+  aspect-ratio:1864 / 446;
+  min-height:0;
+}
+#ds-streetwear .ds-sw-hero__mobile-copy{
+  display:none;
 }
 #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy{
- position:absolute;z-index:2;display:block;left:7%;top:23%;right:auto;bottom:auto;
- width:62%;max-width:830px;color:#eee9df;
+  display:block;position:relative;z-index:2;
+  padding:clamp(92px,9vw,150px) var(--sw-gutter) 115px;
+  width:min(100%,var(--sw-width));margin-inline:auto;
 }
-#ds-streetwear .ds-sw-hero--fallback h1{
- font-family:Impact,"Arial Narrow",Arial,sans-serif!important;
- font-size:clamp(57px,7.5vw,110px)!important;font-weight:800!important;
- line-height:.94!important;letter-spacing:-.015em!important;
+#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy span{
+  display:block;color:#e9e6df;font-size:11px;letter-spacing:.14em;font-weight:650;
+  margin-bottom:23px;
 }
-#ds-streetwear .ds-sw-hero--fallback p{
- max-width:40ch;font-size:14px!important;color:#d7d8d4!important;
+#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy h1{
+  font-family:Impact,"Arial Narrow",Arial,sans-serif!important;
+  font-size:clamp(65px,8.2vw,122px)!important;
+  color:var(--sw-cream)!important;font-weight:850!important;
+  line-height:.92!important;letter-spacing:0!important;
+  max-width:940px;overflow-wrap:normal;
 }
-#ds-streetwear .ds-sw-hero__action{bottom:28px!important;z-index:3!important}
-#ds-streetwear .ds-sw-categories{padding-top:46px!important;padding-bottom:34px!important}
-#ds-streetwear .ds-sw-category-grid{gap:14px!important}
+#ds-streetwear .ds-sw-hero__mobile-copy h1 em{font-style:italic}
+#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy p{
+  color:#d7d9d5!important;font-size:15px!important;
+  line-height:1.6;margin-top:22px;max-width:35ch;
+}
+#ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__action{
+  position:absolute;bottom:42px;left:max(var(--sw-gutter),calc((100% - var(--sw-width))/2));
+  transform:none;z-index:4;
+}
+#ds-streetwear .ds-sw-hero--native .ds-sw-hero__action{
+  position:absolute;z-index:4;right:var(--sw-gutter);bottom:22px;left:auto;transform:none;
+}
+/* Minimal category navigation. Photos are true Shoptet product images. */
+#ds-streetwear .ds-sw-categories{padding-top:75px;padding-bottom:94px}
+#ds-streetwear .ds-sw-categories__heading{
+  display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:25px;
+}
+#ds-streetwear .ds-sw-categories__heading p{
+  color:#bbbfc0;font-size:13px;letter-spacing:.01em;
+}
+#ds-streetwear .ds-sw-category-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;
+}
 #ds-streetwear .ds-sw-category{
- border-radius:5px!important;border:1px solid rgba(237,233,225,.14)!important;
- min-height:202px!important;background:#303b45!important;
+  position:relative;display:flex;flex-direction:column;min-width:0;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  min-height:0;overflow:visible;isolation:isolate;
 }
-#ds-streetwear .ds-sw-category>img{
- filter:grayscale(.60) saturate(.48) brightness(.79)!important;
- transition:filter .3s ease!important;
+#ds-streetwear .ds-sw-category img{
+  display:block!important;position:relative!important;inset:auto!important;
+  width:100%!important;height:auto!important;aspect-ratio:5/4!important;
+  background:#dcdad4;object-fit:contain!important;
+  filter:saturate(.75) contrast(.97)!important;
+  transition:filter .2s ease;
 }
-#ds-streetwear .ds-sw-category:hover>img{
- transform:none!important;filter:grayscale(.22) saturate(.8) brightness(.90)!important;
-}
-#ds-streetwear .ds-sw-category__shade{background:rgba(23,30,36,.23)!important}
+#ds-streetwear .ds-sw-category:hover img{filter:saturate(1) contrast(1)!important;transform:none!important}
+#ds-streetwear .ds-sw-category__shade{display:none}
+#ds-streetwear .ds-sw-category__number{display:none}
 #ds-streetwear .ds-sw-category__name{
- font-family:"Mulish",Arial,sans-serif!important;
- font-size:clamp(18px,1.65vw,25px)!important;
- letter-spacing:.025em!important;font-weight:750!important;line-height:1.12!important;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative!important;inset:auto!important;
+  margin-top:15px;padding:0!important;line-height:1.3;
+  font-family:Mulish,Arial,sans-serif!important;
+  font-size:16px!important;font-weight:650!important;letter-spacing:.02em;
+  color:var(--sw-cream)!important;
 }
-#ds-streetwear .ds-sw-category__number{font-size:9px;color:#d1d0ca!important}
-#ds-streetwear .ds-sw-category__name i{font-size:19px}
-#ds-streetwear .ds-sw-trust{display:none!important}
+#ds-streetwear .ds-sw-category__name i{font-size:20px;font-style:normal;font-weight:400}
+#ds-streetwear .ds-sw-trust,#ds-streetwear .ds-sw-moods,#ds-streetwear .ds-sw-community{display:none!important}
+/* One deliberate light editorial pause for the merchandise — not scattered white cards. */
 #ds-streetwear .ds-sw-products{
- padding-top:62px!important;padding-bottom:96px!important;
+  background:#ece9e3!important;color:#20282f!important;
+  padding:100px 0 108px!important;
 }
-#ds-streetwear .ds-sw-heading{margin-bottom:16px!important}
-#ds-streetwear .ds-sw-heading h2{
- font-family:"Mulish",Arial,sans-serif!important;
- font-size:clamp(33px,3.5vw,50px)!important;
- font-weight:350!important;letter-spacing:-.04em!important;
- line-height:1.15!important;text-transform:none!important;
+#ds-streetwear .ds-sw-heading{
+  display:flex;align-items:end;justify-content:space-between;gap:26px;
+  margin-bottom:24px!important;
 }
-#ds-streetwear .ds-sw-underheading{
- color:#b9c0c2!important;font-size:14px!important;line-height:1.65!important;
- margin-bottom:29px!important;
+#ds-streetwear .ds-sw-products .ds-sw-eyebrow{
+  color:#6c7173!important;
+}
+#ds-streetwear .ds-sw-products .ds-sw-heading h2{
+  font-family:Mulish,Arial,sans-serif!important;
+  color:#20282f!important;font-weight:350!important;
+  font-size:clamp(38px,4vw,61px)!important;
+  letter-spacing:-.045em!important;line-height:1.12!important;
+  margin:11px 0 0!important;
+}
+#ds-streetwear .ds-sw-products .ds-sw-section-link{color:#303b43!important}
+#ds-streetwear .ds-sw-products .ds-sw-underheading{
+  font-size:14px;color:#747976;line-height:1.6;margin:0 0 32px!important;
 }
 #ds-streetwear .ds-sw-products__scroll{
- display:grid!important;grid-auto-flow:column!important;
- grid-auto-columns:calc((100% - 42px) / 4)!important;
- gap:14px!important;min-height:0!important;
- padding-bottom:22px!important;
+  display:grid;grid-auto-flow:column;
+  grid-auto-columns:calc((100% - 54px)/4);
+  gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:thin;scrollbar-color:#acada9 transparent;
+  padding-bottom:14px;
+}
+#ds-streetwear .ds-sw-product{
+  display:flex;flex-direction:column;scroll-snap-align:start;
+  min-width:0;color:#20282f!important;
 }
 #ds-streetwear .ds-sw-product__photo{
- border:0!important;border-radius:5px!important;
- aspect-ratio:4 / 4.7!important;background:#d8d6d1!important;
+  display:block;position:relative;aspect-ratio:4/4.6;
+  border:0!important;border-radius:0!important;background:#dedcd6!important;overflow:hidden;
 }
 #ds-streetwear .ds-sw-product__photo img{
- object-fit:contain!important;background:#d8d6d1!important;
- filter:saturate(.80)!important;transition:filter .2s ease;
+  width:100%;height:100%;object-fit:contain;
+  background:#dedcd6;filter:saturate(.92);
+  transition:transform .3s;
 }
-#ds-streetwear .ds-sw-product:hover .ds-sw-product__photo img{
- transform:none!important;filter:saturate(1)!important;
-}
+#ds-streetwear .ds-sw-product:hover .ds-sw-product__photo img{transform:scale(1.015)}
+#ds-streetwear .ds-sw-product__photo>b{display:none!important}
 #ds-streetwear .ds-sw-product__name{
- color:#e4e2da!important;font-size:13px!important;
- font-weight:500!important;line-height:1.55!important;
- min-height:0!important;
- display:-webkit-box!important;-webkit-box-orient:vertical!important;
- -webkit-line-clamp:2!important;overflow:hidden!important;
- margin-top:11px;padding-top:0!important;
+  color:#20282f!important;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  overflow:hidden;font-size:13px;font-weight:600;line-height:1.52;
+  min-height:0!important;padding:15px 0 0!important;max-height:3.1em;
 }
 #ds-streetwear .ds-sw-product__price{
- color:#f1ede5!important;font-size:13px!important;font-weight:650!important;
- padding-top:8px!important;
+  color:#34393b!important;font-size:13px;
+  font-weight:650;padding-top:9px!important;
 }
+/* Single considered manifesto instead of another loud promo card. */
 #ds-streetwear .ds-sw-editorial{
- display:grid!important;grid-template-columns:58% 42%!important;
- min-height:430px!important;
- border-top:1px solid rgba(237,233,225,.12)!important;
- border-bottom:1px solid rgba(237,233,225,.12)!important;
- background:#2b3640!important;
+  display:block!important;min-height:0!important;
+  background:var(--sw-ink)!important;
+  border:0!important;padding:108px 0 120px;
+}
+#ds-streetwear .ds-sw-editorial__inner{
+  display:grid;grid-template-columns:1fr 2.25fr;align-items:start;gap:32px;
 }
 #ds-streetwear .ds-sw-editorial__copy{
- padding:clamp(45px,6vw,90px)!important;
+  display:block!important;padding:0!important;margin:0!important;max-width:950px;
 }
 #ds-streetwear .ds-sw-editorial__copy h2{
- color:#ede9e1!important;font-family:"Mulish",Arial,sans-serif!important;
- font-weight:350!important;font-style:normal!important;
- font-size:clamp(40px,5.2vw,76px)!important;
- letter-spacing:-.048em!important;line-height:1.07!important;
- margin:24px 0!important;
+  font-family:Mulish,Arial,sans-serif!important;
+  font-weight:350!important;font-style:normal!important;
+  font-size:clamp(44px,5.3vw,81px)!important;
+  line-height:1.13!important;letter-spacing:-.055em!important;
+  color:var(--sw-cream)!important;margin:0 0 27px!important;
 }
 #ds-streetwear .ds-sw-editorial__copy h2 em{font-style:normal!important}
 #ds-streetwear .ds-sw-editorial__copy p{
- max-width:39ch!important;color:#bec3c3!important;font-size:14px!important;
- line-height:1.75!important;
+  color:#b8bdbe;font-size:15px!important;line-height:1.75;max-width:42ch;margin:0!important;
 }
-#ds-streetwear .ds-sw-editorial__photo{
- display:flex!important;align-items:center;justify-content:center;
- padding:32px;min-height:430px!important;background:#303c48!important;
- border-left:1px solid rgba(237,233,225,.06);
-}
-#ds-streetwear .ds-sw-editorial__photo span{
- color:rgba(237,233,225,.37)!important;
- font-family:Impact,"Arial Narrow",Arial,sans-serif!important;
- font-size:clamp(28px,4vw,63px)!important;font-weight:600!important;
- line-height:1.05!important;letter-spacing:-.015em!important;
- transform:rotate(-3deg);
-}
-#ds-streetwear .ds-sw-community{
- padding-top:90px!important;padding-bottom:98px!important;
-}
-#ds-streetwear .ds-sw-community__scroll{
- display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
- gap:16px!important;
-}
-#ds-streetwear .ds-sw-community__scroll>a{
- border-radius:5px!important;aspect-ratio:5/4!important;background:#39424a!important;
-}
-#ds-streetwear .ds-sw-community__scroll img{
- filter:grayscale(.35) saturate(.7) brightness(.87)!important;
-}
+/* Newsletter remains a real Shoptet form, not a fake sign-up action. */
 #ds-streetwear .ds-sw-newsletter{
- background:#303b45!important;color:#eae6dd!important;
- padding:54px 0!important;
- border-top:1px solid rgba(237,233,225,.12)!important;
+  border-top:1px solid var(--sw-rule)!important;background:var(--sw-ink)!important;
+  color:var(--sw-cream)!important;padding:65px 0 86px!important;
+}
+#ds-streetwear .ds-sw-newsletter__inner{
+  width:min(calc(100% - 2 * var(--sw-gutter)),var(--sw-width));
+  margin-inline:auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;
 }
 #ds-streetwear .ds-sw-newsletter h2{
- color:#eae6dd!important;
- font-family:"Mulish",Arial,sans-serif!important;
- font-weight:350!important;letter-spacing:-.04em!important;
- font-size:clamp(35px,4vw,53px)!important;
+  font-family:Mulish,Arial,sans-serif!important;
+  color:var(--sw-cream)!important;font-size:clamp(36px,4vw,50px)!important;
+  font-weight:350!important;letter-spacing:-.04em;line-height:1.2;margin:7px 0 12px!important;
 }
-#ds-streetwear .ds-sw-newsletter p{color:#bac0c0!important}
-#ds-streetwear .ds-sw-newsletter .ds-sw-eyebrow{color:#bac0c0!important}
+#ds-streetwear .ds-sw-newsletter p{color:#b8bdbe!important;font-size:13px;line-height:1.6}
+#ds-streetwear .ds-sw-newsletter__slot form{
+  display:flex!important;align-items:center;gap:8px;width:100%;flex-wrap:wrap;
+}
 #ds-streetwear .ds-sw-newsletter__slot input[type=email]{
- background:#e9e6df!important;border-color:#d0ccc2!important;
+  width:100%;height:46px;border:1px solid #aaaeb0!important;
+  border-radius:99px!important;background:var(--sw-cream)!important;color:#20282f!important;
+  padding:0 18px!important;
 }
 #ds-streetwear .ds-sw-newsletter__slot button{
- background:#d9d2c5!important;color:#222c35!important;
+  height:46px;border-radius:99px!important;background:#dedbd3!important;
+  color:#20282f!important;padding:0 26px!important;border:0!important;
 }
-body.in-index.ds-streetwear-ready #footer{
- background:#222c35!important;border-top:0!important;color:#eae6dd!important;
-}
-body.in-index.ds-streetwear-ready #footer p,
-body.in-index.ds-streetwear-ready #footer a,
-body.in-index.ds-streetwear-ready #footer span{color:#e3e0d8!important}
-@media(min-width:768px) and (max-width:1100px){
- #ds-streetwear .ds-sw-products__scroll{grid-auto-columns:calc((100% - 28px)/3)!important}
- #ds-streetwear .ds-sw-category{min-height:175px!important}
-}
-@media(max-width:767px){
- body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo img{
-  max-width:123px!important;max-height:43px!important;
- }
- #ds-streetwear .ds-sw-hero,
- #ds-streetwear .ds-sw-hero--native,
- #ds-streetwear .ds-sw-hero--fallback{
-  display:flex!important;flex-direction:column!important;
-  min-height:0!important;aspect-ratio:auto!important;
- }
- #ds-streetwear .ds-sw-hero__media{
-  position:relative!important;inset:auto!important;height:222px!important;flex:0 0 222px!important;
- }
- #ds-streetwear .ds-sw-hero__media img{object-position:18% center!important}
- #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__media img{
-  filter:grayscale(.35) saturate(.55) brightness(.7)!important;
- }
- #ds-streetwear .ds-sw-hero__mobile-copy,
- #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy,
- #ds-streetwear .ds-sw-hero--native .ds-sw-hero__mobile-copy{
-  display:block!important;position:relative!important;
-  inset:auto!important;width:auto!important;max-width:none!important;
-  padding:27px 20px 0!important;
- }
- #ds-streetwear .ds-sw-hero__mobile-copy h1,
- #ds-streetwear .ds-sw-hero--fallback h1{
-  font-family:Impact,"Arial Narrow",Arial,sans-serif!important;
-  font-size:clamp(44px,12vw,63px)!important;font-weight:800!important;
-  line-height:.93!important;letter-spacing:0!important;
-  max-width:none!important;margin:0 0 12px!important;
- }
- #ds-streetwear .ds-sw-hero__mobile-copy p{font-size:13px!important}
- #ds-streetwear .ds-sw-hero__action{
-  position:relative!important;inset:auto!important;transform:none!important;
-  margin:19px 20px 34px!important;align-self:flex-start!important;
- }
- #ds-streetwear .ds-sw-categories{padding-top:22px!important;padding-bottom:18px!important}
- #ds-streetwear .ds-sw-category-grid{
-  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:10px!important;overflow:visible!important;margin:0!important;padding:0!important;
- }
- #ds-streetwear .ds-sw-category{
-  min-height:0!important;height:168px!important;min-width:0!important;
- }
- #ds-streetwear .ds-sw-category__name{font-size:19px!important;bottom:12px}
- #ds-streetwear .ds-sw-products{padding-top:43px!important;padding-bottom:56px!important}
- #ds-streetwear .ds-sw-heading{align-items:flex-start!important}
- #ds-streetwear .ds-sw-heading h2{font-size:clamp(29px,8vw,39px)!important}
- #ds-streetwear .ds-sw-products__scroll{
-  display:flex!important;grid-auto-flow:unset!important;gap:11px!important;
-  overflow-x:auto!important;padding-bottom:16px!important;
- }
- #ds-streetwear .ds-sw-product{flex:0 0 min(68%,275px)!important}
- #ds-streetwear .ds-sw-editorial{
-  display:flex!important;flex-direction:column!important;min-height:0!important;
- }
- #ds-streetwear .ds-sw-editorial__copy{
-  padding:51px 20px 38px!important;
- }
- #ds-streetwear .ds-sw-editorial__copy h2{
-  font-size:clamp(37px,10vw,54px)!important;
-  letter-spacing:-.04em!important;
- }
- #ds-streetwear .ds-sw-editorial__photo{
-  display:none!important;
- }
- #ds-streetwear .ds-sw-community{
-  padding-top:60px!important;padding-bottom:65px!important;
- }
- #ds-streetwear .ds-sw-community__scroll{
-  display:flex!important;gap:10px!important;overflow-x:auto!important;
- }
- #ds-streetwear .ds-sw-community__scroll>a{
-  flex:0 0 65%!important;aspect-ratio:5/4.4!important;
- }
- #ds-streetwear .ds-sw-newsletter{padding:38px 0 49px!important}
- #ds-streetwear .ds-sw-newsletter h2{font-size:37px!important}
- #ds-streetwear .ds-sw-newsletter__slot form{
-  width:100%!important;flex-wrap:wrap!important;
- }
-}
-
-/* A barely visible ink-paper grain across the full homepage,
-   rather than separate mismatched textured cards. */
-body.in-index.ds-streetwear-ready #ds-streetwear{isolation:isolate!important}
-body.in-index.ds-streetwear-ready #ds-streetwear::after{
- content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
- background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch' seed='14'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
- background-repeat:repeat;background-size:180px 180px;
- opacity:.037;mix-blend-mode:screen;
-}
-
-/* Footer plugin injects its own black surface late; keep it in the same palette. */
+body.in-index.ds-streetwear-ready #footer,
 body.in-index.ds-streetwear-ready #footer.ds-footer-v6,
 body.in-index.ds-streetwear-ready #footer.ds-footer-v6 .ds-footer-v6__shell{
- background:#222c35!important;color:#ede9e1!important;
- font-family:"Mulish",Arial,sans-serif!important;
+  background:var(--sw-dark)!important;color:var(--sw-cream)!important;
 }
 body.in-index.ds-streetwear-ready #footer.ds-footer-v6 .ds-footer-v6__top,
 body.in-index.ds-streetwear-ready #footer.ds-footer-v6 .ds-footer-v6__middle{
- border-color:rgba(237,233,225,.11)!important;
+  border-color:var(--sw-rule)!important;
+}
+@media(max-width:1100px) and (min-width:768px){
+ #ds-streetwear .ds-sw-products__scroll{grid-auto-columns:calc((100% - 36px)/3)}
+ #ds-streetwear .ds-sw-category-grid{gap:13px}
+}
+@media(max-width:767px){
+ :root{--sw-gutter:18px}
+ body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo img{
+   max-width:122px!important;max-height:42px!important;
+ }
+ #ds-streetwear .ds-sw-hero--native,
+ #ds-streetwear .ds-sw-hero--fallback{
+   display:flex;flex-direction:column;aspect-ratio:auto;min-height:0!important;
+ }
+ #ds-streetwear .ds-sw-hero--fallback::before{font-size:65px;right:-7%;top:12%}
+ #ds-streetwear .ds-sw-hero--native .ds-sw-hero__media{
+   position:relative;width:100%;height:205px;flex:0 0 205px;
+ }
+ #ds-streetwear .ds-sw-hero--native .ds-sw-hero__media img{
+   object-position:14% center;
+ }
+ #ds-streetwear .ds-sw-hero__mobile-copy,
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy{
+   display:block;position:relative;inset:auto;order:2;
+   width:100%;margin:0;padding:35px var(--sw-gutter) 0;
+ }
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy{
+   padding-top:70px;
+ }
+ #ds-streetwear .ds-sw-hero__mobile-copy span{
+   display:block;font-size:10px;color:#b6bec0;letter-spacing:.12em;margin-bottom:16px;
+ }
+ #ds-streetwear .ds-sw-hero__mobile-copy h1,
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy h1{
+   color:var(--sw-cream)!important;font-size:clamp(45px,12vw,65px)!important;
+   font-family:Impact,"Arial Narrow",Arial,sans-serif!important;
+   line-height:.95!important;font-weight:800!important;
+   margin:0 0 15px;max-width:none!important;
+ }
+ #ds-streetwear .ds-sw-hero__mobile-copy p,
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__mobile-copy p{
+   margin:0!important;font-size:13px!important;color:#c6cac8!important;
+ }
+ #ds-streetwear .ds-sw-hero--fallback .ds-sw-hero__action,
+ #ds-streetwear .ds-sw-hero--native .ds-sw-hero__action{
+   order:3;position:relative;inset:auto;align-self:flex-start;
+   margin:23px var(--sw-gutter) 40px!important;transform:none;
+ }
+ #ds-streetwear .ds-sw-categories{padding-top:49px;padding-bottom:60px}
+ #ds-streetwear .ds-sw-categories__heading{margin-bottom:19px}
+ #ds-streetwear .ds-sw-categories__heading p{display:none}
+ #ds-streetwear .ds-sw-category-grid{
+   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px;
+   overflow:visible!important;margin:0!important;padding:0!important;
+ }
+ #ds-streetwear .ds-sw-category{height:auto;min-height:0}
+ #ds-streetwear .ds-sw-category:last-child:nth-child(odd){grid-column:1 / -1}
+ #ds-streetwear .ds-sw-category img{aspect-ratio:4/4}
+ #ds-streetwear .ds-sw-category:last-child:nth-child(odd) img{aspect-ratio:2.3/1}
+ #ds-streetwear .ds-sw-category__name{
+   font-size:13px!important;margin-top:10px;padding:0!important;
+ }
+ #ds-streetwear .ds-sw-products{padding:66px 0 75px!important}
+ #ds-streetwear .ds-sw-heading{align-items:start}
+ #ds-streetwear .ds-sw-products .ds-sw-heading h2{
+   font-size:clamp(32px,8.5vw,43px)!important;
+ }
+ #ds-streetwear .ds-sw-products .ds-sw-section-link{font-size:10px}
+ #ds-streetwear .ds-sw-products .ds-sw-underheading{font-size:12px;margin-bottom:23px!important}
+ #ds-streetwear .ds-sw-products__scroll{
+   display:flex;gap:12px;margin-right:calc(-1*var(--sw-gutter));
+   padding-right:var(--sw-gutter);overflow-x:auto;min-height:0;
+ }
+ #ds-streetwear .ds-sw-product{flex:0 0 min(66%,270px)}
+ #ds-streetwear .ds-sw-editorial{padding:76px 0 84px}
+ #ds-streetwear .ds-sw-editorial__inner{display:block}
+ #ds-streetwear .ds-sw-editorial__copy{margin-top:22px!important}
+ #ds-streetwear .ds-sw-editorial__copy h2{
+   font-size:clamp(39px,10vw,57px)!important;line-height:1.12!important;
+ }
+ #ds-streetwear .ds-sw-editorial__copy p{font-size:13px!important}
+ #ds-streetwear .ds-sw-newsletter{padding:42px 0 60px!important}
+ #ds-streetwear .ds-sw-newsletter__inner{display:block}
+ #ds-streetwear .ds-sw-newsletter h2{font-size:39px!important}
+ #ds-streetwear .ds-sw-newsletter__slot{margin-top:24px}
+ #ds-streetwear .ds-sw-newsletter__slot form{max-width:100%}
+}
+/* Honor reduced-motion preferences. */
+@media(prefers-reduced-motion:reduce){
+ #ds-streetwear *{transition:none!important;scroll-behavior:auto!important}
 }
