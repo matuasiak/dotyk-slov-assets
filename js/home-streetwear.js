@@ -54,7 +54,7 @@ function run(){
     return /oblecenie.s.nazorom|dotyk.streetwear|streetwear.campaign/.test(text);
   });
   if(originalCampaign)heroSource=imgSrc(originalCampaign);
-  if(!heroSource)heroSource=ASSET+'hero.jpg';
+  /* No unrelated stock hero: use a quiet monochrome fallback. */
   var configuredBanner=!!originalCampaign;
   document.documentElement.classList.toggle('ds-sw-awaiting-campaign',!configuredBanner);
 
@@ -88,8 +88,7 @@ function run(){
   var categories=[
     {label:'TRIČKÁ',href:hrefTee,image:'promo1.jpg',code:'01'},
     {label:'MIKINY',href:hrefHood,image:'story.jpg',code:'02'},
-    {label:'DOPLNKY',href:hrefAcc,image:'category-accessories.jpg',code:'03'},
-    {label:'KOLEKCIE',href:hrefAll||hrefNew,image:'promo2.jpg',code:'04'}
+    {label:'DOPLNKY',href:hrefAcc,image:'category-accessories.jpg',code:'03'}
   ].filter(function(c){return !!c.href});
   function categoryImage(c){
     /* Use real Shoptet product photos, not generic fashion stock. */
@@ -112,7 +111,7 @@ function run(){
   function categoryCard(c){
     return '<a class="ds-sw-category" href="'+escapeHTML(c.href)+'">'+
       '<img src="'+escapeHTML(categoryImage(c))+'" alt="" loading="lazy" decoding="async">'+
-      '<span class="ds-sw-category__shade"></span><span class="ds-sw-category__number">'+c.code+' / DS</span>'+
+      '<span class="ds-sw-category__number">'+c.code+' / DS</span>'+
       '<span class="ds-sw-category__name">'+c.label+' <i aria-hidden="true">↗</i></span></a>';
   }
   function trust(){
@@ -124,8 +123,8 @@ function run(){
   }
   function hero(){
     return '<section class="ds-sw-hero'+(configuredBanner?' ds-sw-hero--native':' ds-sw-hero--fallback')+'" aria-label="Oblečenie s názorom">'+
-      '<div class="ds-sw-hero__media"><img src="'+escapeHTML(heroSource)+'" alt="Dotyk Slov — oblečenie s názorom" fetchpriority="high" decoding="async"></div>'+
-      '<div class="ds-sw-hero__mobile-copy"><span>DOTYK SLOV / NOVÝ DROP</span><h1>OBLEČENIE<br><em>S NÁZOROM.</em></h1><p>Všetko, čo si nechal v hlave.</p></div>'+
+      (heroSource?'<div class="ds-sw-hero__media"><img src="'+escapeHTML(heroSource)+'" alt="Dotyk Slov — oblečenie s názorom" fetchpriority="high" decoding="async"></div>':'')+
+      '<div class="ds-sw-hero__mobile-copy"><span>DOTYK SLOV / ODEVY S MYŠLIENKOU</span><h1>OBLEČENIE<br><em>S NÁZOROM.</em></h1><p>Nie všetko treba povedať nahlas.</p></div>'+
       '<div class="ds-sw-hero__action">'+anchor('POZRIEŤ KOLEKCIU <span aria-hidden="true">↗</span>',hrefNew||hrefAll||hrefTee,'ds-sw-pill')+'</div>'+
       '</section>';
   }
@@ -192,19 +191,18 @@ function run(){
       '</a>';
   }
   function products(){
-    return '<section class="ds-sw-products ds-sw-inner" id="ds-sw-novinky" aria-label="Nová kolekcia">'+
+    return '<section class="ds-sw-products" id="ds-sw-novinky" aria-label="Naše produkty"><div class="ds-sw-inner">'+
       head('DOTYK SLOV / VÝBER','MYŠLIENKY NA NOSENIE.',anchor('POZRIEŤ VŠETKO ↗',hrefNew||hrefAll,'ds-sw-section-link'))+
       '<p class="ds-sw-underheading">Pre všetko, čo niekedy ostáva len v hlave.</p>'+
-      '<div class="ds-sw-products__scroll" id="ds-sw-products-list" aria-live="polite"></div></section>';
+      '<div class="ds-sw-products__scroll" id="ds-sw-products-list" aria-live="polite"></div></div></section>';
   }
   function editorial(){
-    return '<section class="ds-sw-editorial" aria-label="Náš príbeh">'+
-      '<div class="ds-sw-editorial__copy"><span class="ds-sw-eyebrow">NIE VŠETKO TREBA POVEDAŤ NAHLAS / 002</span>'+
-      '<h2>VECI, KTORÉ<br>NEPOVIEŠ <em>NAHLAS.</em></h2>'+
-      '<p>Tričká, mikiny a doplnky pre všetko, čo ostalo v hlave. Nie všetko si zaslúži vysvetlenie.</p>'+
-      anchor('SPOZNAŤ NÁŠ PRÍBEH ↗',hrefAbout,'ds-sw-pill')+
-      '</div><div class="ds-sw-editorial__photo" aria-hidden="true"><span>NIE VŠETKO<br>TREBA POVEDAŤ<br>NAHLAS.</span></div>'+
-      '</section>';
+    return '<section class="ds-sw-editorial" aria-label="Čo sme">'+
+      '<div class="ds-sw-editorial__inner ds-sw-inner">'+
+      '<span class="ds-sw-eyebrow">DOTYK SLOV / MANIFEST</span>'+
+      '<div class="ds-sw-editorial__copy"><h2>NIE VŠETKO TREBA<br>POVEDAŤ <em>NAHLAS.</em></h2>'+
+      '<p>Niektoré myšlienky sa lepšie nosia. Na tričku, na mikine, na vlastných pravidlách.</p></div>'+
+      '</div></section>';
   }
   function moods(){
     return '<section class="ds-sw-moods ds-sw-inner" aria-label="Vyber si svoj mood">'+
@@ -237,13 +235,13 @@ function run(){
     slot.appendChild(form);
     return true;
   }
-  var anchorPoint=originalBanner||one('#content .homepage-group-title')||one('#content')||one('.content-wrapper');
+  var anchorPoint=one('#content-wrapper')||originalBanner||one('#content .homepage-group-title')||one('#content')||one('.content-wrapper');
   if(!anchorPoint)return;
   var root=document.createElement('div');
   root.id='ds-streetwear';
   root.innerHTML=hero()+
     (categories.length?'<section class="ds-sw-categories ds-sw-inner" aria-label="Nakupovať podľa kategórie"><div class="ds-sw-category-grid">'+categories.map(categoryCard).join('')+'</div></section>':'')+
-    products()+editorial()+community()+newsletter();
+    products()+editorial()+newsletter();
   anchorPoint.parentNode.insertBefore(root,anchorPoint);
   document.body.classList.add('ds-streetwear-ready');
   loadProducts().then(function(items){
