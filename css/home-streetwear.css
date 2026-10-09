@@ -559,3 +559,14 @@ body.in-index.ds-streetwear-ready #ds-streetwear::after{
  background-repeat:repeat;background-size:180px 180px;
  opacity:.037;mix-blend-mode:screen;
 }
+
+/* Footer plugin injects its own black surface late; keep it in the same palette. */
+body.in-index.ds-streetwear-ready #footer.ds-footer-v6,
+body.in-index.ds-streetwear-ready #footer.ds-footer-v6 .ds-footer-v6__shell{
+ background:#222c35!important;color:#ede9e1!important;
+ font-family:"Mulish",Arial,sans-serif!important;
+}
+body.in-index.ds-streetwear-ready #footer.ds-footer-v6 .ds-footer-v6__top,
+body.in-index.ds-streetwear-ready #footer.ds-footer-v6 .ds-footer-v6__middle{
+ border-color:rgba(237,233,225,.11)!important;
+}
