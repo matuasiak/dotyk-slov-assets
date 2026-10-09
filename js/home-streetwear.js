@@ -175,28 +175,35 @@ function run(){
         }
       }catch(e){}
     }
-    return items.slice(0,8);
+    return items.sort(function(a,b){
+      function score(p){
+        var n=norm(p.name);
+        return (/oversized|mikina|hoodie|unisex|boxy|off.white|cierna|oliv|slav|le[tť]enka|maybe/.test(n)?4:0)
+          - (/candy.pink|ruzova|cotton.pink|macka.vo.vreci/.test(n)?2:0);
+      }
+      return score(b)-score(a);
+    }).slice(0,6);
   }
   function renderProduct(p,i){
     return '<a class="ds-sw-product" href="'+escapeHTML(p.href)+'">'+
-      '<span class="ds-sw-product__photo"><img loading="lazy" decoding="async" src="'+escapeHTML(p.image)+'" alt="'+escapeHTML(p.name)+'"><b>'+(i<3?'NOVINKA':'DOTYK SLOV')+'</b></span>'+
+      '<span class="ds-sw-product__photo"><img loading="lazy" decoding="async" src="'+escapeHTML(p.image)+'" alt="'+escapeHTML(p.name)+'"></span>'+
       '<span class="ds-sw-product__name">'+escapeHTML(p.name)+'</span>'+
       (p.price?'<span class="ds-sw-product__price">'+escapeHTML(p.price)+'</span>':'')+
       '</a>';
   }
   function products(){
     return '<section class="ds-sw-products ds-sw-inner" id="ds-sw-novinky" aria-label="Nová kolekcia">'+
-      head('DROP / 001','NOVÁ KOLEKCIA',anchor('ZOBRAZIŤ VŠETKO ↗',hrefNew||hrefAll,'ds-sw-section-link'))+
-      '<p class="ds-sw-underheading">Dizajny, ktoré hovoria za teba. Pre ľudí, čo vnímajú svet trochu inak.</p>'+
+      head('DOTYK SLOV / VÝBER','MYŠLIENKY NA NOSENIE.',anchor('POZRIEŤ VŠETKO ↗',hrefNew||hrefAll,'ds-sw-section-link'))+
+      '<p class="ds-sw-underheading">Pre všetko, čo niekedy ostáva len v hlave.</p>'+
       '<div class="ds-sw-products__scroll" id="ds-sw-products-list" aria-live="polite"></div></section>';
   }
   function editorial(){
     return '<section class="ds-sw-editorial" aria-label="Náš príbeh">'+
       '<div class="ds-sw-editorial__copy"><span class="ds-sw-eyebrow">NIE VŠETKO TREBA POVEDAŤ NAHLAS / 002</span>'+
-      '<h2>VECI, KTORÉ<br>NEPOVIEŠ<br><em>NAHLAS.</em></h2>'+
+      '<h2>VECI, KTORÉ<br>NEPOVIEŠ <em>NAHLAS.</em></h2>'+
       '<p>Tričká, mikiny a doplnky pre všetko, čo ostalo v hlave. Nie všetko si zaslúži vysvetlenie.</p>'+
       anchor('SPOZNAŤ NÁŠ PRÍBEH ↗',hrefAbout,'ds-sw-pill')+
-      '</div><div class="ds-sw-editorial__photo"><img src="'+ASSET+'story.jpg" alt="Dotyk Slov editorial" loading="lazy" decoding="async"></div>'+
+      '</div><div class="ds-sw-editorial__photo" aria-hidden="true"><span>NIE VŠETKO<br>TREBA POVEDAŤ<br>NAHLAS.</span></div>'+
       '</section>';
   }
   function moods(){
@@ -210,9 +217,9 @@ function run(){
       '</div></section>';
   }
   function community(){
-    var photos=['p1.jpg','p2.jpg','p3.jpg','p4.jpg'];
+    var photos=['p1.jpg','p2.jpg','p3.jpg'];
     return '<section class="ds-sw-community ds-sw-inner" aria-label="Dotyk Slov komunita">'+
-      head('PEOPLE / DOTYK SLOV','NAŠA KOMUNITA',anchor('SLEDOVAŤ NÁS ↗',IG,'ds-sw-section-link'))+
+      head('DOTYK SLOV / ĽUDIA','TÍ, ČO TO CHÁPU.',anchor('SLEDOVAŤ NÁS ↗',IG,'ds-sw-section-link'))+
       '<p class="ds-sw-underheading">Ak toto chápeš, patríš sem. @dotykslov</p>'+
       '<div class="ds-sw-community__scroll">'+photos.map(function(photo,i){
         return '<a href="'+IG+'" target="_blank" rel="noopener noreferrer" aria-label="Dotyk Slov Instagram '+(i+1)+'"><img src="'+ASSET+photo+'" loading="lazy" decoding="async" alt="Dotyk Slov komunita"></a>';
@@ -236,7 +243,7 @@ function run(){
   root.id='ds-streetwear';
   root.innerHTML=hero()+
     (categories.length?'<section class="ds-sw-categories ds-sw-inner" aria-label="Nakupovať podľa kategórie"><div class="ds-sw-category-grid">'+categories.map(categoryCard).join('')+'</div></section>':'')+
-    trust()+products()+editorial()+moods()+community()+newsletter();
+    products()+editorial()+community()+newsletter();
   anchorPoint.parentNode.insertBefore(root,anchorPoint);
   document.body.classList.add('ds-streetwear-ready');
   loadProducts().then(function(items){
