@@ -418,3 +418,18 @@ body.in-index.ds-streetwear-ready .admin-bar{position:relative;z-index:10}
  #ds-streetwear .ds-sw-editorial__photo{height:310px}
  #ds-streetwear .ds-sw-newsletter__slot form{display:flex;flex-wrap:wrap}
 }
+
+/* Exact oval-brand silhouette traced from the supplied logo; no faux text. */
+body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo::after{
+ content:""!important;display:block!important;
+ width:170px!important;height:60px!important;
+ padding:0!important;border:0!important;border-radius:0!important;
+ background:#f4eee2!important;transform:none!important;
+ -webkit-mask:url("https://cdn.jsdelivr.net/gh/matuasiak/dotyk-slov-assets@f050e7ed29a910ca8a91c3e689ab6c51df27358f/images/ds-oval-logo.svg") center/contain no-repeat!important;
+ mask:url("https://cdn.jsdelivr.net/gh/matuasiak/dotyk-slov-assets@f050e7ed29a910ca8a91c3e689ab6c51df27358f/images/ds-oval-logo.svg") center/contain no-repeat!important;
+}
+@media(max-width:767px){
+ body.in-index.ds-streetwear-ready #ds-site-header .ds-site-logo::after{
+ width:118px!important;height:43px!important;
+ }
+}
